@@ -12,6 +12,7 @@ interface HeatmapMapProps {
   onSelectCell: (cell: HeatmapCell) => void;
   selectedCell: HeatmapCell | null;
   isSidebarOpen?: boolean;
+  onMapMoveEnd?: (bbox: { min_lat: number; max_lat: number; min_lon: number; max_lon: number }) => void;
 }
 
 // Controller to update center/zoom programmatically
@@ -20,6 +21,40 @@ function MapController({ center, zoom }: { center: [number, number]; zoom: numbe
   useEffect(() => {
     map.setView(center, zoom);
   }, [center, zoom, map]);
+  return null;
+}
+
+// Debounced moveend handler (800ms debounce - Requirement 2)
+function MapMoveHandler({
+  onMoveEnd
+}: {
+  onMoveEnd?: (bbox: { min_lat: number; max_lat: number; min_lon: number; max_lon: number }) => void;
+}) {
+  const map = useMap();
+  const timerRef = React.useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (!onMoveEnd) return;
+    const handleMove = () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => {
+        const bounds = map.getBounds();
+        onMoveEnd({
+          min_lat: bounds.getSouth(),
+          max_lat: bounds.getNorth(),
+          min_lon: bounds.getWest(),
+          max_lon: bounds.getEast()
+        });
+      }, 800);
+    };
+
+    map.on('moveend', handleMove);
+    return () => {
+      map.off('moveend', handleMove);
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [map, onMoveEnd]);
+
   return null;
 }
 
@@ -56,7 +91,8 @@ export default function HeatmapMap({
   cells,
   onSelectCell,
   selectedCell,
-  isSidebarOpen
+  isSidebarOpen,
+  onMapMoveEnd
 }: HeatmapMapProps) {
   // Color legend specification:
   // 80-100 emerald, 60-79 lime, 40-59 amber, <40 red, no data gray with dashed outline
@@ -147,11 +183,13 @@ export default function HeatmapMap({
       <MapContainer
         center={center}
         zoom={zoom}
+        preferCanvas={true}
         style={{ width: '100%', height: '100%', minHeight: '100%', backgroundColor: '#f1f5f9' }}
         className="rounded-2xl z-10"
       >
         <MapController center={center} zoom={zoom} />
         <MapResizer isSidebarOpen={isSidebarOpen} />
+        <MapMoveHandler onMoveEnd={onMapMoveEnd} />
 
         {/* Clean Standard OpenStreetMap Tile Layer (No API Key Required) */}
         <TileLayer

@@ -1,13 +1,16 @@
-import httpx
+import asyncio
 from datetime import datetime
 from typing import Dict, Any, Optional
+from cachetools import TTLCache
 from app.core.config import settings
+from app.core.http_client import get_shared_client
 from app.schemas.location import (
     WeatherClimateResponse, WeatherCurrent, AirQualityData, ClimateRiskData
 )
 from app.services.demo_data_service import get_demo_location, find_closest_demo
 
-WEATHER_CACHE: Dict[str, WeatherClimateResponse] = {}
+# 1-hour TTL cache for weather and climate metrics (up to 500 coordinates)
+WEATHER_CACHE = TTLCache(maxsize=500, ttl=3600)
 
 def get_weather_code_description(code: int) -> str:
     descriptions = {
@@ -47,16 +50,40 @@ def get_aqi_label(us_aqi: int) -> tuple[str, str]:
     else:
         return "Hazardous", "#7e22ce"
 
+async def _fetch_current_weather(client, lat: float, lon: float):
+    weather_params = {
+        "latitude": lat,
+        "longitude": lon,
+        "current": "temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m",
+        "timezone": "auto"
+    }
+    resp = await client.get(settings.OPEN_METEO_FORECAST_URL, params=weather_params)
+    if resp.status_code == 200:
+        return resp.json()
+    return None
+
+async def _fetch_air_quality(client, lat: float, lon: float):
+    aqi_params = {
+        "latitude": lat,
+        "longitude": lon,
+        "current": "us_aqi,pm2_5,pm10,european_aqi",
+        "timezone": "auto"
+    }
+    resp = await client.get(settings.OPEN_METEO_AIR_QUALITY_URL, params=aqi_params)
+    if resp.status_code == 200:
+        return resp.json()
+    return None
+
 async def fetch_weather_and_climate(
     location_id: str,
     latitude: float,
     longitude: float
 ) -> WeatherClimateResponse:
     """
-    Fetches real-time weather and air quality from Open-Meteo APIs,
-    plus elevation and flood risk heuristic based on terrain elevation.
+    Fetches real-time weather and air quality concurrently using shared HTTP client,
+    with TTLCache and resilient fallback per indicator.
     """
-    cache_key = f"{round(latitude, 3)}_{round(longitude, 3)}"
+    cache_key = f"{round(latitude, 2)}_{round(longitude, 2)}"
     if cache_key in WEATHER_CACHE:
         return WEATHER_CACHE[cache_key]
 
@@ -76,61 +103,42 @@ async def fetch_weather_and_climate(
         WEATHER_CACHE[cache_key] = resp
         return resp
 
-    # Live calls to Open-Meteo
+    client = get_shared_client()
+    weather_res, aqi_res = await asyncio.gather(
+        _fetch_current_weather(client, latitude, longitude),
+        _fetch_air_quality(client, latitude, longitude),
+        return_exceptions=True
+    )
+
     current_weather = None
-    air_quality = None
     elevation_val = 150.0
+    if not isinstance(weather_res, Exception) and weather_res:
+        elevation_val = float(weather_res.get("elevation", 150.0))
+        c_data = weather_res.get("current", {})
+        code = int(c_data.get("weather_code", 0))
+        current_weather = WeatherCurrent(
+            temperature_c=float(c_data.get("temperature_2m", 25.0)),
+            relative_humidity=float(c_data.get("relative_humidity_2m", 50.0)),
+            apparent_temperature=float(c_data.get("apparent_temperature", 26.0)),
+            wind_speed_kmh=float(c_data.get("wind_speed_10m", 10.0)),
+            precipitation_mm=float(c_data.get("precipitation", 0.0)),
+            weather_description=get_weather_code_description(code),
+            weather_code=code
+        )
 
-    try:
-        weather_params = {
-            "latitude": latitude,
-            "longitude": longitude,
-            "current": "temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m",
-            "timezone": "auto"
-        }
-        async with httpx.AsyncClient(timeout=4.0) as client:
-            w_res = await client.get(settings.OPEN_METEO_FORECAST_URL, params=weather_params)
-            if w_res.status_code == 200:
-                w_json = w_res.json()
-                elevation_val = float(w_json.get("elevation", 150.0))
-                c_data = w_json.get("current", {})
-                code = int(c_data.get("weather_code", 0))
-                current_weather = WeatherCurrent(
-                    temperature_c=float(c_data.get("temperature_2m", 25.0)),
-                    relative_humidity=float(c_data.get("relative_humidity_2m", 50.0)),
-                    apparent_temperature=float(c_data.get("apparent_temperature", 26.0)),
-                    wind_speed_kmh=float(c_data.get("wind_speed_10m", 10.0)),
-                    precipitation_mm=float(c_data.get("precipitation", 0.0)),
-                    weather_description=get_weather_code_description(code),
-                    weather_code=code
-                )
-    except Exception:
-        pass
-
-    try:
-        aqi_params = {
-            "latitude": latitude,
-            "longitude": longitude,
-            "current": "us_aqi,pm2_5,pm10,european_aqi",
-            "timezone": "auto"
-        }
-        async with httpx.AsyncClient(timeout=4.0) as client:
-            aq_res = await client.get(settings.OPEN_METEO_AIR_QUALITY_URL, params=aqi_params)
-            if aq_res.status_code == 200:
-                aq_json = aq_res.json()
-                cur_aq = aq_json.get("current", {})
-                us_aqi_val = int(cur_aq.get("us_aqi", 85))
-                label, color = get_aqi_label(us_aqi_val)
-                air_quality = AirQualityData(
-                    us_aqi=us_aqi_val,
-                    pm2_5=float(cur_aq.get("pm2_5", 25.0)),
-                    pm10=float(cur_aq.get("pm10", 50.0)),
-                    european_aqi=int(cur_aq.get("european_aqi", 40)),
-                    category_label=label,
-                    status_color=color
-                )
-    except Exception:
-        pass
+    air_quality = None
+    if not isinstance(aqi_res, Exception) and aqi_res:
+        cur_aq = aqi_res.get("current", {})
+        us_aqi_val = int(cur_aq.get("us_aqi", 85))
+        label, color = get_aqi_label(us_aqi_val)
+        air_quality = AirQualityData(
+            us_aqi=us_aqi_val,
+            pm2_5=float(cur_aq.get("pm2_5", 25.0)),
+            pm10=float(cur_aq.get("pm10", 50.0)),
+            european_aqi=int(cur_aq.get("european_aqi", 40)),
+            category_label=label,
+            status_color=color
+        )
 
     # Heuristic flood & climate risk computation based on terrain elevation
     if elevation_val <= 10.0:

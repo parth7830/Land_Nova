@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import {
   Filter,
@@ -59,8 +59,12 @@ export default function HeatmapExplorer({
   const [nearHospitals, setNearHospitals] = useState(true);
   const [nearSchools, setNearSchools] = useState(true);
 
-  // Top 5 recommended localities
-  const [recommendedLocalities, setRecommendedLocalities] = useState<any[]>([]);
+  const [activeBBox, setActiveBBox] = useState<{
+    min_lat: number;
+    max_lat: number;
+    min_lon: number;
+    max_lon: number;
+  } | null>(null);
 
   // Generate fallback demo cells clearly labeled
   const generateIllustrativeDemoGrid = (centerLat: number, centerLon: number): HeatmapCell[] => {
@@ -127,6 +131,35 @@ export default function HeatmapExplorer({
     return demoCells;
   };
 
+  // Top 5 recommended localities memoized for instant re-renders (Requirement 5)
+  const recommendedLocalities = useMemo(() => {
+    return [...cells]
+      .filter((c) => c.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 5)
+      .map((c, i) => ({
+        rank: i + 1,
+        name: `Sector Cluster ${i + 1} (${currentLocation.city || 'Noida'})`,
+        score: c.score,
+        grade: c.grade,
+        lat: c.latitude,
+        lon: c.longitude
+      }));
+  }, [cells, currentLocation.city]);
+
+  // Sync active bbox when currentLocation changes
+  useEffect(() => {
+    const lat = currentLocation.latitude;
+    const lon = currentLocation.longitude;
+    const delta = 0.04;
+    setActiveBBox({
+      min_lat: lat - delta,
+      max_lat: lat + delta,
+      min_lon: lon - delta,
+      max_lon: lon + delta
+    });
+  }, [currentLocation]);
+
   useEffect(() => {
     let isCancelled = false;
 
@@ -134,16 +167,21 @@ export default function HeatmapExplorer({
       setLoading(true);
       setBackendError(null);
 
-      try {
-        const lat = currentLocation.latitude;
-        const lon = currentLocation.longitude;
-        const delta = 0.04;
+      const lat = currentLocation.latitude;
+      const lon = currentLocation.longitude;
+      const delta = 0.04;
 
+      const minLat = activeBBox?.min_lat ?? lat - delta;
+      const maxLat = activeBBox?.max_lat ?? lat + delta;
+      const minLon = activeBBox?.min_lon ?? lon - delta;
+      const maxLon = activeBBox?.max_lon ?? lon + delta;
+
+      try {
         const res = await fetchHeatmap({
-          min_lat: lat - delta,
-          max_lat: lat + delta,
-          min_lon: lon - delta,
-          max_lon: lon + delta,
+          min_lat: minLat,
+          max_lat: maxLat,
+          min_lon: minLon,
+          max_lon: maxLon,
           persona: activePersona,
           grid_size: 5
         });
@@ -154,21 +192,6 @@ export default function HeatmapExplorer({
           setCells(res.cells);
           setSelectedCell(res.cells[0]);
           setIsDemoFallback(false);
-
-          // Top 5 points
-          const sorted = [...res.cells]
-            .filter((c) => c.score > 0)
-            .sort((a, b) => b.score - a.score)
-            .slice(0, 5)
-            .map((c, i) => ({
-              rank: i + 1,
-              name: `Sector Cluster ${i + 1} (${currentLocation.city || 'Noida'})`,
-              score: c.score,
-              grade: c.grade,
-              lat: c.latitude,
-              lon: c.longitude
-            }));
-          setRecommendedLocalities(sorted);
         } else {
           throw new Error('Received empty cell grid from backend');
         }
@@ -176,30 +199,13 @@ export default function HeatmapExplorer({
         console.warn('Heatmap load warning, activating illustrative demo grid:', err);
         if (isCancelled) return;
 
-        const fallback = generateIllustrativeDemoGrid(
-          currentLocation.latitude,
-          currentLocation.longitude
-        );
+        const fallback = generateIllustrativeDemoGrid(lat, lon);
         setCells(fallback);
         setSelectedCell(fallback[0]);
         setIsDemoFallback(true);
         setBackendError(
           err?.message || 'Spatial API unavailable. Showing illustrative demo grid.'
         );
-
-        const sorted = fallback
-          .filter((c) => c.score > 0)
-          .sort((a, b) => b.score - a.score)
-          .slice(0, 5)
-          .map((c, i) => ({
-            rank: i + 1,
-            name: `Sample Cluster ${i + 1} (${currentLocation.city || 'Noida'})`,
-            score: c.score,
-            grade: c.grade,
-            lat: c.latitude,
-            lon: c.longitude
-          }));
-        setRecommendedLocalities(sorted);
       } finally {
         if (!isCancelled) {
           setLoading(false);
@@ -211,7 +217,7 @@ export default function HeatmapExplorer({
     return () => {
       isCancelled = true;
     };
-  }, [currentLocation, activePersona]);
+  }, [currentLocation, activePersona, activeBBox]);
 
   const resetFilters = () => {
     setMaxPrice(15000000);
@@ -492,6 +498,7 @@ export default function HeatmapExplorer({
             onSelectCell={(c) => setSelectedCell(c)}
             selectedCell={selectedCell}
             isSidebarOpen={isSidebarOpen}
+            onMapMoveEnd={(bbox) => setActiveBBox(bbox)}
           />
         </div>
       </div>

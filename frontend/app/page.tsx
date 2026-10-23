@@ -17,17 +17,42 @@ import {
   CheckCircle2
 } from 'lucide-react';
 
+import dynamic from 'next/dynamic';
+
 import Navbar from '@/components/Navbar';
 import BuyerHome from '@/components/BuyerHome';
 import PersonaPreferences from '@/components/PersonaPreferences';
-import HeatmapExplorer from '@/components/HeatmapExplorer';
 import PropertyDetail from '@/components/PropertyDetail';
 import DeveloperHome from '@/components/DeveloperHome';
-import DeveloperSiteReportView from '@/components/DeveloperSiteReportView';
-import AnalysisView from '@/components/AnalysisView';
-import ComparisonView from '@/components/ComparisonView';
-import AIAdvisorView from '@/components/AIAdvisorView';
 import ChatWidget from '@/components/ChatWidget';
+
+const LoadingView = () => (
+  <div className="w-full h-96 flex flex-col items-center justify-center bg-white rounded-2xl border border-slate-200 shadow-xs">
+    <div className="w-6 h-6 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin mb-2" />
+    <span className="text-xs text-slate-500 font-medium">Loading component...</span>
+  </div>
+);
+
+const HeatmapExplorer = dynamic(() => import('@/components/HeatmapExplorer'), {
+  ssr: false,
+  loading: () => <LoadingView />
+});
+const AnalysisView = dynamic(() => import('@/components/AnalysisView'), {
+  ssr: false,
+  loading: () => <LoadingView />
+});
+const ComparisonView = dynamic(() => import('@/components/ComparisonView'), {
+  ssr: false,
+  loading: () => <LoadingView />
+});
+const DeveloperSiteReportView = dynamic(() => import('@/components/DeveloperSiteReportView'), {
+  ssr: false,
+  loading: () => <LoadingView />
+});
+const AIAdvisorView = dynamic(() => import('@/components/AIAdvisorView'), {
+  ssr: false,
+  loading: () => <LoadingView />
+});
 
 import {
   LocationItem,

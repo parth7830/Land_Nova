@@ -13,13 +13,16 @@ import {
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
-export async function searchLocations(query: string): Promise<LocationItem[]> {
+export async function searchLocations(query: string, signal?: AbortSignal): Promise<LocationItem[]> {
   try {
-    const res = await fetch(`${API_BASE}/api/geocode?q=${encodeURIComponent(query)}`);
+    const res = await fetch(`${API_BASE}/api/geocode?q=${encodeURIComponent(query)}`, { signal });
     if (res.ok) {
       return await res.json();
     }
-  } catch (err) {
+  } catch (err: any) {
+    if (err?.name === 'AbortError') {
+      throw err;
+    }
     console.warn('Backend search unreachable, falling back to local demo catalog', err);
   }
 

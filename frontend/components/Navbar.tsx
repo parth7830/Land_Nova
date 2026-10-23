@@ -56,6 +56,84 @@ export default function Navbar({
   const [listingTypeFilter, setListingTypeFilter] = useState<'buy' | 'rent'>('buy');
 
   const searchRef = useRef<HTMLDivElement>(null);
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  // Local instant suggestions for major Indian hubs (0ms latency)
+  const INSTANT_CITIES: LocationItem[] = [
+    {
+      id: 'sector-62-noida',
+      display_name: 'Sector 62, Noida, Uttar Pradesh, India',
+      locality: 'Sector 62',
+      city: 'Noida',
+      state: 'Uttar Pradesh',
+      country: 'India',
+      latitude: 28.6280,
+      longitude: 77.3649,
+      is_demo: true,
+      source: 'Instant Local Suggestion'
+    },
+    {
+      id: 'connaught-place-delhi',
+      display_name: 'Connaught Place, New Delhi, Delhi, India',
+      locality: 'Connaught Place',
+      city: 'New Delhi',
+      state: 'Delhi',
+      country: 'India',
+      latitude: 28.6315,
+      longitude: 77.2167,
+      is_demo: true,
+      source: 'Instant Local Suggestion'
+    },
+    {
+      id: 'gurugram-haryana',
+      display_name: 'Cyber City, Gurugram, Haryana, India',
+      locality: 'Cyber City',
+      city: 'Gurugram',
+      state: 'Haryana',
+      country: 'India',
+      latitude: 28.4595,
+      longitude: 77.0266,
+      is_demo: true,
+      source: 'Instant Local Suggestion'
+    },
+    {
+      id: 'bkc-mumbai',
+      display_name: 'Bandra Kurla Complex, Mumbai, Maharashtra, India',
+      locality: 'BKC',
+      city: 'Mumbai',
+      state: 'Maharashtra',
+      country: 'India',
+      latitude: 19.0657,
+      longitude: 72.8687,
+      is_demo: true,
+      source: 'Instant Local Suggestion'
+    },
+    {
+      id: 'indiranagar-bengaluru',
+      display_name: 'Indiranagar, Bengaluru, Karnataka, India',
+      locality: 'Indiranagar',
+      city: 'Bengaluru',
+      state: 'Karnataka',
+      country: 'India',
+      latitude: 12.9784,
+      longitude: 77.6408,
+      is_demo: true,
+      source: 'Instant Local Suggestion'
+    },
+    {
+      id: 'hitec-city-hyderabad',
+      display_name: 'HITEC City, Hyderabad, Telangana, India',
+      locality: 'HITEC City',
+      city: 'Hyderabad',
+      state: 'Telangana',
+      country: 'India',
+      latitude: 17.4435,
+      longitude: 78.3772,
+      is_demo: true,
+      source: 'Instant Local Suggestion'
+    }
+  ];
 
   // Close search dropdown on click outside
   useEffect(() => {
@@ -65,26 +143,66 @@ export default function Navbar({
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
+      if (abortControllerRef.current) abortControllerRef.current.abort();
+    };
   }, []);
 
-  const handleSearchChange = async (q: string) => {
+  const handleSearchChange = (q: string) => {
     setSearchQuery(q);
-    if (q.trim().length >= 2) {
-      setIsSearching(true);
+
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    const trimmed = q.trim();
+
+    // Instant local matching (0ms)
+    const localMatches = trimmed.length > 0
+      ? INSTANT_CITIES.filter(
+          (c) =>
+            (c.city || '').toLowerCase().includes(trimmed.toLowerCase()) ||
+            c.display_name.toLowerCase().includes(trimmed.toLowerCase())
+        )
+      : [];
+
+    // Min 3 chars for remote network requests (Requirement 1)
+    if (trimmed.length < 3) {
+      setSearchResults(localMatches);
+      setShowSearchDropdown(localMatches.length > 0);
+      setIsSearching(false);
+      return;
+    }
+
+    // Show local matches immediately while debouncing network request
+    if (localMatches.length > 0) {
+      setSearchResults(localMatches);
       setShowSearchDropdown(true);
+    }
+
+    // Debounce input 400ms & abort stale requests (Requirement 1)
+    setIsSearching(true);
+    searchTimeoutRef.current = setTimeout(async () => {
+      const controller = new AbortController();
+      abortControllerRef.current = controller;
+
       try {
-        const results = await searchLocations(q);
-        setSearchResults(results);
-      } catch (err) {
-        setSearchResults([]);
+        const results = await searchLocations(trimmed, controller.signal);
+        setSearchResults(results.length > 0 ? results : localMatches);
+        setShowSearchDropdown(true);
+      } catch (err: any) {
+        if (err?.name !== 'AbortError') {
+          setSearchResults(localMatches);
+        }
       } finally {
         setIsSearching(false);
       }
-    } else {
-      setSearchResults([]);
-      setShowSearchDropdown(false);
-    }
+    }, 400);
   };
 
   const handleSelectLoc = (loc: LocationItem) => {

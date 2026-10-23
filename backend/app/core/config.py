@@ -24,7 +24,7 @@ class Settings(BaseSettings):
     
     # AI - Google Gemini
     GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
-    GEMINI_MODEL: str = os.getenv("GEMINI_MODEL", "gemini-1.5-flash")
+    GEMINI_MODEL: str = os.getenv("GEMINI_MODEL", "gemini-flash-lite-latest")
     
     # External Geospatial & Climate Services
     NOMINATIM_USER_AGENT: str = os.getenv("NOMINATIM_USER_AGENT", "LandNova-Geospatial-Intelligence/1.0 (contact@landnova.local)")
