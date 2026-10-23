@@ -124,7 +124,7 @@ async def generate_heatmap(request: HeatmapRequest):
             cell_id = f"heatmap_{round(lat, 4)}_{round(lon, 4)}"
 
             try:
-                amenities = await fetch_amenities_for_location(cell_id, lat, lon, radius=1500)
+                amenities = await fetch_amenities_for_location(cell_id, lat, lon, radius_meters=1500)
                 weather = await fetch_weather_and_climate(cell_id, lat, lon)
 
                 result = calculate_livability_score(
