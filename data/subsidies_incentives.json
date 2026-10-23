@@ -1,0 +1,53 @@
+{
+  "_metadata": {
+    "title": "Government Housing & Industrial Development Subsidies, Incentives & FAR Concessions",
+    "source_url": "https://mohua.gov.in/ / https://up-rera.in/",
+    "portal_name": "Ministry of Housing and Urban Affairs (MoHUA) / State Town Planning Portals",
+    "download_date": "2026-01-18",
+    "version": "2026.1",
+    "license": "Government Open Data License - India (GODL)",
+    "disclaimer": "Statutory eligibility guidelines. Must be verified with local development authority prior to architectural submission."
+  },
+  "incentives": [
+    {
+      "id": "incentive-pmay-urban-2",
+      "title": "Pradhan Mantri Awas Yojana (PMAY-U 2.0) Credit Linked Subsidy",
+      "authority": "Ministry of Housing and Urban Affairs (MoHUA)",
+      "applicable_typology": "Affordable / Mid-Market Residential (<60 sqm EWS/LIG)",
+      "benefits": "Interest subsidy up to ₹1.80 Lakh on home loans for eligible unit buyers, boosting project sales velocity.",
+      "eligibility": "Annual household income <= ₹9.0 Lakhs; carpet area <= 60 sqm.",
+      "portal_link": "https://pmay-urban.gov.in/",
+      "verify_flag": "Verify developer bank tie-up with Central Nodal Agencies (HUDCO/NHB)"
+    },
+    {
+      "id": "incentive-up-tod-far-bonus",
+      "title": "UP Transit-Oriented Development (TOD) 0.5x - 1.0x FAR Bonus",
+      "authority": "Uttar Pradesh Housing and Urban Planning Department",
+      "applicable_typology": "Mixed-Use & Commercial High-Density within 500m of Metro",
+      "benefits": "Purchasable or free FAR enhancement of 0.5x to 1.0x above base FAR, lowering per-sqft land acquisition burden.",
+      "eligibility": "Site within 500m of operational or sanctioned metro corridor (e.g. Aqua Line, Blue Line).",
+      "portal_link": "http://awas.up.nic.in/",
+      "verify_flag": "Subject to NOIDA / NMRC TOD notification alignment"
+    },
+    {
+      "id": "incentive-igbc-green-building-far",
+      "title": "State Green Building 5% Additional FAR Incentive",
+      "authority": "NOIDA / Greater Noida Industrial Development Authority",
+      "applicable_typology": "All Typologies (IGBC / GRIHA 4-Star or Gold/Platinum rated)",
+      "benefits": "5% extra FAR granted without additional compounding charges upon achieving Gold or Platinum green rating.",
+      "eligibility": "Mandatory solar rooftop (min 20% load), rainwater harvesting, and tertiary STP recycling.",
+      "portal_link": "https://igbc.in/",
+      "verify_flag": "Requires provisional pre-certification prior to building plan sanction"
+    },
+    {
+      "id": "incentive-data-center-stamp-rebate",
+      "title": "UP Data Center Policy 100% Stamp Duty Exemption",
+      "authority": "Department of IT & Electronics, Govt. of Uttar Pradesh",
+      "applicable_typology": "Commercial IT / Hyperscale Tech Park",
+      "benefits": "100% exemption on stamp duty on first purchase/lease of land; 50% capital subsidy on transmission infrastructure.",
+      "eligibility": "Minimum power load capacity of 5MW and minimum capital investment of ₹100 Cr.",
+      "portal_link": "https://investup.org.in/",
+      "verify_flag": "Requires State Empowered Committee (SEC) in-principle approval"
+    }
+  ]
+}

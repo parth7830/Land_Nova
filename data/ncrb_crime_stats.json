@@ -1,0 +1,73 @@
+{
+  "_metadata": {
+    "title": "National Crime Records Bureau (NCRB) Crime in India District-Level Compilation",
+    "source_url": "https://ncrb.gov.in/crime-in-india-table-addtional-table-and-chapter-contents",
+    "portal_name": "Ministry of Home Affairs / NCRB Official Statistical Portal",
+    "download_date": "2026-01-08",
+    "version": "2023-2024 Edition",
+    "license": "Government Open Data License - India (GODL)",
+    "disclaimer": "CRITICAL ATTRIBUTION: These statistics reflect entire Commissionerate/District administrative aggregates and DO NOT represent street-level micro-crime safety. Use solely as district macro context."
+  },
+  "districts": {
+    "gautam_buddha_nagar": {
+      "district_name": "Gautam Buddha Nagar Commissionerate (Noida / Greater Noida)",
+      "state": "Uttar Pradesh",
+      "ipc_crime_rate_per_lakh": 242.4,
+      "state_average_rate": 268.1,
+      "national_average_rate": 258.1,
+      "safety_category": "Average / Modern Urban Commissionerate with Dedicated CCTV & PCR Coverage",
+      "reported_theft_rate_per_lakh": 110.2,
+      "violent_crime_pct": 8.4,
+      "police_stations_count": 28,
+      "attribution_note": "District-level administrative aggregate (Not localized street-level safety)."
+    },
+    "delhi_central_new": {
+      "district_name": "New Delhi / Central Delhi Police Districts",
+      "state": "Delhi",
+      "ipc_crime_rate_per_lakh": 985.6,
+      "state_average_rate": 1420.5,
+      "national_average_rate": 258.1,
+      "safety_category": "High Reporting Rate / High Density Surveillance Hub",
+      "reported_theft_rate_per_lakh": 612.4,
+      "violent_crime_pct": 5.2,
+      "police_stations_count": 34,
+      "attribution_note": "District-level administrative aggregate. High rate driven by 100% online e-FIR registration."
+    },
+    "bengaluru_urban": {
+      "district_name": "Bengaluru City Police Commissionerate",
+      "state": "Karnataka",
+      "ipc_crime_rate_per_lakh": 298.5,
+      "state_average_rate": 235.8,
+      "national_average_rate": 258.1,
+      "safety_category": "Moderate / Strong Cyber & CCTV Surveillance Infrastructure",
+      "reported_theft_rate_per_lakh": 142.1,
+      "violent_crime_pct": 4.1,
+      "police_stations_count": 112,
+      "attribution_note": "District-level administrative aggregate (Not localized street-level safety)."
+    },
+    "mumbai_city": {
+      "district_name": "Greater Mumbai Police Commissionerate",
+      "state": "Maharashtra",
+      "ipc_crime_rate_per_lakh": 315.2,
+      "state_average_rate": 320.1,
+      "national_average_rate": 258.1,
+      "safety_category": "Good Relative Urban Safety with 24/7 Public Mobility",
+      "reported_theft_rate_per_lakh": 158.4,
+      "violent_crime_pct": 4.8,
+      "police_stations_count": 94,
+      "attribution_note": "District-level administrative aggregate (Not localized street-level safety)."
+    },
+    "hyderabad_city": {
+      "district_name": "Hyderabad & Cyberabad Commissionerates",
+      "state": "Telangana",
+      "ipc_crime_rate_per_lakh": 272.0,
+      "state_average_rate": 295.4,
+      "national_average_rate": 258.1,
+      "safety_category": "High Density Command-and-Control CCTV Network (Nenu Saitham)",
+      "reported_theft_rate_per_lakh": 128.0,
+      "violent_crime_pct": 3.9,
+      "police_stations_count": 78,
+      "attribution_note": "District-level administrative aggregate (Not localized street-level safety)."
+    }
+  }
+}

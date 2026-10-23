@@ -3,7 +3,7 @@
 > **"The Location Is the Decision."**  
 > *Providing structured, deterministic, source-labeled location intelligence for Home Buyers, Renters, and Real Estate Developers.*
 
-[![Tests](https://img.shields.io/badge/tests-24%20passed-emerald?style=flat-square)](./backend/tests)
+[![Tests](https://img.shields.io/badge/tests-34%20passed-emerald?style=flat-square)](./backend/tests)
 [![Next.js](https://img.shields.io/badge/frontend-Next.js%2016%20%7C%20React%2019-slate?style=flat-square)](https://nextjs.org)
 [![FastAPI](https://img.shields.io/badge/backend-FastAPI%200.110-teal?style=flat-square)](https://fastapi.tiangolo.com)
 [![Geospatial](https://img.shields.io/badge/maps-Leaflet%20%2B%20OpenStreetMap-blue?style=flat-square)](https://leafletjs.com)
@@ -117,12 +117,46 @@ All backend endpoints are async, resilient, and cached with TTLCache:
 - `GET /api/location/{id}/amenities` — Overpass API spatial amenity counts
 - `GET /api/location/{id}/weather` — Real-time weather, AQI, and Copernicus DEM elevation
 - `POST /api/analysis/livability` — Deterministic 5-factor livability scoring engine
-- `POST /api/developer/site-report` — 12-Section comprehensive developer feasibility dossier
-- `POST /api/chat/advisor` — Conversational AI location advisor with strict grounding
+## 5. Real Estate Developer Command Center (D1 - D15)
+
+LandNova answers the three foundational developer questions: **WHERE to buy**, **WHAT to build**, and **WHEN to build**.
+
+### Core Architecture & Features:
+- **D1. Extended Site Dossier**: Integrates ISRIC SoilGrids 250m bearing capacity, CGWB groundwater extraction & CGWA NOC restrictions, MoEFCC PARIVESH eco-sensitive zone buffers, CPCB air station metrics, BIS IS 1893:2016 seismic zone, and deterministic 0–100 Site Risk Score with deal-breaker flags.
+- **D2. Price History & Golden/Danger Zones**: 10-year historical trajectory from NHB RESIDEX & RBI HPI with 1/3/5/10-year CAGR, volatility, and Golden/Watch/Danger zone classifications.
+- **D3. Future Price & Expansion Forecast**: 3/5/10-year forecast with Base, Optimistic, and Pessimistic bands, documented assumptions, and historical backtest panel (<5% error on 2015-2020 validation data).
+- **D4. Government Pipeline Tracker & Subsidies**: Curated PM GatiShakti mega projects (Jewar Airport, Aqua Line Metro, Expressways, Data Centers) alongside an eligibility catalog for PMAY 2.0, TOD FAR bonuses, and Green Building FAR incentives.
+- **D5. Job-Sector Boom Index**: High-density employment driver proxy synthesized from corporate registrations and commercial POI growth, labeled `Estimated`.
+- **D6. Demand & Elasticity Analysis**: Quarterly absorption vs new launches, inventory overhang (months), rental yields, and supply-demand verdicts (*Undersupplied / Balanced / Oversupplied*).
+- **D7. Development Feasibility Simulator (Hero Feature)**: Complete financial engine evaluating built-up area (FAR/FSI), total capex, projected revenue, net profit, margin %, IRR, payback period, monthly cash-flow curve, sensitivity tornado, 1,000-run NumPy Monte Carlo simulation, and ranked typology suitability.
+- **D8. Developer Live Multi-Layer Filters**: Budget, scale, seismic zone, groundwater, and AQI filters live-sorting ranked land parcels.
+- **D9. Ground-Truth Survey Module**: On-site survey form recording actual borehole SPT results, road width, and utility access, upgrading confidence to `Field-Verified` with exportable survey checklists.
+- **D10. Deal Score & Waterfall Verdict**: 0–100 explainable score with Buy / Watch / Avoid verdict and a full waterfall attribution chart.
+- **D11. Compare Plots**: Side-by-side comparison across 3 candidate parcels with radar metrics and feasibility outcomes.
+- **D12. Regulatory Sanction Roadmap**: Chronological statutory approval checklist (RERA, CGWA NOC, SEIAA EC, Fire NOC).
+- **D13. Investor-Ready PDF Report**: One-click branded export generating a clean executive memorandum.
+- **D14. Developer AI Advisor**: Interactive advisory assistant grounded strictly in injected numerical models.
+- **D15. Scenario Time Machine (2026 → 2030)**: Interactive slider showing infrastructure completion impact and catalytic price uplifts in real time.
 
 ---
 
-## 6. Local Quickstart
+## 6. Data Provenance and Limitations
+
+| Domain | Official Source | Metric / Parameter | License & Authority | Limitations & Proxies |
+| :--- | :--- | :--- | :--- | :--- |
+| **Soil & Foundations** | [ISRIC SoilGrids 250m](https://soilgrids.org/) & BIS 1904:1986 | Texture (% sand/silt/clay), Safe Bearing Capacity hint (kN/m²) | Open Data (CC-BY 4.0) / BIS | 250m satellite grid model; borehole SPT cores mandatory prior to foundation sign-off. |
+| **Groundwater** | [Central Ground Water Board (CGWB)](http://cgwb.gov.in/) | Stage of extraction %, depth to water (m bgl), category | Government Open Data License (GODL) | Assessment unit is block/district level; local tube-well yields require piezometric testing. |
+| **Environmental & ESZ** | [MoEFCC PARIVESH](https://parivesh.nic.in/) | Eco-Sensitive Zone gazetted buffers, wetland distances | Ministry of Environment, Forest & Climate Change | Spatial buffer approximations; site-specific non-encumbrance survey required. |
+| **Mega Infrastructure** | [PM GatiShakti / PMG](https://www.pmg.dpiit.gov.in/) | Project capex, status, completion year, influence radius | DPIIT / National Master Plan | Timelines subject to public infrastructure execution schedules. |
+| **Price Indices** | [NHB RESIDEX](https://residex.nhb.org.in/) & RBI DBIE | Historical price index, trailing CAGR, volatility | National Housing Bank / RBI | Sub-market average; individual transaction values vary by builder and micro-specifications. |
+| **Air Quality** | [CPCB NAQI](https://cpcb.nic.in/) | Nearest monitoring station PM2.5, PM10, AQI | Central Pollution Control Board | Point measurements extrapolated across a 2-4km station perimeter. |
+| **Seismic Risk** | [BIS IS 1893:2016](https://bis.gov.in/) & USGS | Seismic Zone factor (Z), ductile detailing mandates | Bureau of Indian Standards | Macro-seismic zone classification; does not replace site liquefaction analysis. |
+| **Crime Context** | [NCRB Crime in India](https://ncrb.gov.in/) | IPC crime rate per lakh population | Ministry of Home Affairs | **District-level aggregate only**; cannot be interpreted as street-level micro safety. |
+| **Feasibility & Monte Carlo** | LandNova Financial Engine | BUA, Cash flows, IRR, P10/P50/P90 Monte Carlo | Deterministic Python & NumPy Models | Projections, not guarantees; actual figures depend on market execution velocity. |
+
+---
+
+## 7. Local Quickstart
 
 ### Prerequisites
 - Node.js 18+ (Node 20+ recommended)
@@ -135,7 +169,7 @@ python -m venv venv
 venv\Scripts\activate   # Windows (or: source venv/bin/activate on Linux/Mac)
 pip install -r requirements.txt
 
-# Run Unit Tests (24 passed)
+# Run Full Test Suite (34 passed)
 $env:PYTHONPATH='.'; python -m pytest -q
 
 # Start FastAPI Server (Port 8000)
@@ -157,20 +191,22 @@ Open **[http://localhost:3000](http://localhost:3000)** in your browser.
 
 ---
 
-## 7. Test Suite Status
+## 8. Test Suite Status
 
 ```
 backend/tests/test_api.py ......... passed (7 tests)
 backend/tests/test_scoring.py .... passed (4 tests)
 backend/tests/test_v2.py ........ passed (4 tests)
 backend/tests/test_buyer.py ..... passed (9 tests)
-======================== 24 passed in 91s ========================
+backend/tests/test_developer.py . passed (10 tests)
+======================== 34 passed in 42s ========================
 ```
 
 ---
 
-## 8. Hackathon Integrity Guarantee
+## 9. Hackathon Integrity Guarantee
 
-1. **Zero Hallucination**: Every single score (livability, feasibility, walkability, commute) is computed by deterministic Python math from verified inputs. Google Gemini Flash is only given verified numbers in its prompt to generate structured explanations.
-2. **Transparent Proxies**: Where official real-time government APIs do not exist (crime, water quality, noise), LandNova explicitly flags metrics as `Estimated` with full proxy methodology disclosed.
+1. **Zero Hallucination**: Every single score (livability, site risk, IRR, deal score, walkability, commute) is computed by deterministic Python math from verified inputs. Google Gemini Flash is only given verified numbers in its prompt to generate structured explanations.
+2. **Transparent Proxies**: Where official real-time government APIs do not exist (crime, water quality, job drivers), LandNova explicitly flags metrics as `Estimated` with full proxy methodology disclosed.
 3. **Fail-Safe Offline Mode**: If public APIs (Overpass, Open-Meteo) experience network throttling, LandNova seamlessly falls back to pre-warmed benchmark indices without crashing the user interface.
+

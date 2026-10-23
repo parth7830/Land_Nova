@@ -1,0 +1,89 @@
+{
+  "_metadata": {
+    "title": "Real Estate Absorption Velocity, Demand Elasticity & Employment Driver Compilation",
+    "source_url": "https://data.gov.in/ / https://up-rera.in/",
+    "portal_name": "State RERA Quarterly Project Progress Portals & Ministry of Corporate Affairs (MCA)",
+    "download_date": "2026-01-16",
+    "version": "2026.1",
+    "license": "Government Open Data License - India (GODL)",
+    "disclaimer": "Metrics synthesize state RERA project filings, OpenStreetMap office POI density, and published quarterly real estate transaction velocity."
+  },
+  "submarkets": {
+    "sector-62-noida": {
+      "name": "Sector 62, Noida",
+      "city": "Noida",
+      "quarterly_absorption_units": 420,
+      "quarterly_new_launches_units": 310,
+      "inventory_overhang_months": 11.2,
+      "launch_to_sales_ratio": 0.74,
+      "rental_yield_pct": 4.2,
+      "demand_verdict": "Undersupplied",
+      "elasticity_bracket": "Inelastic (Resilient to +10% price moves due to tech corporate affinity)",
+      "job_boom_index": 86.4,
+      "job_drivers": {
+        "office_poi_count_3km": 142,
+        "registered_tech_companies_district": 4820,
+        "announced_tech_parks_capex_cr": 6500,
+        "key_employers": ["Samsung R&D", "HCL Technologies", "IBM India", "Barclays Shared Services"]
+      },
+      "demand_explanation": "Quarterly absorption (420 units) significantly exceeds new launches (310 units), keeping inventory overhang tight at 11.2 months (<18 months benchmark)."
+    },
+    "yamuna-expressway": {
+      "name": "Yamuna Expressway Corridor",
+      "city": "Greater Noida",
+      "quarterly_absorption_units": 890,
+      "quarterly_new_launches_units": 650,
+      "inventory_overhang_months": 14.5,
+      "launch_to_sales_ratio": 0.73,
+      "rental_yield_pct": 3.4,
+      "demand_verdict": "Undersupplied",
+      "elasticity_bracket": "Moderate Elasticity (High investor demand driven by capital appreciation expectations)",
+      "job_boom_index": 92.8,
+      "job_drivers": {
+        "office_poi_count_3km": 48,
+        "registered_tech_companies_district": 1820,
+        "announced_tech_parks_capex_cr": 28500,
+        "key_employers": ["Jewar Airport Logistics Hub", "Yamuna Semiconductor Cluster", "Vivo Mobile Manufacturing Park"]
+      },
+      "demand_explanation": "Surging absorption propelled by multi-billion dollar industrial commitments and Jewar aerotropolis commissioning."
+    },
+    "greater-noida-west": {
+      "name": "Greater Noida West",
+      "city": "Greater Noida",
+      "quarterly_absorption_units": 1250,
+      "quarterly_new_launches_units": 1320,
+      "inventory_overhang_months": 19.8,
+      "launch_to_sales_ratio": 1.05,
+      "rental_yield_pct": 3.8,
+      "demand_verdict": "Balanced",
+      "elasticity_bracket": "High Elasticity (Price sensitive; buyers migrate quickly between competitor societies)",
+      "job_boom_index": 71.5,
+      "job_drivers": {
+        "office_poi_count_3km": 36,
+        "registered_tech_companies_district": 1450,
+        "announced_tech_parks_capex_cr": 2400,
+        "key_employers": ["Knowledge Park Institutions", "Logistics Corridors", "Retail High-Streets"]
+      },
+      "demand_explanation": "Absorption and new supply are closely aligned (launch-to-sales ratio 1.05), providing stable volume without acute scarcity."
+    },
+    "connaught-place-delhi": {
+      "name": "Connaught Place / Central Delhi",
+      "city": "Delhi",
+      "quarterly_absorption_units": 45,
+      "quarterly_new_launches_units": 15,
+      "inventory_overhang_months": 28.5,
+      "launch_to_sales_ratio": 0.33,
+      "rental_yield_pct": 2.1,
+      "demand_verdict": "Oversupplied",
+      "elasticity_bracket": "Inelastic (Ultra-high capital ticket size limits liquidity)",
+      "job_boom_index": 62.0,
+      "job_drivers": {
+        "office_poi_count_3km": 210,
+        "registered_tech_companies_district": 6200,
+        "announced_tech_parks_capex_cr": 500,
+        "key_employers": ["Banking HQs", "Government Ministries", "Consulting & Legal Chambers"]
+      },
+      "demand_explanation": "Inventory overhang exceeds 24 months due to prohibitive capital ticket sizes and slow luxury secondary churn."
+    }
+  }
+}

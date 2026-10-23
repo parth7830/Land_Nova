@@ -1,0 +1,68 @@
+{
+  "_metadata": {
+    "title": "ISRIC SoilGrids 250m & Geotechnical Foundation Benchmarks",
+    "source_url": "https://soilgrids.org/",
+    "portal_name": "ISRIC World Soil Information / BIS 1904:1986",
+    "download_date": "2026-01-05",
+    "version": "2026.1",
+    "license": "CC-BY 4.0",
+    "disclaimer": "Regional estimates based on ISRIC 250m depth profiles. Mandatory site borehole SPT cores required per BIS IS 1892 & 1904."
+  },
+  "regions": {
+    "noida": {
+      "soil_taxonomy": "Typic Ustifluvents / Deep Gangetic Alluvium",
+      "sand_pct": 52.0,
+      "silt_pct": 33.0,
+      "clay_pct": 15.0,
+      "bearing_capacity_hint_kn_m2": 180,
+      "bearing_capacity_bracket": "160 - 200 kN/m² (Medium Bearing)",
+      "foundation_recommendation": "Raft foundation with perimeter retaining piling for towers >15 floors; deep borehole SPT cores required to detect liquefaction potential in fine sand lenses.",
+      "borehole_test_required": true,
+      "liquefaction_susceptibility": "Moderate (Zone IV Alluvial plain)"
+    },
+    "delhi": {
+      "soil_taxonomy": "Yamuna Alluvium & Quartzite Ridge transition",
+      "sand_pct": 48.0,
+      "silt_pct": 36.0,
+      "clay_pct": 16.0,
+      "bearing_capacity_hint_kn_m2": 210,
+      "bearing_capacity_bracket": "180 - 240 kN/m² (Medium to High Bearing)",
+      "foundation_recommendation": "Isolated/combined footings or raft foundation on dense strata; pile foundation where near Yamuna floodplains.",
+      "borehole_test_required": true,
+      "liquefaction_susceptibility": "Moderate to High near Yamuna banks"
+    },
+    "bengaluru": {
+      "soil_taxonomy": "Red Gravelly Sandy Loam over Charnockite / Peninsular Gneiss",
+      "sand_pct": 64.0,
+      "silt_pct": 16.0,
+      "clay_pct": 20.0,
+      "bearing_capacity_hint_kn_m2": 320,
+      "bearing_capacity_bracket": "280 - 350 kN/m² (Very High Bearing)",
+      "foundation_recommendation": "Isolated or mat footings directly bearing on weathered granite/gneiss; low foundation cost relative to alluvial soils.",
+      "borehole_test_required": true,
+      "liquefaction_susceptibility": "Negligible (Hard rock terrain)"
+    },
+    "mumbai": {
+      "soil_taxonomy": "Coastal Alluvium over Deccan Trap Basalt",
+      "sand_pct": 30.0,
+      "silt_pct": 40.0,
+      "clay_pct": 30.0,
+      "bearing_capacity_hint_kn_m2": 150,
+      "bearing_capacity_bracket": "120 - 180 kN/m² (Variable / Marine Clay)",
+      "foundation_recommendation": "End-bearing driven/bored piles terminating in basaltic bedrock; basement dewatering and waterproof diaphragm walls mandatory.",
+      "borehole_test_required": true,
+      "liquefaction_susceptibility": "High in reclaimed coastal tracts"
+    },
+    "hyderabad": {
+      "soil_taxonomy": "Red Gravelly Sandy Clay over Granitic plutons",
+      "sand_pct": 60.0,
+      "silt_pct": 18.0,
+      "clay_pct": 22.0,
+      "bearing_capacity_hint_kn_m2": 300,
+      "bearing_capacity_bracket": "260 - 340 kN/m² (High Bearing)",
+      "foundation_recommendation": "Pad footings or shallow raft directly on firm weathered granite.",
+      "borehole_test_required": true,
+      "liquefaction_susceptibility": "Negligible"
+    }
+  }
+}

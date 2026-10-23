@@ -1,0 +1,118 @@
+{
+  "_metadata": {
+    "title": "National Housing Bank (NHB) RESIDEX & RBI Housing Price Index (HPI) Series",
+    "source_url": "https://residex.nhb.org.in/",
+    "portal_name": "NHB RESIDEX / Reserve Bank of India Database on Indian Economy (DBIE)",
+    "download_date": "2026-01-12",
+    "version": "2026.1",
+    "license": "Government Open Data License - India (GODL)",
+    "disclaimer": "City and sub-market indices normalized with base year 2017-18 = 100. Local micro-market rates derived from registered transaction averages."
+  },
+  "benchmark_inflation_rate_pct": 5.8,
+  "localities": {
+    "sector-62-noida": {
+      "name": "Sector 62, Noida",
+      "city": "Noida",
+      "history": [
+        {"year": 2015, "avg_rate_sqft": 4800, "index": 82.5},
+        {"year": 2016, "avg_rate_sqft": 4950, "index": 85.1},
+        {"year": 2017, "avg_rate_sqft": 5100, "index": 87.6},
+        {"year": 2018, "avg_rate_sqft": 5350, "index": 92.0},
+        {"year": 2019, "avg_rate_sqft": 5600, "index": 96.2},
+        {"year": 2020, "avg_rate_sqft": 5500, "index": 94.5},
+        {"year": 2021, "avg_rate_sqft": 5900, "index": 101.4},
+        {"year": 2022, "avg_rate_sqft": 6450, "index": 110.8},
+        {"year": 2023, "avg_rate_sqft": 7100, "index": 122.0},
+        {"year": 2024, "avg_rate_sqft": 7800, "index": 134.0},
+        {"year": 2025, "avg_rate_sqft": 8450, "index": 145.2},
+        {"year": 2026, "avg_rate_sqft": 9100, "index": 156.4}
+      ],
+      "cagr_1yr": 7.7,
+      "cagr_3yr": 8.6,
+      "cagr_5yr": 10.6,
+      "cagr_10yr": 6.6,
+      "volatility_pct": 4.2,
+      "stagnation_flag": false,
+      "zone_classification": "Golden Zone",
+      "zone_reason": "Consistent 3-year CAGR exceeding benchmark inflation (8.6% vs 5.8%) and positive institutional office absorption."
+    },
+    "yamuna-expressway": {
+      "name": "Yamuna Expressway / Jewar Corridor",
+      "city": "Greater Noida",
+      "history": [
+        {"year": 2015, "avg_rate_sqft": 2400, "index": 62.0},
+        {"year": 2016, "avg_rate_sqft": 2450, "index": 63.3},
+        {"year": 2017, "avg_rate_sqft": 2500, "index": 64.6},
+        {"year": 2018, "avg_rate_sqft": 2700, "index": 69.8},
+        {"year": 2019, "avg_rate_sqft": 2950, "index": 76.2},
+        {"year": 2020, "avg_rate_sqft": 3100, "index": 80.1},
+        {"year": 2021, "avg_rate_sqft": 3650, "index": 94.3},
+        {"year": 2022, "avg_rate_sqft": 4400, "index": 113.7},
+        {"year": 2023, "avg_rate_sqft": 5300, "index": 137.0},
+        {"year": 2024, "avg_rate_sqft": 6200, "index": 160.2},
+        {"year": 2025, "avg_rate_sqft": 7150, "index": 184.8},
+        {"year": 2026, "avg_rate_sqft": 8100, "index": 209.3}
+      ],
+      "cagr_1yr": 13.3,
+      "cagr_3yr": 15.2,
+      "cagr_5yr": 21.2,
+      "cagr_10yr": 12.9,
+      "volatility_pct": 6.8,
+      "stagnation_flag": false,
+      "zone_classification": "Golden Zone",
+      "zone_reason": "High momentum greenfield expansion propelled by Jewar International Airport and Data Center SEZ investments."
+    },
+    "greater-noida-west": {
+      "name": "Greater Noida West (Noida Extension)",
+      "city": "Greater Noida",
+      "history": [
+        {"year": 2015, "avg_rate_sqft": 3200, "index": 82.0},
+        {"year": 2016, "avg_rate_sqft": 3300, "index": 84.5},
+        {"year": 2017, "avg_rate_sqft": 3350, "index": 85.8},
+        {"year": 2018, "avg_rate_sqft": 3400, "index": 87.1},
+        {"year": 2019, "avg_rate_sqft": 3550, "index": 90.9},
+        {"year": 2020, "avg_rate_sqft": 3500, "index": 89.6},
+        {"year": 2021, "avg_rate_sqft": 3800, "index": 97.3},
+        {"year": 2022, "avg_rate_sqft": 4350, "index": 111.4},
+        {"year": 2023, "avg_rate_sqft": 5100, "index": 130.6},
+        {"year": 2024, "avg_rate_sqft": 5850, "index": 149.8},
+        {"year": 2025, "avg_rate_sqft": 6400, "index": 163.9},
+        {"year": 2026, "avg_rate_sqft": 6950, "index": 178.0}
+      ],
+      "cagr_1yr": 8.6,
+      "cagr_3yr": 10.9,
+      "cagr_5yr": 14.7,
+      "cagr_10yr": 8.0,
+      "volatility_pct": 5.1,
+      "stagnation_flag": false,
+      "zone_classification": "Watchlist",
+      "zone_reason": "Healthy price acceleration following Aqua Line Metro expansion, though large supply pipeline demands disciplined pricing."
+    },
+    "connaught-place-delhi": {
+      "name": "Connaught Place / Central Delhi",
+      "city": "Delhi",
+      "history": [
+        {"year": 2015, "avg_rate_sqft": 28000, "index": 88.0},
+        {"year": 2016, "avg_rate_sqft": 29000, "index": 91.1},
+        {"year": 2017, "avg_rate_sqft": 29500, "index": 92.7},
+        {"year": 2018, "avg_rate_sqft": 30500, "index": 95.8},
+        {"year": 2019, "avg_rate_sqft": 31500, "index": 98.9},
+        {"year": 2020, "avg_rate_sqft": 30500, "index": 95.8},
+        {"year": 2021, "avg_rate_sqft": 32000, "index": 100.5},
+        {"year": 2022, "avg_rate_sqft": 33500, "index": 105.2},
+        {"year": 2023, "avg_rate_sqft": 34800, "index": 109.3},
+        {"year": 2024, "avg_rate_sqft": 36200, "index": 113.7},
+        {"year": 2025, "avg_rate_sqft": 37400, "index": 117.5},
+        {"year": 2026, "avg_rate_sqft": 38500, "index": 120.9}
+      ],
+      "cagr_1yr": 2.9,
+      "cagr_3yr": 3.4,
+      "cagr_5yr": 4.8,
+      "cagr_10yr": 3.2,
+      "volatility_pct": 2.8,
+      "stagnation_flag": true,
+      "zone_classification": "Danger Zone",
+      "zone_reason": "Mature heritage core with nominal 3-year CAGR (3.4%) trailing annual inflation (5.8%), resulting in real capital value stagnation."
+    }
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "_metadata": {
+    "title": "MoEFCC / Parivesh Eco-Sensitive Zones & Wetland Benchmarks (NCR & Key Metros)",
+    "source_url": "https://parivesh.nic.in/",
+    "portal_name": "Ministry of Environment, Forest and Climate Change (MoEFCC) PARIVESH Portal",
+    "download_date": "2026-01-15",
+    "version": "2026.1",
+    "license": "Government Open Data License - India (GODL)",
+    "disclaimer": "Spatial buffer zones represent gazetted notifications under Environment (Protection) Act, 1986. Micro-level demarcation requires certified site survey."
+  },
+  "protected_zones": [
+    {
+      "id": "esz-okhla-bird-sanctuary",
+      "name": "Okhla Bird Sanctuary Eco-Sensitive Zone",
+      "state": "Uttar Pradesh / Delhi",
+      "district": "Gautam Buddha Nagar",
+      "center_lat": 28.5615,
+      "center_lon": 77.3092,
+      "buffer_radius_km": 1.0,
+      "esz_notification_date": "2015-08-19",
+      "notification_no": "S.O. 2262(E)",
+      "restrictions": "Prohibition of new polluting industries, high-rise restrictions within 100m, mandatory NBWL approval if within 1km buffer.",
+      "clearance_required": "National Board for Wildlife (NBWL) NOC + State Environmental Impact Assessment Authority (SEIAA)"
+    },
+    {
+      "id": "esz-surajpur-wetland",
+      "name": "Surajpur Wetland & Reserve Forest",
+      "state": "Uttar Pradesh",
+      "district": "Gautam Buddha Nagar",
+      "center_lat": 28.5280,
+      "center_lon": 77.4890,
+      "buffer_radius_km": 1.5,
+      "esz_notification_date": "2019-03-08",
+      "notification_no": "S.O. 1198(E)",
+      "restrictions": "Regulated construction, zero effluent discharge, groundwater extraction prohibited within 500m.",
+      "clearance_required": "Wetland Regulatory Authority Sanction & SEIAA Clearance"
+    },
+    {
+      "id": "esz-asola-bhatti",
+      "name": "Asola Bhatti Wildlife Sanctuary ESZ",
+      "state": "Delhi / Haryana",
+      "district": "South Delhi / Faridabad",
+      "center_lat": 28.4682,
+      "center_lon": 77.2475,
+      "buffer_radius_km": 1.0,
+      "esz_notification_date": "2019-05-15",
+      "notification_no": "S.O. 1805(E)",
+      "restrictions": "No commercial construction within default 1km ESZ buffer zone without Supreme Court / NBWL standing committee permission.",
+      "clearance_required": "Supreme Court Standing Committee on NBWL Clearances"
+    },
+    {
+      "id": "esz-sanjay-gandhi-np",
+      "name": "Sanjay Gandhi National Park ESZ",
+      "state": "Maharashtra",
+      "district": "Mumbai Suburban / Thane",
+      "center_lat": 19.2288,
+      "center_lon": 72.9182,
+      "buffer_radius_km": 1.0,
+      "esz_notification_date": "2016-12-05",
+      "notification_no": "S.O. 3645(E)",
+      "restrictions": "Strict height restrictions, eco-sensitive clearance required for commercial/residential projects within buffer.",
+      "clearance_required": "MCZMA / SEIAA / NBWL NOC"
+    },
+    {
+      "id": "esz-bannerghatta-np",
+      "name": "Bannerghatta National Park ESZ",
+      "state": "Karnataka",
+      "district": "Bengaluru Urban",
+      "center_lat": 12.8009,
+      "center_lon": 77.5777,
+      "buffer_radius_km": 1.0,
+      "esz_notification_date": "2020-03-11",
+      "notification_no": "S.O. 1072(E)",
+      "restrictions": "Regulated buffer zone prohibiting red/orange category projects, mandatory ecological buffer.",
+      "clearance_required": "Karnataka State SEIAA & Forest Dept Clearances"
+    }
+  ]
+}

@@ -53,6 +53,10 @@ const AIAdvisorView = dynamic(() => import('@/components/AIAdvisorView'), {
   ssr: false,
   loading: () => <LoadingView />
 });
+const DeveloperCommandCenter = dynamic(() => import('@/components/DeveloperCommandCenter'), {
+  ssr: false,
+  loading: () => <LoadingView />
+});
 
 import {
   LocationItem,
@@ -476,12 +480,12 @@ export default function Home() {
         {/* DEVELOPER FLOW VIEWS */}
         {currentRole === 'developer' && (
           <>
-            {/* Developer Home */}
+            {/* Developer Command Center (D1, D7, D10) */}
             {currentView === 'home' && (
-              <DeveloperHome
+              <DeveloperCommandCenter
                 currentLocation={currentLocation}
                 onNavigateView={(v) => setCurrentView(v)}
-                onLaunchSiteReport={handleLaunchSiteReport}
+                onSelectLocation={(loc) => setCurrentLocation(loc)}
               />
             )}
 

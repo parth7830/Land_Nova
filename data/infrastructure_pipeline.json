@@ -1,0 +1,103 @@
+{
+  "_metadata": {
+    "title": "National & Regional Mega Infrastructure Project Pipeline (NCR & Major Growth Corridors)",
+    "source_url": "https://www.pmg.dpiit.gov.in/",
+    "portal_name": "Project Monitoring Group (PMG) / PM Gati Shakti National Master Plan",
+    "download_date": "2026-01-20",
+    "version": "2026.1",
+    "license": "Government Open Data License - India (GODL)",
+    "disclaimer": "Project milestones and estimated completion dates compiled from official ministry press releases and PM GatiShakti tracking."
+  },
+  "pipeline_projects": [
+    {
+      "id": "infra-jewar-airport",
+      "name": "Noida International Airport (Jewar DXN)",
+      "type": "Airport & Aerotropolis",
+      "status": "Final Commissioning / Phase 1 Operations 2026",
+      "expected_completion_year": 2026,
+      "estimated_capex_cr": 29650,
+      "center_lat": 28.1889,
+      "center_lon": 77.6256,
+      "influence_radius_km": 45.0,
+      "key_beneficiary_zones": ["Yamuna Expressway", "Greater Noida", "Sector 150 Noida", "Noida Expressway"],
+      "projected_price_uplift_pct": 18.5,
+      "source_reference": "NIAL / Zurich Airport International Press Release Jan 2026",
+      "portal_link": "https://niairport.in"
+    },
+    {
+      "id": "infra-delhi-mumbai-expressway",
+      "name": "Delhi-Mumbai Expressway (NE-4)",
+      "type": "Access-Controlled Expressway",
+      "status": "Under Phased Operation & Linkages Construction",
+      "expected_completion_year": 2026,
+      "estimated_capex_cr": 100000,
+      "center_lat": 28.3200,
+      "center_lon": 77.3000,
+      "influence_radius_km": 25.0,
+      "key_beneficiary_zones": ["Sohna Road Gurgaon", "Faridabad", "Jewar Link", "South Delhi"],
+      "projected_price_uplift_pct": 14.0,
+      "source_reference": "NHAI Official Dashboard 2025-2026",
+      "portal_link": "https://nhai.gov.in"
+    },
+    {
+      "id": "infra-aqua-line-extension",
+      "name": "Noida Metro Aqua Line Extension (Sector 51 to Greater Noida West)",
+      "type": "Rapid Rail / Metro",
+      "status": "Under Construction (NMRC Phase 2)",
+      "expected_completion_year": 2027,
+      "estimated_capex_cr": 2991,
+      "center_lat": 28.6015,
+      "center_lon": 77.4285,
+      "influence_radius_km": 8.0,
+      "key_beneficiary_zones": ["Greater Noida West / Noida Extension", "Sector 71 Noida", "Sector 62 Noida"],
+      "projected_price_uplift_pct": 16.2,
+      "source_reference": "NMRC Board Resolution & PIB Sanction Order",
+      "portal_link": "https://www.nmrcnoida.com"
+    },
+    {
+      "id": "infra-yamuna-data-center-park",
+      "name": "Yamuna Expressway Hyperscale Data Center & Semiconductor Park",
+      "type": "Industrial & Tech SEZ",
+      "status": "Site Allotment & Groundbreaking",
+      "expected_completion_year": 2028,
+      "estimated_capex_cr": 18500,
+      "center_lat": 28.3100,
+      "center_lon": 77.5400,
+      "influence_radius_km": 15.0,
+      "key_beneficiary_zones": ["YEIDA Sectors 28-33", "Pari Chowk", "Greater Noida"],
+      "projected_price_uplift_pct": 21.0,
+      "source_reference": "YEIDA Official Master Plan 2041 Gazette",
+      "portal_link": "https://www.yamunaexpresswayauthority.com"
+    },
+    {
+      "id": "infra-blr-suburban-rail",
+      "name": "Bengaluru Suburban Rail Project (BSRP - Corridor 2)",
+      "type": "Suburban Rail Transit",
+      "status": "Civil Work in Progress (K-RIDE)",
+      "expected_completion_year": 2027,
+      "estimated_capex_cr": 15767,
+      "center_lat": 12.9716,
+      "center_lon": 77.5946,
+      "influence_radius_km": 10.0,
+      "key_beneficiary_zones": ["Baiyappanahalli", "Yeshwantpur", "Hebbal", "Yelahanka"],
+      "projected_price_uplift_pct": 15.0,
+      "source_reference": "K-RIDE Project Status Report 2025",
+      "portal_link": "https://kride.in"
+    },
+    {
+      "id": "infra-mumbai-coastal-road",
+      "name": "Mumbai Coastal Road Project North Extension (Versova to Dahisar)",
+      "type": "Urban Expressway",
+      "status": "Under Construction (BMC)",
+      "expected_completion_year": 2028,
+      "estimated_capex_cr": 16621,
+      "center_lat": 19.1400,
+      "center_lon": 72.8200,
+      "influence_radius_km": 12.0,
+      "key_beneficiary_zones": ["Andheri West", "Malad", "Kandivali", "Borivali"],
+      "projected_price_uplift_pct": 12.5,
+      "source_reference": "BMC Engineering Status 2025-2026",
+      "portal_link": "https://www.mcgm.gov.in"
+    }
+  ]
+}

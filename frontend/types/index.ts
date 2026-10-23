@@ -372,3 +372,127 @@ export interface SiteChecklistItem {
   severity: 'High' | 'Medium' | 'Low';
 }
 
+export interface FeasibilityInputs {
+  plot_acres: number;
+  typology: string;
+  far: number;
+  ground_coverage_pct: number;
+  land_cost_total_cr: number;
+  construction_cost_per_sqft: number;
+  sale_price_per_sqft: number;
+  absorption_months: number;
+  financing_interest_pct: number;
+  debt_equity_ratio: number;
+}
+
+export interface FeasibilitySummary {
+  plot_sqft: number;
+  bua_sqft: number;
+  salable_sqft: number;
+  units_count: number;
+  land_cost_cr: number;
+  construction_cost_cr: number;
+  soft_costs_cr: number;
+  finance_cost_cr: number;
+  total_project_cost_cr: number;
+  total_revenue_cr: number;
+  gross_profit_cr: number;
+  profit_margin_pct: number;
+  annualized_irr_pct: number;
+  break_even_month: number;
+  payback_period_years: number;
+}
+
+export interface MonteCarloResult {
+  simulations_count: number;
+  probability_of_profit_pct: number;
+  p10_irr_pct: number;
+  p50_median_irr_pct: number;
+  p90_irr_pct: number;
+  methodology: string;
+}
+
+export interface SensitivityTornadoItem {
+  parameter: string;
+  low_case_profit_cr: number;
+  high_case_profit_cr: number;
+  swing_cr: number;
+  sensitivity_rank: number;
+}
+
+export interface TypologyRecommendation {
+  typology_key: string;
+  name: string;
+  fit_score: number;
+  projected_margin_pct: number;
+  recommended_far: number;
+  description: string;
+  suitability_reason: string;
+}
+
+export interface FeasibilityModelResult {
+  inputs: FeasibilityInputs;
+  summary: FeasibilitySummary;
+  monthly_cash_flows: number[];
+  monte_carlo: MonteCarloResult;
+  sensitivity_tornado: SensitivityTornadoItem[];
+  typology_recommendations: TypologyRecommendation[];
+  best_fit_typology: string;
+}
+
+export interface ExtendedSiteDossier {
+  site_id: string;
+  display_name: string;
+  city: string;
+  coordinates: { latitude: number; longitude: number };
+  scale_acres: number;
+  site_risk_score: number;
+  site_readiness_score: number;
+  risk_level: string;
+  risk_breakdown: Record<string, number>;
+  deal_breaker_flags: string[];
+  sections: {
+    soil: any;
+    groundwater: any;
+    environmental: any;
+    air_quality: any;
+    seismic: any;
+    terrain: any;
+    crime_macro: any;
+  };
+}
+
+export interface DealVerdictResponse {
+  deal_score: number;
+  verdict: 'BUY' | 'WATCH' | 'AVOID';
+  verdict_summary: string;
+  deal_breakers: string[];
+  component_scores: {
+    site_readiness: number;
+    financial_feasibility: number;
+    catchment_demand: number;
+    infrastructure_catalysts: number;
+  };
+  waterfall_breakdown: Array<{
+    factor: string;
+    delta: number;
+    type: 'base' | 'positive' | 'negative';
+  }>;
+  nearby_infrastructure: Array<{
+    name: string;
+    distance_km: number;
+    completion_year: number;
+    uplift_pct: number;
+    portal_link: string;
+  }>;
+  ai_grounded_summary: string;
+  calculated_at: string;
+}
+
+export interface DeveloperCommandCenterResponse {
+  site_dossier: ExtendedSiteDossier;
+  feasibility: FeasibilityModelResult;
+  deal_verdict: DealVerdictResponse;
+}
+
+

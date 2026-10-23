@@ -1,0 +1,85 @@
+{
+  "_metadata": {
+    "title": "Central Ground Water Board (CGWB) Dynamic Ground Water Resources Assessment of India",
+    "source_url": "http://cgwb.gov.in/en/ground-water-assessment",
+    "portal_name": "CGWB / Central Ground Water Authority (CGWA) Portal",
+    "download_date": "2026-01-10",
+    "version": "2024-2025 Assessment",
+    "license": "Government Open Data License - India (GODL)",
+    "disclaimer": "Assessment units are Block / Taluka / Tehsil level per National Compilation of Dynamic Ground Water Resources."
+  },
+  "regions": {
+    "gautam_buddha_nagar": {
+      "district": "Gautam Buddha Nagar (Noida / Greater Noida)",
+      "state": "Uttar Pradesh",
+      "stage_of_extraction_pct": 112.4,
+      "category": "Over-Exploited",
+      "depth_to_water_pre_monsoon_m": "18.5 - 24.2 m bgl",
+      "depth_to_water_post_monsoon_m": "16.8 - 22.0 m bgl",
+      "annual_extractable_resource_mcm": 384.2,
+      "cgwa_noc_required": true,
+      "cgwa_noc_implication": "DEAL CONSTRAINT: In Over-Exploited zones, CGWA NOC for new groundwater extraction for residential/commercial projects is NOT granted unless mandatory dual-piping, zero liquid discharge (ZLD), 100% rooftop rainwater harvesting, and municipal bulk treated water tie-up is established.",
+      "risk_level": "High Risk"
+    },
+    "delhi_new_delhi": {
+      "district": "New Delhi / Central Delhi",
+      "state": "Delhi",
+      "stage_of_extraction_pct": 128.5,
+      "category": "Over-Exploited",
+      "depth_to_water_pre_monsoon_m": "22.0 - 32.5 m bgl",
+      "depth_to_water_post_monsoon_m": "20.1 - 29.8 m bgl",
+      "annual_extractable_resource_mcm": 28.5,
+      "cgwa_noc_required": true,
+      "cgwa_noc_implication": "CRITICAL: Extraction of groundwater for construction is banned by Delhi Jal Board / NGT directives. Must rely strictly on treated STP water and DJB pipeline connection.",
+      "risk_level": "Severe Risk"
+    },
+    "bengaluru_urban": {
+      "district": "Bengaluru Urban",
+      "state": "Karnataka",
+      "stage_of_extraction_pct": 141.2,
+      "category": "Over-Exploited",
+      "depth_to_water_pre_monsoon_m": "35.0 - 55.0 m bgl",
+      "depth_to_water_post_monsoon_m": "30.0 - 48.0 m bgl",
+      "annual_extractable_resource_mcm": 152.0,
+      "cgwa_noc_required": true,
+      "cgwa_noc_implication": "CRITICAL: Severe sub-surface depletion. Borewell drilling strictly regulated by Karnataka Ground Water Authority. BWSSB connection or onsite STP recycling mandatory.",
+      "risk_level": "Severe Risk"
+    },
+    "mumbai_suburban": {
+      "district": "Mumbai Suburban",
+      "state": "Maharashtra",
+      "stage_of_extraction_pct": 58.2,
+      "category": "Safe",
+      "depth_to_water_pre_monsoon_m": "4.5 - 7.5 m bgl",
+      "depth_to_water_post_monsoon_m": "2.0 - 4.5 m bgl",
+      "annual_extractable_resource_mcm": 74.5,
+      "cgwa_noc_required": false,
+      "cgwa_noc_implication": "High water table with saline ingress risks near creeks. Dewatering required during basement excavation; CGWA notification requires intimation for deep dewatering.",
+      "risk_level": "Low Resource Risk / High Foundation Dewatering Risk"
+    },
+    "hyderabad_ranga_reddy": {
+      "district": "Ranga Reddy / Hyderabad",
+      "state": "Telangana",
+      "stage_of_extraction_pct": 82.6,
+      "category": "Semi-Critical",
+      "depth_to_water_pre_monsoon_m": "12.0 - 18.0 m bgl",
+      "depth_to_water_post_monsoon_m": "9.5 - 14.0 m bgl",
+      "annual_extractable_resource_mcm": 245.0,
+      "cgwa_noc_required": true,
+      "cgwa_noc_implication": "Groundwater extraction permitted subject to artificial recharge structures and mandatory digital flow meter installation.",
+      "risk_level": "Moderate Risk"
+    },
+    "pune": {
+      "district": "Pune",
+      "state": "Maharashtra",
+      "stage_of_extraction_pct": 74.1,
+      "category": "Safe",
+      "depth_to_water_pre_monsoon_m": "8.0 - 14.0 m bgl",
+      "depth_to_water_post_monsoon_m": "4.0 - 8.5 m bgl",
+      "annual_extractable_resource_mcm": 810.0,
+      "cgwa_noc_required": false,
+      "cgwa_noc_implication": "Basaltic aquifer with good seasonal replenishment. Standard rainwater harvesting mandatory under Pune Municipal Bye-laws.",
+      "risk_level": "Low Risk"
+    }
+  }
+}
