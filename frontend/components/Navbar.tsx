@@ -141,7 +141,7 @@ export default function Navbar({
               {currentRole === 'buyer' ? (
                 <>
                   <button
-                    onClick={() => onNavigateView('preferences')}
+                    onClick={() => onNavigateView('heatmap')}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
                       currentView === 'preferences' || currentView === 'heatmap'
                         ? 'bg-emerald-600 text-white'

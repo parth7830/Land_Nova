@@ -86,6 +86,10 @@ export default function Home() {
       if (urlRole === 'buyer' || urlRole === 'developer') {
         setCurrentRole(urlRole);
       }
+      const urlView = params.get('view');
+      if (urlView) {
+        setCurrentView(urlView);
+      }
     }
   }, []);
 

@@ -21,7 +21,7 @@ export default function ChatWidget({
     {
       role: 'assistant',
       content: `Hello! I'm your **LandNova AI Location Advisor**. Ask me anything about **${currentLocationName}** — livability, schools, metro connectivity, air quality, or due-diligence risks.`,
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      timestamp: 'Just now',
       model_used: 'LandNova Grounded Engine'
     }
   ]);
