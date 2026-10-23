@@ -112,27 +112,32 @@ export default function HeatmapExplorer({
   const loadSectors = useCallback(async () => {
     setLoading(true);
     try {
-      const city = currentLocation.city || 'Noida';
+      const city = currentLocation.city || preferences.city || 'Noida';
       const evaluated = await evaluateBuyerPreferences({
         ...preferences,
-        city
+        city,
+        latitude: currentLocation.latitude,
+        longitude: currentLocation.longitude
       });
 
       if (evaluated && evaluated.sectors && evaluated.sectors.length > 0) {
         setSectors(evaluated.sectors);
         setTopRecommended(evaluated.top_recommended || evaluated.sectors.slice(0, 5));
         setWeightsApplied(evaluated.weights_applied || {});
-        // Default select first top sector if none selected
-        if (!selectedSector) {
+        // Default select first top sector if none selected or invalid
+        const currentStillValid = selectedSector && evaluated.sectors.find((s) => s.id === selectedSector.id);
+        if (!currentStillValid) {
           setSelectedSector(evaluated.sectors[0]);
+          setMapCenter(evaluated.sectors[0].center);
         }
       } else {
         // Fallback to fetchBuyerSectors
         const fallbackList = await fetchBuyerSectors(city);
-        setSectors(fallbackList);
-        setTopRecommended(fallbackList.slice(0, 5));
-        if (fallbackList.length > 0 && !selectedSector) {
+        if (fallbackList && fallbackList.length > 0) {
+          setSectors(fallbackList);
+          setTopRecommended(fallbackList.slice(0, 5));
           setSelectedSector(fallbackList[0]);
+          setMapCenter(fallbackList[0].center);
         }
       }
     } catch (err) {
@@ -140,17 +145,22 @@ export default function HeatmapExplorer({
     } finally {
       setLoading(false);
     }
-  }, [currentLocation, preferences]);
+  }, [currentLocation, preferences, selectedSector]);
 
+  // Sync preferences and map center whenever currentLocation changes
   useEffect(() => {
-    loadSectors();
-  }, [currentLocation]);
-
-  // Update center when location changes
-  useEffect(() => {
+    if (currentLocation.city) {
+      setPreferences((prev) => ({
+        ...prev,
+        city: currentLocation.city || prev.city || 'Noida',
+        workplace_address: currentLocation.display_name.split(',')[0],
+        workplace_coords: [currentLocation.latitude, currentLocation.longitude]
+      }));
+    }
     if (currentLocation.latitude && currentLocation.longitude) {
       setMapCenter([currentLocation.latitude, currentLocation.longitude]);
     }
+    loadSectors();
   }, [currentLocation]);
 
   const handleUpdatePreferences = (updated: Partial<BuyerPreferences>) => {

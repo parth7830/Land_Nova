@@ -38,6 +38,8 @@ class PreferencesRequest(BaseModel):
     max_commute_minutes: Optional[int] = 45
     workplace_address: Optional[str] = "Sector 62, Noida"
     workplace_coords: Optional[List[float]] = [28.6280, 77.3649]
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
     custom_weights: Optional[Dict[str, float]] = None
 
 
@@ -102,7 +104,9 @@ async def evaluate_sectors_with_preferences(prefs: PreferencesRequest):
     all_sectors = buyer_service.get_all_sectors(
         city=prefs.city,
         weights=normalized_weights,
-        commute_origin=workplace
+        commute_origin=workplace,
+        lat=prefs.latitude,
+        lon=prefs.longitude
     )
 
     # Apply commute and budget filters

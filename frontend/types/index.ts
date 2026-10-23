@@ -337,6 +337,8 @@ export interface BuyerPreferences {
   max_commute_minutes: number;
   workplace_address: string;
   workplace_coords?: [number, number];
+  latitude?: number;
+  longitude?: number;
   custom_weights?: Record<string, number>;
 }
 
