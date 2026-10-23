@@ -8,6 +8,19 @@ from app.scoring.livability import calculate_livability_score
 from app.scoring.builder import calculate_builder_suitability
 from app.services.amenities_service import fetch_amenities_for_location
 from app.services.weather_service import fetch_weather_and_climate
+from app.services.site_intelligence_service import generate_site_intelligence_report
+from pydantic import BaseModel, Field
+from typing import Optional
+
+class DeveloperSiteReportRequest(BaseModel):
+    latitude: float
+    longitude: float
+    display_name: Optional[str] = "Selected Development Site"
+    city: Optional[str] = "Noida"
+    project_type: Optional[str] = "residential_colony"
+    budget_bracket: Optional[str] = "mid_market"
+    target_audience: Optional[str] = "families"
+    scale_acres: Optional[float] = 2.5
 
 router = APIRouter(tags=["Location Analysis & Scoring Engine"])
 
@@ -133,3 +146,22 @@ async def compare_locations(request: LocationComparisonRequest):
         buyer_verdict=buyer_verdict,
         builder_verdict=builder_verdict
     )
+
+@router.post("/site")
+async def generate_developer_site_report(request: DeveloperSiteReportRequest):
+    """
+    Generates comprehensive 12-section site intelligence report for developers:
+    Soil (SoilGrids), Seismic (USGS & BIS), Climate, Groundwater, Protected Areas,
+    Connectivity, Demographics (Census), Market Indicators, and AI Engineering Recommendations.
+    """
+    report = await generate_site_intelligence_report(
+        lat=request.latitude,
+        lon=request.longitude,
+        display_name=request.display_name or "Selected Site",
+        city=request.city or "Noida",
+        project_type=request.project_type or "residential_colony",
+        budget_bracket=request.budget_bracket or "mid_market",
+        target_audience=request.target_audience or "families",
+        scale_acres=request.scale_acres or 2.5
+    )
+    return report

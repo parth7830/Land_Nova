@@ -164,3 +164,119 @@ export interface AIChatMessage {
   warnings?: string[];
   is_demo?: boolean;
 }
+
+// --- V2 Interfaces ---
+
+export interface PersonaProfile {
+  id: string;
+  label: string;
+  description: string;
+  icon: string;
+  weights: {
+    connectivity: number;
+    amenities: number;
+    environment: number;
+    safety: number;
+    climate_flood: number;
+  };
+  priority_amenities: string[];
+  filters_defaults: {
+    connectivity_importance: 'low' | 'medium' | 'high';
+    preferred_amenities: string[];
+  };
+}
+
+export interface PropertyListing {
+  id: string;
+  title: string;
+  type: 'apartment' | 'villa' | 'plot' | 'house';
+  listing_type: 'buy' | 'rent' | 'new_project';
+  price: number;
+  price_per_sqft: number;
+  bedrooms: number;
+  bathrooms: number;
+  area_sqft: number;
+  locality: string;
+  city: string;
+  state: string;
+  address: string;
+  description: string;
+  amenities: string[];
+  image_url: string;
+  furnished: string;
+  possession: string;
+  floor: string;
+  facing: string;
+  age: string;
+  latitude: number;
+  longitude: number;
+  location_id: string;
+  builder: string;
+  rera: string;
+  livability_score: number;
+  posted_date: string;
+  verified: boolean;
+  is_demo: boolean;
+}
+
+export interface HeatmapCell {
+  latitude: number;
+  longitude: number;
+  score: number;
+  grade: string;
+  data_completeness_pct: number;
+  factors_summary: Record<string, number>;
+}
+
+export interface HeatmapResponse {
+  cells: HeatmapCell[];
+  persona: string;
+  persona_label: string;
+  grid_size: number;
+  bbox: {
+    min_lat: number;
+    max_lat: number;
+    min_lon: number;
+    max_lon: number;
+  };
+  note: string;
+}
+
+export interface DeveloperSiteReport {
+  site_id: string;
+  display_name: string;
+  city: string;
+  coordinates: {
+    latitude: number;
+    longitude: number;
+  };
+  project_metadata: {
+    project_type: string;
+    budget_bracket: string;
+    target_audience: string;
+    scale_acres: number;
+  };
+  suitability_score: number;
+  feasibility_verdict: string;
+  score_breakdown: Record<string, number>;
+  sections: {
+    soil_properties: any;
+    groundwater_status: any;
+    seismic_risk: any;
+    climate_normals: any;
+    flood_and_landslide: any;
+    biodiversity_protected_areas: any;
+    local_resources: any;
+    connectivity_transport: any;
+    demographics_census: any;
+    market_indicators: any;
+  };
+  ai_engineering_recommendations: {
+    text: string;
+    disclaimer: string;
+    model_used: string;
+  };
+  data_gaps: string[];
+  statutory_clearances: string[];
+  generated_at: string;
+}
