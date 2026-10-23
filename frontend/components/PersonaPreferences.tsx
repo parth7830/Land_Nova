@@ -336,11 +336,11 @@ export default function PersonaPreferences({
           className="w-full sm:w-auto px-8 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold rounded-xl shadow-md flex items-center justify-center gap-3 mx-auto transition-all hover:scale-102"
         >
           <Flame className="w-5 h-5 text-amber-300" />
-          Generate Spatial Suitability Heatmap
+          GENERATE SUITABILITY MAP
           <ArrowRight className="w-4 h-4" />
         </button>
         <p className="text-[11px] text-slate-500 mt-2">
-          Samples coordinates across {initialCity} and computes persona-weighted scores in real-time.
+          a personalised heatmap that shows area to your preferences
         </p>
       </div>
     </div>

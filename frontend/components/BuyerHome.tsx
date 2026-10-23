@@ -93,11 +93,11 @@ export default function BuyerHome({
               className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl text-xs sm:text-sm shadow-sm flex items-center gap-2 transition-all hover:scale-102"
             >
               <Flame className="w-4 h-4 text-amber-300" />
-              Explore Persona Heatmap Explorer
+              EXPLORE PERSONA HEATMAP
               <ArrowRight className="w-4 h-4" />
             </button>
             <span className="text-xs text-slate-500">
-              Personalized to your family, commute, or lifestyle.
+              a personalised realtime experience
             </span>
           </div>
         </div>

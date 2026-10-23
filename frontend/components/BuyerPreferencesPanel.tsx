@@ -400,7 +400,7 @@ export default function BuyerPreferencesPanel({
           ) : (
             <>
               <Sparkles className="w-4 h-4" />
-              <span>Generate Heat Map</span>
+              <span>GENERATE SUITABILITY MAP</span>
             </>
           )}
         </button>
