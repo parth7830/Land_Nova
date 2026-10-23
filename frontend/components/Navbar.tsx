@@ -256,55 +256,7 @@ export default function Navbar({
               </div>
             </div>
 
-            {/* Center Tabs: Buyers, Developers, Reports, About */}
-            <div className="hidden md:flex items-center gap-1 bg-slate-100/80 p-1 rounded-xl border border-slate-200/80">
-              <button
-                onClick={() => {
-                  onSwitchRole('buyer');
-                  onNavigateView('heatmap');
-                }}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                  currentRole === 'buyer' && currentView === 'heatmap'
-                    ? 'bg-white text-emerald-700 shadow-2xs'
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
-              >
-                Buyers
-              </button>
-              <button
-                onClick={() => {
-                  onSwitchRole('developer');
-                  onNavigateView('site-report');
-                }}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                  currentRole === 'developer'
-                    ? 'bg-white text-amber-700 shadow-2xs'
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
-              >
-                Developers
-              </button>
-              <button
-                onClick={() => onNavigateView('reports')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                  currentView === 'reports'
-                    ? 'bg-white text-slate-900 shadow-2xs'
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
-              >
-                Reports
-              </button>
-              <button
-                onClick={() => onNavigateView('about')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                  currentView === 'about'
-                    ? 'bg-white text-slate-900 shadow-2xs'
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
-              >
-                About
-              </button>
-            </div>
+
 
             {/* Right Controls: Search City + Notification Bell + Avatar */}
             <div className="flex items-center gap-2.5">
