@@ -97,7 +97,8 @@ export default function BuyerHome({
               <ArrowRight className="w-4 h-4" />
             </button>
             <span className="text-xs text-slate-500">
-              a personalised realtime experience
+              a personalised realtime experience,  
+               <b>Heatmap</b> See the best places for you at a glance, from red to green.
             </span>
           </div>
         </div>

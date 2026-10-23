@@ -87,8 +87,8 @@ export default function DeveloperParcelMap({
 
   return (
     <div className="relative w-full h-[450px] rounded-2xl overflow-hidden border border-slate-200 bg-white shadow-xs">
-      {/* Top Map Switcher Bar */}
-      <div className="absolute top-3 left-3 z-10 flex items-center gap-2 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm text-xs font-semibold text-slate-700">
+      {/* Top Map Switcher Bar (Placed on top-right to keep Leaflet zoom controls visible on top-left) */}
+      <div className="absolute top-3 right-3 z-[1000] flex items-center gap-2 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm text-xs font-semibold text-slate-700">
         <span className="flex items-center gap-1.5 text-slate-500 font-bold uppercase tracking-wider text-[10px]">
           <Layers className="w-3.5 h-3.5 text-emerald-600" />
           Basemap:
