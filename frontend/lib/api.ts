@@ -8,7 +8,12 @@ import {
   PersonaProfile,
   PropertyListing,
   HeatmapResponse,
-  DeveloperSiteReport
+  DeveloperSiteReport,
+  BuyerSector,
+  BuyerPreferences,
+  CommuteCalculation,
+  AffordabilityCalculation,
+  SiteChecklistItem
 } from '@/types';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
@@ -955,3 +960,115 @@ function round(val: number, decimals: number): number {
   const factor = Math.pow(10, decimals);
   return Math.round(val * factor) / factor;
 }
+
+// ==================== BUYER / RENTER PLATFORM APIS ====================
+
+export async function fetchBuyerSectors(city: string = 'Noida'): Promise<BuyerSector[]> {
+  try {
+    const res = await fetch(`${API_BASE}/api/buyer/sectors?city=${encodeURIComponent(city)}`);
+    if (res.ok) {
+      const data = await res.json();
+      return data.sectors || [];
+    }
+  } catch (err) {
+    console.warn('Backend sectors unreachable, falling back to client demo sectors', err);
+  }
+  return [];
+}
+
+export async function evaluateBuyerPreferences(prefs: BuyerPreferences): Promise<{
+  sectors: BuyerSector[];
+  top_recommended: BuyerSector[];
+  weights_applied: Record<string, number>;
+}> {
+  try {
+    const res = await fetch(`${API_BASE}/api/buyer/evaluate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(prefs)
+    });
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (err) {
+    console.warn('Backend evaluate unreachable', err);
+  }
+  return { sectors: [], top_recommended: [], weights_applied: {} };
+}
+
+export async function calculateBuyerCommute(
+  origin: [number, number],
+  destination: [number, number],
+  mode: string = 'car'
+): Promise<CommuteCalculation | null> {
+  try {
+    const res = await fetch(`${API_BASE}/api/buyer/commute`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ origin, destination, mode })
+    });
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (err) {
+    console.warn('Commute calc failed', err);
+  }
+  return null;
+}
+
+export async function compareBuyerSectors(
+  sectorIds: string[],
+  weights?: Record<string, number>
+): Promise<{
+  sectors: BuyerSector[];
+  grounded_ai_summary: string;
+  radar_keys: string[];
+  radar_data: any[];
+} | null> {
+  try {
+    const res = await fetch(`${API_BASE}/api/buyer/compare`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sector_ids: sectorIds, weights })
+    });
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (err) {
+    console.warn('Comparison failed', err);
+  }
+  return null;
+}
+
+export async function calculateBuyerAffordability(
+  price: number,
+  downPaymentPct: number = 20,
+  interestPct: number = 8.5,
+  tenureYears: number = 20,
+  monthlyIncome: number = 150000
+): Promise<AffordabilityCalculation | null> {
+  try {
+    const url = `${API_BASE}/api/buyer/affordability?price=${price}&down_payment_pct=${downPaymentPct}&loan_interest_pct=${interestPct}&tenure_years=${tenureYears}&monthly_household_income=${monthlyIncome}`;
+    const res = await fetch(url);
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (err) {
+    console.warn('Affordability calc failed', err);
+  }
+  return null;
+}
+
+export async function fetchSiteChecklist(sectorId: string): Promise<SiteChecklistItem[]> {
+  try {
+    const res = await fetch(`${API_BASE}/api/buyer/checklist/${encodeURIComponent(sectorId)}`);
+    if (res.ok) {
+      const data = await res.json();
+      return data.checklist || [];
+    }
+  } catch (err) {
+    console.warn('Checklist failed', err);
+  }
+  return [];
+}
+

@@ -1,86 +1,122 @@
 'use client';
 
-import React, { useEffect, useMemo } from 'react';
-import { MapContainer, TileLayer, Rectangle, Popup, Tooltip, useMap } from 'react-leaflet';
+import React, { useEffect, useMemo, useState } from 'react';
+import {
+  MapContainer,
+  TileLayer,
+  Polygon,
+  Marker,
+  Popup,
+  Tooltip,
+  useMap,
+  CircleMarker
+} from 'react-leaflet';
+import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { HeatmapCell } from '@/types';
+import {
+  Layers,
+  Crosshair,
+  Plus,
+  Minus,
+  Sparkles,
+  Train,
+  GraduationCap,
+  Building2,
+  Trees,
+  ShoppingBag,
+  Wind,
+  ShieldCheck,
+  MapPin
+} from 'lucide-react';
+import { BuyerSector, HeatmapCell } from '@/types';
+
+// Fix Leaflet Default Marker Icons in Next.js
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png'
+});
 
 interface HeatmapMapProps {
   center: [number, number];
   zoom: number;
-  cells: HeatmapCell[];
-  onSelectCell: (cell: HeatmapCell) => void;
-  selectedCell: HeatmapCell | null;
+  sectors: BuyerSector[];
+  selectedSector: BuyerSector | null;
+  onSelectSector: (sector: BuyerSector) => void;
   isSidebarOpen?: boolean;
   onMapMoveEnd?: (bbox: { min_lat: number; max_lat: number; min_lon: number; max_lon: number }) => void;
+  maxCommuteFilter?: number;
 }
 
 // Controller to update center/zoom programmatically
 function MapController({ center, zoom }: { center: [number, number]; zoom: number }) {
   const map = useMap();
   useEffect(() => {
-    map.setView(center, zoom);
+    map.setView(center, zoom, { animate: true });
   }, [center, zoom, map]);
   return null;
 }
 
-// Debounced moveend handler (800ms debounce - Requirement 2)
-function MapMoveHandler({
-  onMoveEnd
-}: {
-  onMoveEnd?: (bbox: { min_lat: number; max_lat: number; min_lon: number; max_lon: number }) => void;
-}) {
+// Map Controls: Zoom in/out, Locate Me
+function CustomMapControls({ center }: { center: [number, number] }) {
   const map = useMap();
-  const timerRef = React.useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
-    if (!onMoveEnd) return;
-    const handleMove = () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-      timerRef.current = setTimeout(() => {
-        const bounds = map.getBounds();
-        onMoveEnd({
-          min_lat: bounds.getSouth(),
-          max_lat: bounds.getNorth(),
-          min_lon: bounds.getWest(),
-          max_lon: bounds.getEast()
-        });
-      }, 800);
-    };
+  const handleLocateMe = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          map.flyTo([pos.coords.latitude, pos.coords.longitude], 14, { duration: 1.2 });
+        },
+        () => {
+          map.flyTo(center, 13, { duration: 1.2 });
+        }
+      );
+    } else {
+      map.flyTo(center, 13, { duration: 1.2 });
+    }
+  };
 
-    map.on('moveend', handleMove);
-    return () => {
-      map.off('moveend', handleMove);
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, [map, onMoveEnd]);
-
-  return null;
+  return (
+    <div className="absolute top-16 right-4 z-[400] flex flex-col gap-1.5 shadow-md">
+      <button
+        onClick={() => map.zoomIn()}
+        className="w-8 h-8 bg-white/95 hover:bg-white text-slate-800 rounded-lg flex items-center justify-center border border-slate-200 transition shadow-xs cursor-pointer font-bold"
+        title="Zoom In"
+      >
+        <Plus className="w-4 h-4" />
+      </button>
+      <button
+        onClick={() => map.zoomOut()}
+        className="w-8 h-8 bg-white/95 hover:bg-white text-slate-800 rounded-lg flex items-center justify-center border border-slate-200 transition shadow-xs cursor-pointer font-bold"
+        title="Zoom Out"
+      >
+        <Minus className="w-4 h-4" />
+      </button>
+      <button
+        onClick={handleLocateMe}
+        className="w-8 h-8 bg-white/95 hover:bg-white text-emerald-700 rounded-lg flex items-center justify-center border border-slate-200 transition shadow-xs cursor-pointer"
+        title="Locate Me / Recenter"
+      >
+        <Crosshair className="w-4 h-4" />
+      </button>
+    </div>
+  );
 }
 
-// Invalidate size immediately and after layout changes (sidebar toggle, resize)
+// Invalidate size immediately and after layout changes
 function MapResizer({ isSidebarOpen }: { isSidebarOpen?: boolean }) {
   const map = useMap();
 
   useEffect(() => {
     map.invalidateSize();
     const t1 = setTimeout(() => map.invalidateSize(), 100);
-    const t2 = setTimeout(() => map.invalidateSize(), 350);
+    const t2 = setTimeout(() => map.invalidateSize(), 300);
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
     };
   }, [isSidebarOpen, map]);
-
-  useEffect(() => {
-    const handleResize = () => map.invalidateSize();
-    window.addEventListener('resize', handleResize);
-    const initialTimer = setTimeout(() => map.invalidateSize(), 150);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      clearTimeout(initialTimer);
-    };
-  }, [map]);
 
   return null;
 }
@@ -88,207 +124,238 @@ function MapResizer({ isSidebarOpen }: { isSidebarOpen?: boolean }) {
 export default function HeatmapMap({
   center,
   zoom,
-  cells,
-  onSelectCell,
-  selectedCell,
+  sectors,
+  selectedSector,
+  onSelectSector,
   isSidebarOpen,
-  onMapMoveEnd
+  onMapMoveEnd,
+  maxCommuteFilter = 120
 }: HeatmapMapProps) {
-  // Color legend specification:
-  // 80-100 emerald, 60-79 lime, 40-59 amber, <40 red, no data gray with dashed outline
-  const getCellTheme = (score: number) => {
-    if (score < 0) {
-      return {
-        fill: '#94a3b8', // Gray
-        stroke: '#475569',
-        isNoData: true,
-        label: 'No Data'
-      };
+  // Layer Toggle Pills: Heat Map, Transport, Amenities, AQI, Crime, Schools, Hospitals
+  const [activeLayer, setActiveLayer] = useState<
+    'heatmap' | 'transport' | 'amenities' | 'aqi' | 'crime' | 'schools' | 'hospitals'
+  >('heatmap');
+
+  const layersList = [
+    { id: 'heatmap', label: 'Heat Map', icon: Sparkles },
+    { id: 'transport', label: 'Transport', icon: Train },
+    { id: 'amenities', label: 'Amenities', icon: ShoppingBag },
+    { id: 'aqi', label: 'AQI', icon: Wind },
+    { id: 'crime', label: 'Crime (Proxy)', icon: ShieldCheck },
+    { id: 'schools', label: 'Schools', icon: GraduationCap },
+    { id: 'hospitals', label: 'Hospitals', icon: Building2 }
+  ] as const;
+
+  // Color helper based on active layer metric
+  const getSectorStyle = (sector: BuyerSector) => {
+    const isSelected = selectedSector?.id === sector.id;
+    const isCommuteDimmed = sector.is_within_commute === false;
+
+    let score = sector.overall_score;
+
+    if (activeLayer === 'transport') {
+      score = sector.metrics?.connectivity?.score || score;
+    } else if (activeLayer === 'aqi') {
+      score = sector.metrics?.aqi?.score || score;
+    } else if (activeLayer === 'crime') {
+      score = sector.metrics?.crime_rate?.score || score;
+    } else if (activeLayer === 'schools') {
+      score = sector.metrics?.schools?.score || score;
+    } else if (activeLayer === 'hospitals') {
+      score = sector.metrics?.hospitals?.score || score;
+    } else if (activeLayer === 'amenities') {
+      const s1 = sector.metrics?.schools?.score || 70;
+      const s2 = sector.metrics?.hospitals?.score || 70;
+      const s3 = sector.metrics?.markets?.score || 70;
+      score = (s1 + s2 + s3) / 3;
     }
-    if (score >= 80) {
-      return {
-        fill: '#059669', // Emerald
-        stroke: '#047857',
-        isNoData: false,
-        label: '80-100 (Excellent)'
-      };
+
+    // Color gradient mapping: 80-100 emerald, 60-79 lime, 40-59 amber, <40 red
+    let fill = '#059669'; // Emerald
+    let stroke = '#047857';
+
+    if (score < 40) {
+      fill = '#dc2626'; // Red
+      stroke = '#b91c1c';
+    } else if (score < 60) {
+      fill = '#d97706'; // Amber
+      stroke = '#b45309';
+    } else if (score < 80) {
+      fill = '#65a30d'; // Lime
+      stroke = '#4d7c0f';
     }
-    if (score >= 60) {
-      return {
-        fill: '#65a30d', // Lime
-        stroke: '#4d7c0f',
-        isNoData: false,
-        label: '60-79 (Good)'
-      };
-    }
-    if (score >= 40) {
-      return {
-        fill: '#d97706', // Amber
-        stroke: '#b45309',
-        isNoData: false,
-        label: '40-59 (Moderate)'
-      };
-    }
+
     return {
-      fill: '#dc2626', // Red
-      stroke: '#b91c1c',
-      isNoData: false,
-      label: '<40 (Poor Match)'
+      fillColor: fill,
+      color: isSelected ? '#ffffff' : stroke,
+      weight: isSelected ? 3.5 : 1.5,
+      fillOpacity: isCommuteDimmed ? 0.2 : isSelected ? 0.78 : 0.62,
+      dashArray: isCommuteDimmed ? '6, 6' : undefined
     };
   };
 
-  // Derive rectangular cell bounds dynamically from the grid coordinates
-  const cellBoundsMap = useMemo(() => {
-    if (!cells || cells.length === 0) return [];
-
-    const uniqueLats = Array.from(new Set(cells.map((c) => c.latitude))).sort((a, b) => a - b);
-    const uniqueLons = Array.from(new Set(cells.map((c) => c.longitude))).sort((a, b) => a - b);
-
-    // Calculate step intervals
-    let latStep = 0.015;
-    if (uniqueLats.length > 1) {
-      let minDiff = Infinity;
-      for (let i = 1; i < uniqueLats.length; i++) {
-        const diff = uniqueLats[i] - uniqueLats[i - 1];
-        if (diff > 0.0001 && diff < minDiff) minDiff = diff;
-      }
-      if (minDiff < Infinity) latStep = minDiff;
-    }
-
-    let lonStep = 0.015;
-    if (uniqueLons.length > 1) {
-      let minDiff = Infinity;
-      for (let i = 1; i < uniqueLons.length; i++) {
-        const diff = uniqueLons[i] - uniqueLons[i - 1];
-        if (diff > 0.0001 && diff < minDiff) minDiff = diff;
-      }
-      if (minDiff < Infinity) lonStep = minDiff;
-    }
-
-    const halfLat = (latStep / 2) * 0.94; // 6% padding between grid cells for clean visual separation
-    const halfLon = (lonStep / 2) * 0.94;
-
-    return cells.map((cell) => {
-      const southWest: [number, number] = [cell.latitude - halfLat, cell.longitude - halfLon];
-      const northEast: [number, number] = [cell.latitude + halfLat, cell.longitude + halfLon];
-      return {
-        cell,
-        bounds: [southWest, northEast] as [[number, number], [number, number]]
-      };
-    });
-  }, [cells]);
-
   return (
     <div className="w-full h-full relative" style={{ minHeight: '100%', height: '100%' }}>
+      {/* Top Layer Toggle Pills */}
+      <div className="absolute top-3 left-1/2 transform -translate-x-1/2 z-[400] bg-white/95 backdrop-blur-md px-2 py-1.5 rounded-2xl shadow-lg border border-slate-200/90 flex items-center gap-1 overflow-x-auto max-w-[94vw] sm:max-w-none">
+        {layersList.map((layer) => {
+          const Icon = layer.icon;
+          const isActive = activeLayer === layer.id;
+          return (
+            <button
+              key={layer.id}
+              onClick={() => setActiveLayer(layer.id)}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap ${
+                isActive
+                  ? 'bg-emerald-600 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+              }`}
+            >
+              <Icon className="w-3.5 h-3.5" />
+              <span>{layer.label}</span>
+            </button>
+          );
+        })}
+      </div>
+
       <MapContainer
         center={center}
         zoom={zoom}
         preferCanvas={true}
-        style={{ width: '100%', height: '100%', minHeight: '100%', backgroundColor: '#f1f5f9' }}
+        zoomControl={false}
+        style={{ width: '100%', height: '100%', minHeight: '100%', backgroundColor: '#0f172a' }}
         className="rounded-2xl z-10"
       >
         <MapController center={center} zoom={zoom} />
         <MapResizer isSidebarOpen={isSidebarOpen} />
-        <MapMoveHandler onMoveEnd={onMapMoveEnd} />
+        <CustomMapControls center={center} />
 
-        {/* Clean Standard OpenStreetMap Tile Layer (No API Key Required) */}
+        {/* 1. Esri World Imagery Satellite Tiles */}
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+          url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
           maxZoom={19}
         />
 
-        {/* Colored Grid Cells (Rectangle) */}
-        {cellBoundsMap.map(({ cell, bounds }, idx) => {
-          const theme = getCellTheme(cell.score);
-          const isSelected =
-            selectedCell &&
-            Math.abs(selectedCell.latitude - cell.latitude) < 0.0001 &&
-            Math.abs(selectedCell.longitude - cell.longitude) < 0.0001;
+        {/* 2. CartoDB Crisp Labels Overlay */}
+        <TileLayer
+          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png"
+          maxZoom={19}
+          opacity={0.85}
+        />
+
+        {/* 3. Sectors Polygons with Smooth Visual Field */}
+        {sectors.map((sector) => {
+          const style = getSectorStyle(sector);
+          const isSelected = selectedSector?.id === sector.id;
 
           return (
-            <Rectangle
-              key={`${cell.latitude}-${cell.longitude}-${idx}`}
-              bounds={bounds}
-              pathOptions={{
-                color: isSelected ? '#0f172a' : theme.stroke,
-                weight: isSelected ? 3.5 : theme.isNoData ? 1.5 : 1.2,
-                fillColor: theme.fill,
-                fillOpacity: theme.isNoData ? 0.35 : isSelected ? 0.82 : 0.62,
-                dashArray: theme.isNoData ? '5, 5' : undefined
-              }}
-              eventHandlers={{
-                click: () => onSelectCell(cell)
-              }}
-            >
-              <Tooltip sticky direction="top" opacity={0.96}>
-                <div className="p-1 text-slate-900 text-xs">
-                  <div className="flex items-center gap-1.5 font-bold">
-                    <span
-                      className="w-2.5 h-2.5 rounded-full"
-                      style={{ backgroundColor: theme.fill }}
-                    />
-                    {theme.isNoData ? (
-                      <span className="text-slate-600">No Data (Insufficient metrics)</span>
-                    ) : (
-                      <span>
-                        Score: <strong>{cell.score}/100</strong> (Grade {cell.grade})
+            <React.Fragment key={sector.id}>
+              <Polygon
+                positions={sector.polygon}
+                pathOptions={style}
+                eventHandlers={{
+                  click: () => onSelectSector(sector)
+                }}
+              >
+                <Tooltip sticky direction="top" opacity={0.96}>
+                  <div className="p-1 text-slate-900 text-xs">
+                    <div className="flex items-center gap-1.5 font-bold">
+                      <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: style.fillColor }} />
+                      <span>{sector.name}</span>
+                      <span className="px-1.5 py-0.2 bg-slate-100 rounded text-[10px] font-black">
+                        Score: {sector.overall_score}
                       </span>
+                    </div>
+                    <div className="text-[10px] text-slate-500 mt-0.5">
+                      ₹{sector.avg_price_sqft.toLocaleString()}/sq.ft • {sector.commute.car_minutes} min commute
+                    </div>
+                    {sector.is_within_commute === false && (
+                      <div className="text-[10px] text-amber-600 font-semibold mt-0.5">
+                        ⚠️ Beyond max commute filter ({sector.commute.car_minutes}m &gt; {maxCommuteFilter}m)
+                      </div>
                     )}
                   </div>
-                  <div className="text-[10px] text-slate-500 mt-0.5">
-                    ({cell.latitude.toFixed(3)}, {cell.longitude.toFixed(3)}) • {cell.data_completeness_pct}% verified
-                  </div>
-                </div>
-              </Tooltip>
+                </Tooltip>
 
-              <Popup>
-                <div className="p-2 text-slate-900 text-xs space-y-2 min-w-[200px]">
-                  <div className="font-bold flex items-center justify-between gap-3 border-b border-slate-100 pb-1.5">
-                    <span className="text-[11px] uppercase tracking-wider text-slate-500">
-                      Grid Cell Metric
-                    </span>
-                    <span
-                      className="px-2 py-0.5 rounded text-white font-extrabold text-xs shadow-xs"
-                      style={{ backgroundColor: theme.fill }}
+                <Popup>
+                  <div className="p-2 text-slate-900 text-xs space-y-2 min-w-[210px]">
+                    <div className="font-bold flex items-center justify-between gap-3 border-b border-slate-100 pb-1.5">
+                      <span className="text-xs font-extrabold text-slate-900">{sector.name}</span>
+                      <span
+                        className="px-2 py-0.5 rounded text-white font-extrabold text-xs shadow-xs"
+                        style={{ backgroundColor: style.fillColor }}
+                      >
+                        {sector.overall_score}/100
+                      </span>
+                    </div>
+
+                    <div className="text-[11px] space-y-1 text-slate-600">
+                      <div>
+                        <strong>Avg Rate:</strong> ₹{sector.avg_price_sqft.toLocaleString()} / sq.ft
+                      </div>
+                      <div>
+                        <strong>Drive Time:</strong> ~{sector.commute.car_minutes} mins to workplace
+                      </div>
+                      <div>
+                        <strong>AQI:</strong> {sector.metrics.aqi.value}
+                      </div>
+                      <div>
+                        <strong>Safety Proxy:</strong> {sector.metrics.crime_rate.badge} ({sector.metrics.crime_rate.value})
+                      </div>
+                    </div>
+
+                    <div
+                      onClick={() => onSelectSector(sector)}
+                      className="pt-1 text-[11px] text-emerald-700 font-bold flex items-center gap-1 cursor-pointer hover:underline"
                     >
-                      {theme.isNoData ? 'No Data' : `${cell.score}/100`}
-                    </span>
-                  </div>
-
-                  <div className="text-[11px] space-y-1 text-slate-600">
-                    <div>
-                      <strong>Coordinates:</strong> {cell.latitude.toFixed(4)}, {cell.longitude.toFixed(4)}
-                    </div>
-                    <div>
-                      <strong>Data Completeness:</strong> {cell.data_completeness_pct}%
-                    </div>
-                    <div>
-                      <strong>Suitability Grade:</strong> {cell.grade}
+                      Click to open full Area Analysis →
                     </div>
                   </div>
+                </Popup>
+              </Polygon>
 
-                  {cell.factors_summary && Object.keys(cell.factors_summary).length > 0 && (
-                    <div className="pt-1.5 border-t border-slate-100 space-y-1">
-                      <div className="text-[10px] font-semibold text-slate-500 uppercase">Top Factors</div>
-                      {Object.entries(cell.factors_summary).slice(0, 3).map(([key, val]) => (
-                        <div key={key} className="flex justify-between text-[11px]">
-                          <span className="capitalize text-slate-600">{key.replace('_', ' ')}</span>
-                          <span className="font-semibold text-slate-800">{Math.round(val)}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  <div className="pt-1 text-[10px] text-emerald-700 font-semibold flex items-center gap-1 cursor-pointer">
-                    Click cell to inspect full parameters in drawer →
-                  </div>
-                </div>
-              </Popup>
-            </Rectangle>
+              {/* Sector Centroid Marker with Label */}
+              <CircleMarker
+                center={sector.center}
+                radius={isSelected ? 6 : 4}
+                pathOptions={{
+                  fillColor: isSelected ? '#ffffff' : style.fillColor,
+                  color: isSelected ? '#059669' : '#ffffff',
+                  weight: 2,
+                  fillOpacity: 1
+                }}
+                eventHandlers={{
+                  click: () => onSelectSector(sector)
+                }}
+              />
+            </React.Fragment>
           );
         })}
       </MapContainer>
+
+      {/* Bottom-Right Legend: Location Suitability Score Gradient */}
+      <div className="absolute bottom-4 right-4 z-[400] bg-white/95 backdrop-blur-md px-3.5 py-2.5 rounded-xl shadow-lg border border-slate-200/90 text-xs max-w-[240px]">
+        <div className="font-bold text-slate-900 text-[11px] mb-1.5 flex items-center justify-between">
+          <span>Location Suitability Score</span>
+          <span className="text-[9px] text-slate-400 font-mono">0 - 100</span>
+        </div>
+
+        {/* Color Gradient Bar */}
+        <div className="w-full h-2.5 rounded-full bg-gradient-to-r from-red-600 via-amber-500 via-lime-500 to-emerald-600 shadow-inner mb-2" />
+
+        <div className="flex justify-between text-[10px] text-slate-600 font-semibold">
+          <span className="flex items-center gap-1">
+            <span className="w-2 h-2 rounded-full bg-red-600 inline-block" /> Low (0-20)
+          </span>
+          <span className="flex items-center gap-1">
+            <span className="w-2 h-2 rounded-full bg-amber-500 inline-block" /> Mod (21-60)
+          </span>
+          <span className="flex items-center gap-1">
+            <span className="w-2 h-2 rounded-full bg-emerald-600 inline-block" /> High (61-100)
+          </span>
+        </div>
+      </div>
     </div>
   );
 }

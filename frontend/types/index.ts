@@ -280,3 +280,93 @@ export interface DeveloperSiteReport {
   statutory_clearances: string[];
   generated_at: string;
 }
+
+export interface BuyerMetricDetail {
+  title: string;
+  value: string;
+  score: number;
+  badge: string;
+  badge_color: 'emerald' | 'lime' | 'amber' | 'red';
+  source: string;
+  timestamp: string;
+  confidence: 'High' | 'Medium' | 'Estimated';
+  is_proxy: boolean;
+  formula: string;
+}
+
+export interface BuyerSector {
+  id: string;
+  name: string;
+  city: string;
+  center: [number, number];
+  polygon: [number, number][];
+  image: string;
+  avg_price_sqft: number;
+  avg_rent_2bhk: number;
+  property_count: number;
+  overall_score: number;
+  grade_label: string;
+  grade_color: string;
+  reasons: string[];
+  commute: {
+    distance_km: number;
+    car_minutes: number;
+    metro_minutes: number;
+    bus_minutes: number;
+    bike_minutes: number;
+    walk_minutes: number;
+  };
+  metrics: Record<string, BuyerMetricDetail>;
+  weights_used: Record<string, number>;
+  is_within_commute?: boolean;
+  is_within_budget?: boolean;
+  estimated_unit_price?: number;
+}
+
+export interface BuyerPreferences {
+  city: string;
+  property_types: string[];
+  min_budget: number;
+  max_budget: number;
+  preferred_amenities: string[];
+  good_aqi: boolean;
+  good_water: boolean;
+  low_noise: boolean;
+  low_crime: boolean;
+  local_language: string;
+  max_commute_minutes: number;
+  workplace_address: string;
+  workplace_coords?: [number, number];
+  custom_weights?: Record<string, number>;
+}
+
+export interface CommuteCalculation {
+  mode: string;
+  distance_km: number;
+  duration_minutes: number;
+  source: string;
+  confidence: string;
+  is_estimated: boolean;
+  formula: string;
+}
+
+export interface AffordabilityCalculation {
+  property_price: number;
+  down_payment: number;
+  loan_principal: number;
+  monthly_emi: number;
+  total_interest: number;
+  total_payable: number;
+  debt_to_income_pct: number;
+  health_badge: string;
+  health_color: 'emerald' | 'amber' | 'red';
+  formula: string;
+}
+
+export interface SiteChecklistItem {
+  category: string;
+  title: string;
+  reason: string;
+  severity: 'High' | 'Medium' | 'Low';
+}
+

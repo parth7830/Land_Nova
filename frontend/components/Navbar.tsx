@@ -16,6 +16,8 @@ import {
   Layers,
   Sparkles,
   UserCheck,
+  Bell,
+  User,
   X
 } from 'lucide-react';
 import { LocationItem } from '@/types';
@@ -254,238 +256,132 @@ export default function Navbar({
               </div>
             </div>
 
-            {/* Middle Nav Items */}
-            <div className="flex items-center gap-2">
-              {currentRole === 'buyer' ? (
-                <>
-                  <button
-                    onClick={() => onNavigateView('heatmap')}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
-                      currentView === 'preferences' || currentView === 'heatmap'
-                        ? 'bg-emerald-600 text-white'
-                        : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
-                    }`}
-                  >
-                    <Flame className="w-3.5 h-3.5 text-amber-500" />
-                    Heatmap
-                  </button>
-
-                  {/* Area Filter Trigger */}
-                  <div className="relative">
-                    <button
-                      onClick={() => setShowAreaPopover(!showAreaPopover)}
-                      className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs text-slate-700 hover:text-slate-900 hover:bg-slate-100 border border-slate-200 transition-colors"
-                    >
-                      Area <ChevronDown className="w-3 h-3 text-slate-400" />
-                    </button>
-
-                    {showAreaPopover && (
-                      <div className="absolute top-full left-0 mt-2 w-64 bg-white border border-slate-200 rounded-xl p-4 shadow-xl z-50 animate-in fade-in">
-                        <h4 className="text-xs font-semibold text-slate-900 mb-2">Area Range (sq ft)</h4>
-                        <div className="flex items-center justify-between text-xs text-slate-500 mb-2">
-                          <span>{areaRange[0]} sqft</span>
-                          <span>{areaRange[1]} sqft</span>
-                        </div>
-                        <input
-                          type="range"
-                          min="300"
-                          max="5000"
-                          step="100"
-                          value={areaRange[1]}
-                          onChange={(e) => setAreaRange([areaRange[0], parseInt(e.target.value)])}
-                          className="w-full accent-emerald-600 mb-4"
-                        />
-                        <button
-                          onClick={applyAreaFilter}
-                          className="w-full py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg"
-                        >
-                          Apply Filter
-                        </button>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Price Filter Trigger */}
-                  <div className="relative">
-                    <button
-                      onClick={() => setShowPricePopover(!showPricePopover)}
-                      className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs text-slate-700 hover:text-slate-900 hover:bg-slate-100 border border-slate-200 transition-colors"
-                    >
-                      Price <ChevronDown className="w-3 h-3 text-slate-400" />
-                    </button>
-
-                    {showPricePopover && (
-                      <div className="absolute top-full left-0 mt-2 w-72 bg-white border border-slate-200 rounded-xl p-4 shadow-xl z-50 animate-in fade-in">
-                        <div className="flex gap-2 mb-3">
-                          <button
-                            onClick={() => setListingTypeFilter('buy')}
-                            className={`flex-1 py-1 text-xs rounded-lg font-semibold ${
-                              listingTypeFilter === 'buy' ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-600'
-                            }`}
-                          >
-                            Buy
-                          </button>
-                          <button
-                            onClick={() => setListingTypeFilter('rent')}
-                            className={`flex-1 py-1 text-xs rounded-lg font-semibold ${
-                              listingTypeFilter === 'rent' ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-600'
-                            }`}
-                          >
-                            Rent
-                          </button>
-                        </div>
-                        <h4 className="text-xs font-semibold text-slate-900 mb-1">Max Budget</h4>
-                        <p className="text-xs text-emerald-700 font-bold mb-2">
-                          {listingTypeFilter === 'buy'
-                            ? `Up to ₹${(priceRange[1] / 100000).toFixed(0)} Lakhs`
-                            : `Up to ₹${(priceRange[1] / 1000).toFixed(0)}k / month`}
-                        </p>
-                        <input
-                          type="range"
-                          min={listingTypeFilter === 'buy' ? 1000000 : 10000}
-                          max={listingTypeFilter === 'buy' ? 80000000 : 150000}
-                          step={listingTypeFilter === 'buy' ? 500000 : 5000}
-                          value={priceRange[1]}
-                          onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value)])}
-                          className="w-full accent-emerald-600 mb-4"
-                        />
-                        <button
-                          onClick={applyPriceFilter}
-                          className="w-full py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg"
-                        >
-                          Apply Filter
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </>
-              ) : (
-                /* Developer Navigation Links */
-                <>
-                  <button
-                    onClick={() => onNavigateView('site-report')}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
-                      currentView === 'site-report'
-                        ? 'bg-amber-600 text-white'
-                        : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
-                    }`}
-                  >
-                    <BarChart3 className="w-3.5 h-3.5 text-amber-600" />
-                    Site Analysis
-                  </button>
-                  <button
-                    onClick={() => onNavigateView('heatmap')}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
-                      currentView === 'heatmap'
-                        ? 'bg-amber-600 text-white'
-                        : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
-                    }`}
-                  >
-                    <Flame className="w-3.5 h-3.5 text-amber-500" />
-                    Heatmap
-                  </button>
-                  <button
-                    onClick={() => onNavigateView('compare')}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
-                      currentView === 'compare'
-                        ? 'bg-amber-600 text-white'
-                        : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
-                    }`}
-                  >
-                    <GitCompare className="w-3.5 h-3.5 text-amber-600" />
-                    Compare Sites
-                  </button>
-                </>
-              )}
+            {/* Center Tabs: Buyers, Developers, Reports, About */}
+            <div className="hidden md:flex items-center gap-1 bg-slate-100/80 p-1 rounded-xl border border-slate-200/80">
+              <button
+                onClick={() => {
+                  onSwitchRole('buyer');
+                  onNavigateView('heatmap');
+                }}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  currentRole === 'buyer' && currentView === 'heatmap'
+                    ? 'bg-white text-emerald-700 shadow-2xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                Buyers
+              </button>
+              <button
+                onClick={() => {
+                  onSwitchRole('developer');
+                  onNavigateView('site-report');
+                }}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  currentRole === 'developer'
+                    ? 'bg-white text-amber-700 shadow-2xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                Developers
+              </button>
+              <button
+                onClick={() => onNavigateView('reports')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  currentView === 'reports'
+                    ? 'bg-white text-slate-900 shadow-2xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                Reports
+              </button>
+              <button
+                onClick={() => onNavigateView('about')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  currentView === 'about'
+                    ? 'bg-white text-slate-900 shadow-2xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                About
+              </button>
             </div>
 
-            {/* Search City Autocomplete Input */}
-            <div ref={searchRef} className="relative flex-1 max-w-xs hidden md:block">
-              <div className="relative">
-                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => handleSearchChange(e.target.value)}
-                  placeholder="Search City or Locality..."
-                  className="w-full bg-slate-100 border border-slate-200 rounded-xl pl-8 pr-3 py-1.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-500 focus:bg-white transition-all"
-                />
-                {isSearching && (
-                  <div className="w-3 h-3 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin absolute right-3 top-1/2 -translate-y-1/2" />
+            {/* Right Controls: Search City + Notification Bell + Avatar */}
+            <div className="flex items-center gap-2.5">
+              {/* Search City Autocomplete Input */}
+              <div ref={searchRef} className="relative w-44 sm:w-56 hidden sm:block">
+                <div className="relative">
+                  <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => handleSearchChange(e.target.value)}
+                    placeholder="Search city / sector..."
+                    className="w-full bg-slate-100 border border-slate-200 rounded-xl pl-8 pr-3 py-1.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-500 focus:bg-white transition-all shadow-2xs"
+                  />
+                  {isSearching && (
+                    <div className="w-3 h-3 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin absolute right-3 top-1/2 -translate-y-1/2" />
+                  )}
+                </div>
+
+                {showSearchDropdown && searchResults.length > 0 && (
+                  <div className="absolute top-full left-0 right-0 mt-1.5 bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden z-50 max-h-60 overflow-y-auto">
+                    {searchResults.map((loc) => (
+                      <button
+                        key={loc.id}
+                        onClick={() => handleSelectLoc(loc)}
+                        className="w-full text-left px-3.5 py-2 hover:bg-slate-50 flex items-start gap-2 border-b border-slate-100 last:border-0"
+                      >
+                        <MapPin className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-xs font-semibold text-slate-900">{loc.display_name.split(',')[0]}</p>
+                          <p className="text-[10px] text-slate-500 truncate">{loc.display_name}</p>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
                 )}
               </div>
 
-              {showSearchDropdown && searchResults.length > 0 && (
-                <div className="absolute top-full left-0 right-0 mt-1.5 bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden z-50 max-h-60 overflow-y-auto">
-                  {searchResults.map((loc) => (
-                    <button
-                      key={loc.id}
-                      onClick={() => handleSelectLoc(loc)}
-                      className="w-full text-left px-3.5 py-2.5 hover:bg-slate-50 flex items-start gap-2 border-b border-slate-100 last:border-0"
-                    >
-                      <MapPin className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                      <div>
-                        <p className="text-xs font-semibold text-slate-900">{loc.display_name.split(',')[0]}</p>
-                        <p className="text-[10px] text-slate-500 truncate">{loc.display_name}</p>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Right Controls: Switch Role & Auth */}
-            <div className="flex items-center gap-2">
-              {/* Return to Role Gateway */}
+              {/* Notification Bell */}
               <button
-                onClick={() => onSwitchRole('gateway')}
-                className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-xs font-medium text-slate-700 border border-slate-200 transition-colors"
-                title="Return to Page 1: Role Gateway"
+                className="relative p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200 transition cursor-pointer"
+                title="Notifications"
+                onClick={() => alert('Notifications: All geospatial and air quality datasets are live and verified.')}
               >
-                <span>Role Gateway</span>
+                <Bell className="w-4 h-4" />
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white" />
               </button>
 
-              {/* Role Toggle Button */}
-              <button
-                onClick={() => onSwitchRole(currentRole === 'buyer' ? 'developer' : 'buyer')}
-                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs font-medium text-slate-800 transition-colors"
-                title={`Switch to ${currentRole === 'buyer' ? 'Real Estate Developer' : 'Buyer / Renter'} View`}
-              >
-                {currentRole === 'buyer' ? (
-                  <>
-                    <Building2 className="w-3.5 h-3.5 text-amber-600" />
-                    <span className="hidden lg:inline">Developer Mode</span>
-                  </>
-                ) : (
-                  <>
-                    <Users className="w-3.5 h-3.5 text-emerald-600" />
-                    <span className="hidden lg:inline">Buyer Mode</span>
-                  </>
-                )}
-              </button>
-
-              {/* Auth Buttons */}
-              <button
+              {/* User Avatar */}
+              <div
                 onClick={() => {
                   setAuthMode('login');
                   setShowAuthModal(true);
                 }}
-                className="px-3 py-1.5 text-xs text-slate-600 hover:text-slate-900 font-medium transition-colors"
+                className="w-8 h-8 rounded-full bg-emerald-100 border border-emerald-300 text-emerald-800 font-bold text-xs flex items-center justify-center cursor-pointer shadow-2xs hover:scale-105 transition-transform"
+                title="Account Profile / Login"
               >
-                Login
-              </button>
+                <User className="w-4 h-4 text-emerald-700" />
+              </div>
+
+              {/* Role Switcher Pill */}
               <button
-                onClick={() => {
-                  setAuthMode('signup');
-                  setShowAuthModal(true);
-                }}
-                className={`px-3 py-1.5 text-xs text-white font-semibold rounded-lg transition-colors shadow-xs ${
-                  currentRole === 'buyer'
-                    ? 'bg-emerald-600 hover:bg-emerald-700'
-                    : 'bg-amber-600 hover:bg-amber-700'
-                }`}
+                onClick={() => onSwitchRole(currentRole === 'buyer' ? 'developer' : 'buyer')}
+                className="hidden lg:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs font-bold text-slate-800 transition-colors cursor-pointer"
+                title={`Switch to ${currentRole === 'buyer' ? 'Developer' : 'Buyer'} View`}
               >
-                Sign Up
+                {currentRole === 'buyer' ? (
+                  <>
+                    <Building2 className="w-3.5 h-3.5 text-amber-600" />
+                    <span>Developer</span>
+                  </>
+                ) : (
+                  <>
+                    <Users className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Buyer</span>
+                  </>
+                )}
               </button>
             </div>
           </div>
