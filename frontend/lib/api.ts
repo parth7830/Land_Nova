@@ -1175,6 +1175,8 @@ export async function fetchDeveloperCommandCenter(payload: {
               distance_km: 7.2,
               buffer_radius_km: 1.0,
               in_buffer: false,
+              lat: 28.5600,
+              lon: 77.3100,
               restrictions: 'No restrictions for Sector 62 (beyond 1km statutory buffer).'
             }
           ],

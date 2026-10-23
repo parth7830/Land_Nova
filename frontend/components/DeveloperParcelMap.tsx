@@ -77,9 +77,13 @@ export default function DeveloperParcelMap({
       ? '#d97706' // amber-600
       : '#e11d48'; // rose-600
 
-  // ESZ buffer circles
-  const eszZones = siteDossier.sections.environmental.data.eco_sensitive_zones || [];
-  const nearbyInfra = dealVerdict.nearby_infrastructure || [];
+  // ESZ buffer circles safely extracted
+  const eszZones = (
+    siteDossier?.sections?.environmental?.nearby_eco_sensitive_zones ||
+    (siteDossier?.sections?.environmental as any)?.data?.eco_sensitive_zones ||
+    []
+  ).filter((z: any) => z && (z.lat != null || z.center_lat != null));
+  const nearbyInfra = dealVerdict?.nearby_infrastructure || [];
 
   return (
     <div className="relative w-full h-[450px] rounded-2xl overflow-hidden border border-slate-200 bg-white shadow-xs">
@@ -194,19 +198,23 @@ export default function DeveloperParcelMap({
         </Polygon>
 
         {/* ESZ Zones Buffers */}
-        {eszZones.map((zone: any) => (
-          <Circle
-            key={zone.name}
-            center={[zone.lat, zone.lon]}
-            radius={zone.buffer_radius_km * 1000}
-            pathOptions={{
-              color: '#d97706',
-              fillColor: '#f59e0b',
-              fillOpacity: 0.12,
-              weight: 2,
-              dashArray: '5, 5'
-            }}
-          >
+        {eszZones.map((zone: any) => {
+          const zLat = zone.lat ?? zone.center_lat;
+          const zLon = zone.lon ?? zone.center_lon;
+          if (zLat == null || zLon == null) return null;
+          return (
+            <Circle
+              key={zone.name || zone.id}
+              center={[zLat, zLon]}
+              radius={(zone.buffer_radius_km || 1.0) * 1000}
+              pathOptions={{
+                color: '#d97706',
+                fillColor: '#f59e0b',
+                fillOpacity: 0.12,
+                weight: 2,
+                dashArray: '5, 5'
+              }}
+            >
             <Popup>
               <div className="p-2 space-y-1 text-slate-900 text-xs">
                 <div className="font-bold text-amber-700 flex items-center gap-1">
@@ -218,7 +226,8 @@ export default function DeveloperParcelMap({
               </div>
             </Popup>
           </Circle>
-        ))}
+          );
+        })}
 
         {/* Nearby Pipeline Infrastructure Markers */}
         {nearbyInfra.map((infra: any, idx: number) => {

@@ -163,7 +163,9 @@ def build_extended_site_dossier(
                 "in_buffer": is_inside_buffer,
                 "restrictions": pz.get("restrictions", ""),
                 "clearance_required": pz.get("clearance_required", ""),
-                "notification_no": pz.get("notification_no", "")
+                "notification_no": pz.get("notification_no", ""),
+                "lat": pz.get("center_lat"),
+                "lon": pz.get("center_lon")
             }
             nearby_esz_list.append(entry)
             if is_inside_buffer:
