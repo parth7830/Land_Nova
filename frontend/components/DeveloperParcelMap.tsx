@@ -54,70 +54,80 @@ export default function DeveloperParcelMap({
   siteDossier,
   dealVerdict
 }: DeveloperParcelMapProps) {
-  const [baseMap, setBaseMap] = useState<'satellite' | 'dark'>('satellite');
+  const [baseMap, setBaseMap] = useState<'street' | 'satellite'>('street');
 
   // Compute a realistic plot polygon boundary centered around [lat, lon]
   // 1 acre ≈ 4046.86 m²; side length in meters for a square plot: sqrt(acres * 4047)
-  const sideMeters = Math.sqrt(plotAcres * 4046.86);
-  const deltaLat = sideMeters / 111320 / 2;
-  const deltaLon = sideMeters / (111320 * Math.cos((center[0] * Math.PI) / 180)) / 2;
+  const [lat, lon] = center;
+  const sideMeters = Math.sqrt(Math.max(0.5, plotAcres) * 4046.86);
+  const dLat = (sideMeters / 111320.0) / 2.0;
+  const dLon = (sideMeters / (111320.0 * Math.cos((lat * Math.PI) / 180.0))) / 2.0;
 
   const parcelPolygon: [number, number][] = [
-    [center[0] - deltaLat, center[1] - deltaLon],
-    [center[0] + deltaLat, center[1] - deltaLon],
-    [center[0] + deltaLat, center[1] + deltaLon],
-    [center[0] - deltaLat, center[1] + deltaLon]
+    [lat - dLat, lon - dLon],
+    [lat - dLat, lon + dLon],
+    [lat + dLat, lon + dLon],
+    [lat + dLat, lon - dLon]
   ];
 
   const verdictColor =
     dealVerdict.verdict === 'BUY'
-      ? '#10b981' // emerald-500
+      ? '#059669' // emerald-600
       : dealVerdict.verdict === 'WATCH'
-      ? '#f59e0b' // amber-500
-      : '#f43f5e'; // rose-500
+      ? '#d97706' // amber-600
+      : '#e11d48'; // rose-600
+
+  // ESZ buffer circles
+  const eszZones = siteDossier.sections.environmental.data.eco_sensitive_zones || [];
+  const nearbyInfra = dealVerdict.nearby_infrastructure || [];
 
   return (
-    <div className="relative w-full h-[400px] md:h-[480px] rounded-2xl overflow-hidden border border-slate-800 bg-slate-950 shadow-2xl">
-      {/* Map Layer Switcher */}
-      <div className="absolute top-3 left-3 z-[1000] flex items-center gap-1.5 p-1 rounded-xl bg-slate-900/90 backdrop-blur-md border border-slate-700/80 shadow-lg">
+    <div className="relative w-full h-[450px] rounded-2xl overflow-hidden border border-slate-200 bg-white shadow-xs">
+      {/* Top Map Switcher Bar */}
+      <div className="absolute top-3 left-3 z-10 flex items-center gap-2 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm text-xs font-semibold text-slate-700">
+        <span className="flex items-center gap-1.5 text-slate-500 font-bold uppercase tracking-wider text-[10px]">
+          <Layers className="w-3.5 h-3.5 text-emerald-600" />
+          Basemap:
+        </span>
         <button
-          onClick={() => setBaseMap('satellite')}
-          className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-lg transition-all ${
-            baseMap === 'satellite'
-              ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-xs'
-              : 'text-slate-400 hover:text-slate-200'
+          onClick={() => setBaseMap('street')}
+          className={`px-2 py-0.5 rounded-md transition-all cursor-pointer ${
+            baseMap === 'street'
+              ? 'bg-emerald-50 text-emerald-700 border border-emerald-300 font-bold'
+              : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          <Layers className="w-3.5 h-3.5" />
-          Satellite (Esri)
+          Street
         </button>
         <button
-          onClick={() => setBaseMap('dark')}
-          className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-lg transition-all ${
-            baseMap === 'dark'
-              ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-xs'
-              : 'text-slate-400 hover:text-slate-200'
+          onClick={() => setBaseMap('satellite')}
+          className={`px-2 py-0.5 rounded-md transition-all cursor-pointer ${
+            baseMap === 'satellite'
+              ? 'bg-emerald-50 text-emerald-700 border border-emerald-300 font-bold'
+              : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          Dark Topo
+          Satellite
         </button>
       </div>
 
-      {/* Map Legend Overlay */}
-      <div className="absolute bottom-3 left-3 z-[1000] hidden sm:flex items-center gap-3 px-3 py-1.5 rounded-xl bg-slate-900/90 backdrop-blur-md border border-slate-800 text-[11px] text-slate-300 shadow-md">
-        <span className="flex items-center gap-1.5">
+      {/* Map Legend */}
+      <div className="absolute bottom-3 left-3 z-10 hidden sm:flex flex-wrap items-center gap-2 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm text-[11px] text-slate-700">
+        <span className="flex items-center gap-1 font-semibold text-slate-800">
           <span
-            className="w-3 h-3 rounded-xs border-2 inline-block"
-            style={{ borderColor: verdictColor, backgroundColor: `${verdictColor}33` }}
+            className="w-3 h-3 rounded-xs inline-block border"
+            style={{ backgroundColor: verdictColor, borderColor: verdictColor }}
           />
-          Target Parcel ({plotAcres} Acres)
+          Target Parcel ({plotAcres} Ac)
         </span>
-        <span className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded-full border border-amber-500/80 bg-amber-500/20 inline-block" />
-          MoEFCC ESZ Buffer (1km)
+        <span className="text-slate-300">|</span>
+        <span className="flex items-center gap-1">
+          <span className="w-2.5 h-2.5 rounded-full border-2 border-dashed border-amber-500 inline-block" />
+          MoEFCC ESZ Buffer
         </span>
-        <span className="flex items-center gap-1.5">
-          <span className="w-2 h-2 rounded-full bg-cyan-400 inline-block" />
+        <span className="text-slate-300">|</span>
+        <span className="flex items-center gap-1">
+          <span className="w-2 h-2 rounded-full bg-cyan-600 inline-block" />
           GatiShakti Pipeline Node
         </span>
       </div>
@@ -138,8 +148,8 @@ export default function DeveloperParcelMap({
           />
         ) : (
           <TileLayer
-            url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-            attribution="&copy; OpenStreetMap contributors &copy; CARTO"
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution="&copy; OpenStreetMap contributors"
             maxZoom={19}
           />
         )}
@@ -150,13 +160,13 @@ export default function DeveloperParcelMap({
           pathOptions={{
             color: verdictColor,
             fillColor: verdictColor,
-            fillOpacity: 0.28,
+            fillOpacity: 0.35,
             weight: 3,
             dashArray: dealVerdict.verdict === 'AVOID' ? '6, 6' : undefined
           }}
         >
           <Tooltip permanent direction="center" className="parcel-map-tooltip">
-            <span className="text-[11px] font-bold px-1.5 py-0.5 rounded-sm bg-slate-950/90 text-white border border-slate-700 shadow-sm">
+            <span className="text-[11px] font-bold px-1.5 py-0.5 rounded-sm bg-white/95 text-slate-900 border border-slate-300 shadow-sm">
               {siteDossier.display_name.split(',')[0]} ({plotAcres} Ac)
             </span>
           </Tooltip>
@@ -183,46 +193,71 @@ export default function DeveloperParcelMap({
           </Popup>
         </Polygon>
 
-        {/* Nearby MoEFCC Protected / Eco-Sensitive Zones */}
-        {(siteDossier.sections.environmental.nearby_eco_sensitive_zones || []).map((esz: any) => (
+        {/* ESZ Zones Buffers */}
+        {eszZones.map((zone: any) => (
           <Circle
-            key={esz.id}
-            center={center}
-            radius={esz.buffer_radius_km * 1000}
+            key={zone.name}
+            center={[zone.lat, zone.lon]}
+            radius={zone.buffer_radius_km * 1000}
             pathOptions={{
-              color: '#f59e0b',
+              color: '#d97706',
               fillColor: '#f59e0b',
-              fillOpacity: 0.08,
-              weight: 1.5,
-              dashArray: '4, 4'
+              fillOpacity: 0.12,
+              weight: 2,
+              dashArray: '5, 5'
             }}
           >
             <Popup>
-              <div className="p-1.5 text-xs text-slate-900 max-w-[240px]">
+              <div className="p-2 space-y-1 text-slate-900 text-xs">
                 <div className="font-bold text-amber-700 flex items-center gap-1">
                   <Trees className="w-3.5 h-3.5" />
-                  {esz.name}
+                  {zone.name}
                 </div>
-                <div className="text-[11px] text-slate-600 mt-1">
-                  Distance: <span className="font-semibold">{esz.distance_km} km</span> ({esz.buffer_radius_km}km Buffer Zone)
-                </div>
-                <div className="text-[10px] text-slate-500 mt-1 italic">{esz.restrictions}</div>
+                <div>Statutory Buffer: {zone.buffer_radius_km} km</div>
+                <div className="text-[11px] text-slate-500">{zone.notification_number}</div>
               </div>
             </Popup>
           </Circle>
         ))}
 
-        {/* Center Target Parcel Marker */}
-        <Marker position={center}>
-          <Popup>
-            <div className="text-xs font-semibold text-slate-900">
-              {siteDossier.display_name}
-              <div className="text-[10px] text-slate-500">
-                Lat: {center[0].toFixed(4)}, Lon: {center[1].toFixed(4)}
-              </div>
-            </div>
-          </Popup>
-        </Marker>
+        {/* Nearby Pipeline Infrastructure Markers */}
+        {nearbyInfra.map((infra: any, idx: number) => {
+          const isAirport = infra.name.toLowerCase().includes('airport');
+          return (
+            <Circle
+              key={idx}
+              center={[lat + (idx % 2 === 0 ? 0.015 : -0.012), lon + (idx % 2 === 0 ? 0.018 : -0.015)]}
+              radius={350}
+              pathOptions={{
+                color: '#0284c7',
+                fillColor: '#38bdf8',
+                fillOpacity: 0.4,
+                weight: 2
+              }}
+            >
+              <Popup>
+                <div className="p-2 space-y-1 text-slate-900 text-xs">
+                  <div className="font-bold text-cyan-700 flex items-center gap-1">
+                    {isAirport ? <Plane className="w-3.5 h-3.5" /> : <Train className="w-3.5 h-3.5" />}
+                    {infra.name}
+                  </div>
+                  <div>Estimated Completion: {infra.completion_year || 2026}</div>
+                  <div>Catalytic Price Uplift: +{infra.uplift_pct || 15.0}%</div>
+                  {infra.portal_link && (
+                    <a
+                      href={infra.portal_link}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-cyan-600 flex items-center gap-1 text-[11px] hover:underline"
+                    >
+                      Project Portal <ExternalLink className="w-2.5 h-2.5" />
+                    </a>
+                  )}
+                </div>
+              </Popup>
+            </Circle>
+          );
+        })}
       </MapContainer>
     </div>
   );

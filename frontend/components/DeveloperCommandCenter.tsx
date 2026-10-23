@@ -62,9 +62,9 @@ import {
 const DynamicParcelMap = dynamic(() => import('./DeveloperParcelMap'), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-[440px] rounded-2xl bg-slate-900 flex flex-col items-center justify-center text-slate-400 border border-slate-800">
-      <div className="w-6 h-6 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin mb-2" />
-      <span className="text-xs font-semibold text-slate-300">Rendering high-resolution satellite imagery...</span>
+    <div className="w-full h-[450px] rounded-2xl bg-slate-100 flex flex-col items-center justify-center text-slate-500 border border-slate-200 shadow-xs">
+      <div className="w-6 h-6 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin mb-2" />
+      <span className="text-xs font-semibold text-slate-600">Loading High-Resolution Site Map...</span>
     </div>
   )
 });
@@ -151,11 +151,6 @@ export default function DeveloperCommandCenter({
 
   // Time Machine catalytic price uplift calculation based on scenarioYear (D15)
   const scenarioPipelineUplift = useMemo(() => {
-    // 2026: Jewar Phase 1 (+3%)
-    // 2027: Aqua Line Metro (+6%)
-    // 2028: Data Center SEZ (+10%)
-    // 2029: Peripheral link (+13%)
-    // 2030: Aerotropolis full maturity (+18%)
     const uplifts: Record<number, number> = {
       2026: 0,
       2027: 5.5,
@@ -274,47 +269,47 @@ export default function DeveloperCommandCenter({
     if (!verdict) return null;
     if (verdict.verdict === 'BUY') {
       return (
-        <span className="px-3 py-1 rounded-full text-xs font-black bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 tracking-wider shadow-sm flex items-center gap-1.5">
-          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> BUY VERDICT
+        <span className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-300 tracking-wider shadow-2xs flex items-center gap-1.5">
+          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> BUY VERDICT
         </span>
       );
     }
     if (verdict.verdict === 'WATCH') {
       return (
-        <span className="px-3 py-1 rounded-full text-xs font-black bg-amber-500/20 text-amber-400 border border-amber-500/40 tracking-wider shadow-sm flex items-center gap-1.5">
-          <AlertCircle className="w-3.5 h-3.5 text-amber-400" /> WATCH CONDITIONAL
+        <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-300 tracking-wider shadow-2xs flex items-center gap-1.5">
+          <AlertCircle className="w-3.5 h-3.5 text-amber-600" /> WATCH CONDITIONAL
         </span>
       );
     }
     return (
-      <span className="px-3 py-1 rounded-full text-xs font-black bg-rose-500/20 text-rose-400 border border-rose-500/40 tracking-wider shadow-sm flex items-center gap-1.5">
-        <ShieldAlert className="w-3.5 h-3.5 text-rose-400" /> AVOID BARRIER
+      <span className="px-3 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-300 tracking-wider shadow-2xs flex items-center gap-1.5">
+        <ShieldAlert className="w-3.5 h-3.5 text-rose-600" /> AVOID BARRIER
       </span>
     );
   }, [verdict]);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans pb-16 print:bg-white print:text-black">
-      {/* Top Command Bar */}
-      <div className="sticky top-0 z-40 bg-slate-950/95 backdrop-blur-md border-b border-slate-800/80 px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-4 print:hidden">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans pb-16 print:bg-white print:text-black">
+      {/* Top Command Bar (Clean Light Theme) */}
+      <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-4 shadow-xs print:hidden">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-600 to-emerald-500 flex items-center justify-center text-white shadow-md shadow-emerald-950/40">
+          <div className="w-9 h-9 rounded-xl bg-emerald-600 flex items-center justify-center text-white shadow-xs">
             <Building2 className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-base font-extrabold text-white tracking-tight">
+              <h1 className="text-base font-extrabold text-slate-900 tracking-tight">
                 LANDNOVA DEVELOPER COMMAND CENTER
               </h1>
-              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-sm bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">
                 PRO 2026
               </span>
             </div>
-            <div className="flex items-center gap-1.5 text-xs text-slate-400">
-              <MapPin className="w-3 h-3 text-cyan-400" />
-              <span>{currentLocation.display_name}</span>
-              <span className="text-slate-600">•</span>
-              <span className="text-slate-400 font-mono text-[11px]">
+            <div className="flex items-center gap-1.5 text-xs text-slate-500">
+              <MapPin className="w-3.5 h-3.5 text-emerald-600" />
+              <span className="font-semibold text-slate-700">{currentLocation.display_name}</span>
+              <span className="text-slate-300">•</span>
+              <span className="text-slate-500 font-mono text-[11px]">
                 {currentLocation.latitude.toFixed(4)}°N, {currentLocation.longitude.toFixed(4)}°E
               </span>
             </div>
@@ -326,24 +321,24 @@ export default function DeveloperCommandCenter({
           {verdictBadge}
           <button
             onClick={() => window.print()}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-xs font-semibold text-slate-200 border border-slate-800 transition-all cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-slate-50 text-xs font-semibold text-slate-700 border border-slate-200 shadow-2xs transition-all cursor-pointer"
             title="D13: Investor-Ready PDF Export"
           >
-            <Printer className="w-3.5 h-3.5 text-cyan-400" />
+            <Printer className="w-3.5 h-3.5 text-slate-500" />
             <span className="hidden sm:inline">Export PDF</span>
           </button>
           <button
             onClick={() => loadCommandCenter(true)}
             disabled={isRefreshing}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-xs font-semibold text-slate-200 border border-slate-800 transition-all cursor-pointer disabled:opacity-50"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-xs font-semibold text-white shadow-2xs transition-all cursor-pointer disabled:opacity-50"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-emerald-400' : ''}`} />
+            <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
             <span className="hidden sm:inline">Recalculate</span>
           </button>
           {onNavigateView && (
             <button
               onClick={() => onNavigateView('home')}
-              className="px-3 py-1.5 rounded-xl bg-slate-800/60 hover:bg-slate-800 text-xs font-semibold text-slate-300 border border-slate-700/60 transition-all cursor-pointer"
+              className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-semibold text-slate-700 border border-slate-200 transition-all cursor-pointer"
             >
               Exit
             </button>
@@ -352,7 +347,7 @@ export default function DeveloperCommandCenter({
       </div>
 
       {/* D15: SCENARIO TIME MACHINE & NAVIGATION SUB-BAR */}
-      <div className="bg-slate-900/90 border-b border-slate-800 px-4 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-4 print:hidden">
+      <div className="bg-white border-b border-slate-200 px-4 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-4 shadow-2xs print:hidden">
         {/* Navigation Tabs */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
           {[
@@ -372,8 +367,8 @@ export default function DeveloperCommandCenter({
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
                   activeTab === tab.id
-                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-xs'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                    ? 'bg-emerald-50 text-emerald-700 border border-emerald-300 shadow-2xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" />
@@ -384,20 +379,20 @@ export default function DeveloperCommandCenter({
         </div>
 
         {/* D15: Scenario Time Machine Control */}
-        <div className="flex items-center gap-3 bg-slate-950 px-3 py-1.5 rounded-xl border border-slate-800">
-          <div className="flex items-center gap-1.5 text-xs font-bold text-cyan-400">
-            <Clock className="w-3.5 h-3.5" />
+        <div className="flex items-center gap-3 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200">
+          <div className="flex items-center gap-1.5 text-xs font-bold text-slate-700">
+            <Clock className="w-3.5 h-3.5 text-emerald-600" />
             <span className="hidden sm:inline">Scenario Time Machine:</span>
           </div>
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1">
             {[2026, 2027, 2028, 2029, 2030].map((yr) => (
               <button
                 key={yr}
                 onClick={() => setScenarioYear(yr)}
                 className={`px-2 py-0.5 text-xs font-mono font-bold rounded-lg transition-all cursor-pointer ${
                   scenarioYear === yr
-                    ? 'bg-cyan-500 text-slate-950 shadow-xs'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
+                    ? 'bg-emerald-600 text-white shadow-2xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200'
                 }`}
               >
                 {yr}
@@ -405,7 +400,7 @@ export default function DeveloperCommandCenter({
             ))}
           </div>
           {scenarioPipelineUplift > 0 && (
-            <span className="text-[10px] font-mono font-bold text-emerald-400">
+            <span className="text-[10px] font-mono font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-md border border-emerald-200">
               +{scenarioPipelineUplift}% Infra Uplift
             </span>
           )}
@@ -421,20 +416,22 @@ export default function DeveloperCommandCenter({
         <div className="flex-1 max-w-[1780px] w-full mx-auto px-4 sm:px-6 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* COLUMN 1: FEASIBILITY INPUTS & SENSITIVITY */}
           <div className="lg:col-span-3 space-y-5">
-            <div className="rounded-2xl bg-slate-900/90 border border-slate-800/90 p-4 shadow-xl">
-              <div className="flex items-center justify-between mb-3.5 pb-2.5 border-b border-slate-800">
+            <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-xs">
+              <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
                 <div className="flex items-center gap-2">
-                  <Sliders className="w-4 h-4 text-emerald-400" />
-                  <h2 className="text-sm font-bold text-slate-100 uppercase tracking-wider">
+                  <Sliders className="w-4 h-4 text-emerald-600" />
+                  <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
                     Land &amp; Development Spec
                   </h2>
                 </div>
-                <span className="text-[10px] font-mono text-slate-400">D7 ENGINE</span>
+                <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-600">
+                  D7 ENGINE
+                </span>
               </div>
 
               {/* Typology Select */}
               <div className="space-y-1.5 mb-4">
-                <label className="text-xs font-semibold text-slate-300">Target Typology</label>
+                <label className="text-xs font-semibold text-slate-700">Target Typology</label>
                 <select
                   value={typology}
                   onChange={(e) => {
@@ -443,7 +440,7 @@ export default function DeveloperCommandCenter({
                     else if (e.target.value === 'residential_colony') setFar(1.75);
                     else setFar(2.75);
                   }}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs font-medium text-slate-200 focus:outline-hidden focus:border-emerald-500"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-hidden focus:border-emerald-500 focus:bg-white transition-all"
                 >
                   <option value="apartment_complex">High-Rise Apartment Complex</option>
                   <option value="commercial_it_hub">Grade-A Commercial IT / Tech Park</option>
@@ -455,8 +452,8 @@ export default function DeveloperCommandCenter({
               {/* Plot Acres */}
               <div className="space-y-1.5 mb-4">
                 <div className="flex justify-between text-xs">
-                  <span className="text-slate-300 font-semibold">Plot Area</span>
-                  <span className="text-emerald-400 font-bold font-mono">{plotAcres} Acres</span>
+                  <span className="text-slate-700 font-semibold">Plot Area</span>
+                  <span className="text-emerald-700 font-bold font-mono">{plotAcres} Acres</span>
                 </div>
                 <input
                   type="range"
@@ -465,7 +462,7 @@ export default function DeveloperCommandCenter({
                   step="0.5"
                   value={plotAcres}
                   onChange={(e) => setPlotAcres(parseFloat(e.target.value))}
-                  className="w-full accent-emerald-500 cursor-pointer"
+                  className="w-full accent-emerald-600 cursor-pointer"
                 />
                 <div className="text-[10px] text-slate-500 font-mono">
                   {(plotAcres * 43560).toLocaleString()} sq.ft. footprint
@@ -475,8 +472,8 @@ export default function DeveloperCommandCenter({
               {/* FAR */}
               <div className="space-y-1.5 mb-4">
                 <div className="flex justify-between text-xs">
-                  <span className="text-slate-300 font-semibold">Permissible FAR / FSI</span>
-                  <span className="text-cyan-400 font-bold font-mono">{far.toFixed(2)}x</span>
+                  <span className="text-slate-700 font-semibold">Permissible FAR / FSI</span>
+                  <span className="text-slate-900 font-bold font-mono">{far.toFixed(2)}x</span>
                 </div>
                 <input
                   type="range"
@@ -485,15 +482,15 @@ export default function DeveloperCommandCenter({
                   step="0.25"
                   value={far}
                   onChange={(e) => setFar(parseFloat(e.target.value))}
-                  className="w-full accent-cyan-500 cursor-pointer"
+                  className="w-full accent-emerald-600 cursor-pointer"
                 />
               </div>
 
               {/* Land Cost */}
               <div className="space-y-1.5 mb-4">
                 <div className="flex justify-between text-xs">
-                  <span className="text-slate-300 font-semibold">Land Acquisition Cost</span>
-                  <span className="text-slate-200 font-bold font-mono">₹{landCostCr} Cr</span>
+                  <span className="text-slate-700 font-semibold">Land Acquisition Cost</span>
+                  <span className="text-slate-900 font-bold font-mono">₹{landCostCr} Cr</span>
                 </div>
                 <input
                   type="range"
@@ -502,15 +499,15 @@ export default function DeveloperCommandCenter({
                   step="2.5"
                   value={landCostCr}
                   onChange={(e) => setLandCostCr(parseFloat(e.target.value))}
-                  className="w-full accent-emerald-500 cursor-pointer"
+                  className="w-full accent-emerald-600 cursor-pointer"
                 />
               </div>
 
               {/* Construction Cost */}
               <div className="space-y-1.5 mb-4">
                 <div className="flex justify-between text-xs">
-                  <span className="text-slate-300 font-semibold">Construction Cost / SqFt</span>
-                  <span className="text-slate-200 font-bold font-mono">₹{constructionCostSqft.toLocaleString()}</span>
+                  <span className="text-slate-700 font-semibold">Construction Cost / SqFt</span>
+                  <span className="text-slate-900 font-bold font-mono">₹{constructionCostSqft.toLocaleString()}</span>
                 </div>
                 <input
                   type="range"
@@ -519,15 +516,15 @@ export default function DeveloperCommandCenter({
                   step="100"
                   value={constructionCostSqft}
                   onChange={(e) => setConstructionCostSqft(parseInt(e.target.value))}
-                  className="w-full accent-emerald-500 cursor-pointer"
+                  className="w-full accent-emerald-600 cursor-pointer"
                 />
               </div>
 
               {/* Sale Realization */}
               <div className="space-y-1.5 mb-4">
                 <div className="flex justify-between text-xs">
-                  <span className="text-slate-300 font-semibold">Sale Realization / SqFt</span>
-                  <span className="text-emerald-400 font-bold font-mono">₹{salePriceSqft.toLocaleString()}</span>
+                  <span className="text-slate-700 font-semibold">Sale Realization / SqFt</span>
+                  <span className="text-emerald-700 font-bold font-mono">₹{salePriceSqft.toLocaleString()}</span>
                 </div>
                 <input
                   type="range"
@@ -536,15 +533,15 @@ export default function DeveloperCommandCenter({
                   step="200"
                   value={salePriceSqft}
                   onChange={(e) => setSalePriceSqft(parseInt(e.target.value))}
-                  className="w-full accent-emerald-500 cursor-pointer"
+                  className="w-full accent-emerald-600 cursor-pointer"
                 />
               </div>
 
               {/* Absorption Lifecycle */}
               <div className="space-y-1.5 mb-2">
                 <div className="flex justify-between text-xs">
-                  <span className="text-slate-300 font-semibold">Lifecycle &amp; Absorption</span>
-                  <span className="text-slate-200 font-bold font-mono">{absorptionMonths} Months</span>
+                  <span className="text-slate-700 font-semibold">Lifecycle &amp; Absorption</span>
+                  <span className="text-slate-900 font-bold font-mono">{absorptionMonths} Months</span>
                 </div>
                 <input
                   type="range"
@@ -553,28 +550,30 @@ export default function DeveloperCommandCenter({
                   step="3"
                   value={absorptionMonths}
                   onChange={(e) => setAbsorptionMonths(parseInt(e.target.value))}
-                  className="w-full accent-cyan-500 cursor-pointer"
+                  className="w-full accent-emerald-600 cursor-pointer"
                 />
               </div>
             </div>
 
             {/* SENSITIVITY STRESS TEST SLIDERS */}
-            <div className="rounded-2xl bg-slate-900/90 border border-slate-800/90 p-4 shadow-xl">
-              <div className="flex items-center justify-between mb-3 pb-2 border-b border-slate-800">
+            <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-xs">
+              <div className="flex items-center justify-between mb-3.5 pb-2.5 border-b border-slate-100">
                 <div className="flex items-center gap-2">
-                  <Flame className="w-4 h-4 text-amber-400" />
-                  <h3 className="text-xs font-bold text-slate-100 uppercase tracking-wider">
+                  <Flame className="w-4 h-4 text-amber-600" />
+                  <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
                     Sensitivity Modifiers
                   </h3>
                 </div>
-                <span className="text-[10px] font-mono text-amber-400">STRESS-TEST</span>
+                <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-md bg-amber-50 text-amber-700 border border-amber-200">
+                  STRESS-TEST
+                </span>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-3.5">
                 <div>
                   <div className="flex justify-between text-[11px] mb-1">
-                    <span className="text-slate-400">Price Shift</span>
-                    <span className="font-mono font-bold text-emerald-400">{priceModifierPct}%</span>
+                    <span className="text-slate-600 font-medium">Price Shift</span>
+                    <span className="font-mono font-bold text-emerald-700">{priceModifierPct}%</span>
                   </div>
                   <input
                     type="range"
@@ -583,13 +582,13 @@ export default function DeveloperCommandCenter({
                     step="5"
                     value={priceModifierPct}
                     onChange={(e) => setPriceModifierPct(parseInt(e.target.value))}
-                    className="w-full accent-emerald-400 cursor-pointer"
+                    className="w-full accent-emerald-600 cursor-pointer"
                   />
                 </div>
                 <div>
                   <div className="flex justify-between text-[11px] mb-1">
-                    <span className="text-slate-400">Cost Overrun</span>
-                    <span className="font-mono font-bold text-rose-400">+{costOverrunPct}%</span>
+                    <span className="text-slate-600 font-medium">Cost Overrun</span>
+                    <span className="font-mono font-bold text-rose-600">+{costOverrunPct}%</span>
                   </div>
                   <input
                     type="range"
@@ -598,13 +597,13 @@ export default function DeveloperCommandCenter({
                     step="5"
                     value={costOverrunPct}
                     onChange={(e) => setCostOverrunPct(parseInt(e.target.value))}
-                    className="w-full accent-rose-400 cursor-pointer"
+                    className="w-full accent-rose-600 cursor-pointer"
                   />
                 </div>
                 <div>
                   <div className="flex justify-between text-[11px] mb-1">
-                    <span className="text-slate-400">Delay</span>
-                    <span className="font-mono font-bold text-amber-400">+{timelineDelayMonths} Mos</span>
+                    <span className="text-slate-600 font-medium">Timeline Delay</span>
+                    <span className="font-mono font-bold text-amber-700">+{timelineDelayMonths} Mos</span>
                   </div>
                   <input
                     type="range"
@@ -613,7 +612,7 @@ export default function DeveloperCommandCenter({
                     step="3"
                     value={timelineDelayMonths}
                     onChange={(e) => setTimelineDelayMonths(parseInt(e.target.value))}
-                    className="w-full accent-amber-400 cursor-pointer"
+                    className="w-full accent-amber-600 cursor-pointer"
                   />
                 </div>
               </div>
@@ -634,15 +633,15 @@ export default function DeveloperCommandCenter({
 
             {/* Deal Breakers Banner */}
             {siteDossier && siteDossier.deal_breaker_flags.length > 0 && (
-              <div className="rounded-2xl bg-amber-950/30 border border-amber-600/40 p-4 shadow-lg space-y-2">
-                <div className="flex items-center gap-2 text-amber-400 font-bold text-xs uppercase tracking-wider">
-                  <ShieldAlert className="w-4 h-4 text-amber-400" />
+              <div className="rounded-2xl bg-amber-50 border border-amber-300 p-4 shadow-2xs space-y-2">
+                <div className="flex items-center gap-2 text-amber-800 font-bold text-xs uppercase tracking-wider">
+                  <ShieldAlert className="w-4 h-4 text-amber-600" />
                   Active Site Regulatory &amp; Environmental Flags
                 </div>
-                <div className="space-y-1.5 text-xs text-amber-200/90 font-medium">
+                <div className="space-y-1.5 text-xs text-amber-900 font-medium">
                   {siteDossier.deal_breaker_flags.map((flag, idx) => (
-                    <div key={idx} className="flex items-start gap-2 bg-amber-900/20 p-2 rounded-xl border border-amber-800/30">
-                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5 shrink-0" />
+                    <div key={idx} className="flex items-start gap-2 bg-white/80 p-2 rounded-xl border border-amber-200">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-600 mt-1.5 shrink-0" />
                       <span>{flag}</span>
                     </div>
                   ))}
@@ -651,42 +650,44 @@ export default function DeveloperCommandCenter({
             )}
 
             {/* 12-Section Extended Site Dossier */}
-            <div className="rounded-2xl bg-slate-900/90 border border-slate-800/90 p-4 shadow-xl space-y-3">
-              <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+            <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-xs space-y-3.5">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div className="flex items-center gap-2">
-                  <FileText className="w-4 h-4 text-cyan-400" />
-                  <h3 className="text-xs font-bold text-slate-100 uppercase tracking-wider">
+                  <FileText className="w-4 h-4 text-emerald-600" />
+                  <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
                     Extended Site Analysis Dossier
                   </h3>
                 </div>
-                <span className="text-[10px] font-mono text-cyan-400">D1 DOSSIER</span>
+                <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  D1 DOSSIER
+                </span>
               </div>
 
               {siteDossier && (
                 <div className="space-y-2 text-xs">
                   {/* Soil & Foundation */}
-                  <div className="rounded-xl border border-slate-800 bg-slate-950/60 overflow-hidden">
+                  <div className="rounded-xl border border-slate-200 bg-slate-50/60 overflow-hidden">
                     <button
                       onClick={() => toggleSection('soil')}
-                      className="w-full px-3.5 py-2.5 flex items-center justify-between text-left font-semibold text-slate-200 hover:bg-slate-900/50 cursor-pointer"
+                      className="w-full px-3.5 py-2.5 flex items-center justify-between text-left font-semibold text-slate-800 hover:bg-slate-100/60 cursor-pointer"
                     >
                       <div className="flex items-center gap-2">
-                        <Layers className="w-3.5 h-3.5 text-amber-400" />
+                        <Layers className="w-3.5 h-3.5 text-amber-600" />
                         <span>ISRIC SoilGrids &amp; Bearing Capacity</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-sm bg-amber-500/10 text-amber-300 border border-amber-500/20">
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 border border-amber-200 font-bold">
                           {siteDossier.sections.soil.data.bearing_capacity_hint_kn_m2} kN/m²
                         </span>
                         {expandedSections.soil ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
                       </div>
                     </button>
                     {expandedSections.soil && (
-                      <div className="px-3.5 pb-3 text-slate-400 text-xs space-y-2 border-t border-slate-800/60 pt-2">
-                        <p className="text-[11px] text-slate-300">{siteDossier.sections.soil.data.foundation_recommendation}</p>
+                      <div className="px-3.5 pb-3 text-slate-600 text-xs space-y-2 border-t border-slate-200/80 pt-2 bg-white">
+                        <p className="text-[11px] text-slate-700">{siteDossier.sections.soil.data.foundation_recommendation}</p>
                         <div className="flex items-center justify-between text-[10px] text-slate-500 pt-1">
-                          <span>Confidence: {siteDossier.sections.soil.confidence}</span>
-                          <a href={siteDossier.sections.soil.portal_url} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-cyan-400 hover:underline">
+                          <span>Confidence: <b>{siteDossier.sections.soil.confidence}</b></span>
+                          <a href={siteDossier.sections.soil.portal_url} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-emerald-600 hover:underline">
                             Verify on ISRIC Portal <ExternalLink className="w-2.5 h-2.5" />
                           </a>
                         </div>
@@ -695,30 +696,30 @@ export default function DeveloperCommandCenter({
                   </div>
 
                   {/* Groundwater & CGWA NOC */}
-                  <div className="rounded-xl border border-slate-800 bg-slate-950/60 overflow-hidden">
+                  <div className="rounded-xl border border-slate-200 bg-slate-50/60 overflow-hidden">
                     <button
                       onClick={() => toggleSection('groundwater')}
-                      className="w-full px-3.5 py-2.5 flex items-center justify-between text-left font-semibold text-slate-200 hover:bg-slate-900/50 cursor-pointer"
+                      className="w-full px-3.5 py-2.5 flex items-center justify-between text-left font-semibold text-slate-800 hover:bg-slate-100/60 cursor-pointer"
                     >
                       <div className="flex items-center gap-2">
-                        <Landmark className="w-3.5 h-3.5 text-cyan-400" />
+                        <Landmark className="w-3.5 h-3.5 text-cyan-600" />
                         <span>CGWB Groundwater Table &amp; CGWA NOC</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-sm bg-rose-500/10 text-rose-300 border border-rose-500/20">
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-rose-50 text-rose-700 border border-rose-200 font-bold">
                           {siteDossier.sections.groundwater.data.category}
                         </span>
                         {expandedSections.groundwater ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
                       </div>
                     </button>
                     {expandedSections.groundwater && (
-                      <div className="px-3.5 pb-3 text-slate-400 text-xs space-y-2 border-t border-slate-800/60 pt-2">
-                        <p className="text-[11px] text-amber-300/90 bg-amber-950/20 p-2 rounded-lg border border-amber-900/30">
+                      <div className="px-3.5 pb-3 text-slate-600 text-xs space-y-2 border-t border-slate-200/80 pt-2 bg-white">
+                        <p className="text-[11px] text-amber-900 bg-amber-50 p-2.5 rounded-lg border border-amber-200">
                           {siteDossier.sections.groundwater.data.cgwa_noc_implication}
                         </p>
                         <div className="flex items-center justify-between text-[10px] text-slate-500 pt-1">
-                          <span>Confidence: {siteDossier.sections.groundwater.confidence}</span>
-                          <a href={siteDossier.sections.groundwater.portal_url} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-cyan-400 hover:underline">
+                          <span>Confidence: <b>{siteDossier.sections.groundwater.confidence}</b></span>
+                          <a href={siteDossier.sections.groundwater.portal_url} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-emerald-600 hover:underline">
                             Verify on CGWB Portal <ExternalLink className="w-2.5 h-2.5" />
                           </a>
                         </div>
@@ -727,28 +728,28 @@ export default function DeveloperCommandCenter({
                   </div>
 
                   {/* MoEFCC Environmental & Forest Clearances */}
-                  <div className="rounded-xl border border-slate-800 bg-slate-950/60 overflow-hidden">
+                  <div className="rounded-xl border border-slate-200 bg-slate-50/60 overflow-hidden">
                     <button
                       onClick={() => toggleSection('environmental')}
-                      className="w-full px-3.5 py-2.5 flex items-center justify-between text-left font-semibold text-slate-200 hover:bg-slate-900/50 cursor-pointer"
+                      className="w-full px-3.5 py-2.5 flex items-center justify-between text-left font-semibold text-slate-800 hover:bg-slate-100/60 cursor-pointer"
                     >
                       <div className="flex items-center gap-2">
-                        <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                        <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
                         <span>MoEFCC PARIVESH Clearance Flags</span>
                       </div>
                       {expandedSections.environmental ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
                     </button>
                     {expandedSections.environmental && (
-                      <div className="px-3.5 pb-3 text-slate-400 text-xs space-y-2 border-t border-slate-800/60 pt-2">
-                        <div className="text-[11px] font-semibold text-slate-300">Required Clearances:</div>
-                        <ul className="list-disc pl-4 space-y-1 text-[11px] text-slate-300">
+                      <div className="px-3.5 pb-3 text-slate-600 text-xs space-y-2 border-t border-slate-200/80 pt-2 bg-white">
+                        <div className="text-[11px] font-semibold text-slate-800">Required Clearances:</div>
+                        <ul className="list-disc pl-4 space-y-1 text-[11px] text-slate-700">
                           {siteDossier.sections.environmental.clearances_likely_required.map((cl: string, idx: number) => (
                             <li key={idx}>{cl}</li>
                           ))}
                         </ul>
                         <div className="flex items-center justify-between text-[10px] text-slate-500 pt-1">
-                          <span>Confidence: {siteDossier.sections.environmental.confidence}</span>
-                          <a href={siteDossier.sections.environmental.portal_url} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-cyan-400 hover:underline">
+                          <span>Confidence: <b>{siteDossier.sections.environmental.confidence}</b></span>
+                          <a href={siteDossier.sections.environmental.portal_url} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-emerald-600 hover:underline">
                             Verify on PARIVESH Portal <ExternalLink className="w-2.5 h-2.5" />
                           </a>
                         </div>
@@ -763,13 +764,13 @@ export default function DeveloperCommandCenter({
           {/* COLUMN 3: DEAL SCORE (D10) & FEASIBILITY RESULTS */}
           <div className="lg:col-span-4 space-y-5">
             {/* Deal Score Ring Card */}
-            <div className="rounded-2xl bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-800 p-5 shadow-2xl relative overflow-hidden">
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-                  <Sparkles className="w-4 h-4 text-emerald-400" />
+            <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-xs relative overflow-hidden">
+              <div className="flex items-center justify-between mb-4 pb-2 border-b border-slate-100">
+                <span className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                  <Sparkles className="w-4 h-4 text-emerald-600" />
                   LandNova Deal Score
                 </span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 font-bold">
                   D10 VERDICT
                 </span>
               </div>
@@ -778,17 +779,17 @@ export default function DeveloperCommandCenter({
                 <div className="flex items-center gap-5">
                   <div className="relative w-28 h-28 shrink-0 flex items-center justify-center">
                     <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
-                      <circle cx="50" cy="50" r="40" className="text-slate-800 stroke-current" strokeWidth="9" fill="transparent" />
+                      <circle cx="50" cy="50" r="40" className="text-slate-100 stroke-current" strokeWidth="9" fill="transparent" />
                       <circle
                         cx="50"
                         cy="50"
                         r="40"
                         className={`stroke-current ${
                           verdict.deal_score >= 75
-                            ? 'text-emerald-500'
+                            ? 'text-emerald-600'
                             : verdict.deal_score >= 60
                             ? 'text-amber-500'
-                            : 'text-rose-500'
+                            : 'text-rose-600'
                         }`}
                         strokeWidth="9"
                         strokeDasharray={2 * Math.PI * 40}
@@ -798,34 +799,34 @@ export default function DeveloperCommandCenter({
                       />
                     </svg>
                     <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                      <span className="text-3xl font-black tracking-tight text-white font-mono">{verdict.deal_score}</span>
+                      <span className="text-3xl font-black tracking-tight text-slate-900 font-mono">{verdict.deal_score}</span>
                       <span className="text-[9px] uppercase tracking-wider text-slate-400 font-bold">DEAL SCORE</span>
                     </div>
                   </div>
 
                   <div className="flex-1 space-y-1.5 text-xs">
-                    <div className="flex justify-between text-slate-300">
-                      <span className="text-slate-400">Site Readiness:</span>
-                      <span className="font-mono font-bold text-cyan-400">{verdict.component_scores.site_readiness}/100</span>
+                    <div className="flex justify-between text-slate-700">
+                      <span className="text-slate-500">Site Readiness:</span>
+                      <span className="font-mono font-bold text-slate-900">{verdict.component_scores.site_readiness}/100</span>
                     </div>
-                    <div className="flex justify-between text-slate-300">
-                      <span className="text-slate-400">Financial Feasibility:</span>
-                      <span className="font-mono font-bold text-emerald-400">{verdict.component_scores.financial_feasibility}/100</span>
+                    <div className="flex justify-between text-slate-700">
+                      <span className="text-slate-500">Feasibility:</span>
+                      <span className="font-mono font-bold text-emerald-700">{verdict.component_scores.financial_feasibility}/100</span>
                     </div>
-                    <div className="flex justify-between text-slate-300">
-                      <span className="text-slate-400">Catchment Demand:</span>
-                      <span className="font-mono font-bold text-slate-200">{verdict.component_scores.catchment_demand}/100</span>
+                    <div className="flex justify-between text-slate-700">
+                      <span className="text-slate-500">Demand:</span>
+                      <span className="font-mono font-bold text-slate-900">{verdict.component_scores.catchment_demand}/100</span>
                     </div>
-                    <div className="flex justify-between text-slate-300">
-                      <span className="text-slate-400">Infra Pipeline:</span>
-                      <span className="font-mono font-bold text-purple-400">{verdict.component_scores.infrastructure_catalysts}/100</span>
+                    <div className="flex justify-between text-slate-700">
+                      <span className="text-slate-500">Infra Pipeline:</span>
+                      <span className="font-mono font-bold text-cyan-700">{verdict.component_scores.infrastructure_catalysts}/100</span>
                     </div>
                   </div>
                 </div>
               )}
 
               {verdict && (
-                <p className="mt-4 text-xs text-slate-300 leading-relaxed border-t border-slate-800/80 pt-3">
+                <p className="mt-4 text-xs text-slate-700 leading-relaxed border-t border-slate-100 pt-3">
                   {verdict.verdict_summary}
                 </p>
               )}
@@ -833,26 +834,26 @@ export default function DeveloperCommandCenter({
 
             {/* Waterfall Factor Decomposition */}
             {verdict && (
-              <div className="rounded-2xl bg-slate-900/90 border border-slate-800/90 p-4 shadow-xl">
-                <div className="flex items-center justify-between mb-3 pb-2 border-b border-slate-800">
-                  <span className="text-xs font-bold text-slate-100 uppercase tracking-wider flex items-center gap-1.5">
-                    <TrendingUp className="w-3.5 h-3.5 text-cyan-400" />
+              <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-xs">
+                <div className="flex items-center justify-between mb-3.5 pb-2.5 border-b border-slate-100">
+                  <span className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                    <TrendingUp className="w-3.5 h-3.5 text-emerald-600" />
                     Why This Verdict (Waterfall)
                   </span>
-                  <span className="text-[10px] font-mono text-slate-400">ATTRIBUTION</span>
+                  <span className="text-[10px] font-mono text-slate-500 font-bold">ATTRIBUTION</span>
                 </div>
 
-                <div className="space-y-2 text-xs">
+                <div className="space-y-2.5 text-xs">
                   {verdict.waterfall_breakdown.map((item, idx) => (
-                    <div key={idx} className="flex items-center justify-between">
-                      <span className="text-slate-400 text-[11px] truncate max-w-[210px]">{item.factor}</span>
+                    <div key={idx} className="flex items-center justify-between border-b border-slate-50 pb-1.5">
+                      <span className="text-slate-600 text-[11px] truncate max-w-[210px]">{item.factor}</span>
                       <span
                         className={`font-mono text-xs font-bold ${
                           item.type === 'base'
-                            ? 'text-slate-200'
+                            ? 'text-slate-700'
                             : item.delta >= 0
-                            ? 'text-emerald-400'
-                            : 'text-rose-400'
+                            ? 'text-emerald-700'
+                            : 'text-rose-600'
                         }`}
                       >
                         {item.type === 'base' ? '50.0' : item.delta >= 0 ? `+${item.delta}` : `${item.delta}`}
@@ -865,57 +866,57 @@ export default function DeveloperCommandCenter({
 
             {/* Financial Summary & Monte Carlo */}
             {feasibility && (
-              <div className="rounded-2xl bg-slate-900/90 border border-slate-800/90 p-4 shadow-xl space-y-3.5">
-                <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+              <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-xs space-y-4">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                   <div className="flex items-center gap-2">
-                    <DollarSign className="w-4 h-4 text-emerald-400" />
-                    <h3 className="text-xs font-bold text-slate-100 uppercase tracking-wider">
+                    <DollarSign className="w-4 h-4 text-emerald-600" />
+                    <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
                       Financial Feasibility
                     </h3>
                   </div>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-bold">
+                  <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold">
                     IRR {feasibility.summary.annualized_irr_pct}%
                   </span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3 text-xs">
-                  <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800">
-                    <div className="text-[10px] text-slate-400 uppercase font-semibold">Total Revenue</div>
-                    <div className="text-sm font-bold text-emerald-400 font-mono mt-0.5">
+                  <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+                    <div className="text-[10px] text-slate-500 uppercase font-semibold">Total Revenue</div>
+                    <div className="text-base font-bold text-emerald-700 font-mono mt-0.5">
                       ₹{feasibility.summary.total_revenue_cr} Cr
                     </div>
                   </div>
-                  <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800">
-                    <div className="text-[10px] text-slate-400 uppercase font-semibold">Gross Profit</div>
-                    <div className="text-sm font-bold text-cyan-400 font-mono mt-0.5">
+                  <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+                    <div className="text-[10px] text-slate-500 uppercase font-semibold">Gross Profit</div>
+                    <div className="text-base font-bold text-slate-900 font-mono mt-0.5">
                       ₹{feasibility.summary.gross_profit_cr} Cr
                     </div>
                   </div>
                 </div>
 
                 {/* Monte Carlo 1,000 Runs */}
-                <div className="p-3 rounded-xl bg-slate-950/90 border border-slate-800 space-y-2">
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2.5">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-semibold text-slate-200 flex items-center gap-1.5">
-                      <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                    <span className="font-semibold text-slate-800 flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
                       NumPy Monte Carlo (1,000 Runs)
                     </span>
-                    <span className="text-[10px] font-bold text-emerald-400 font-mono">
+                    <span className="text-[10px] font-bold text-emerald-700 font-mono bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
                       {feasibility.monte_carlo.probability_of_profit_pct}% Prob of Profit
                     </span>
                   </div>
                   <div className="grid grid-cols-3 gap-2 text-center text-[10px] font-mono">
-                    <div className="bg-slate-900 p-1.5 rounded-lg border border-slate-800">
-                      <span className="text-slate-500 block">P10</span>
-                      <span className="text-amber-400 font-bold">{feasibility.monte_carlo.p10_irr_pct}%</span>
+                    <div className="bg-white p-2 rounded-lg border border-slate-200 shadow-2xs">
+                      <span className="text-slate-400 block">P10</span>
+                      <span className="text-amber-700 font-bold">{feasibility.monte_carlo.p10_irr_pct}%</span>
                     </div>
-                    <div className="bg-slate-900 p-1.5 rounded-lg border border-slate-800">
-                      <span className="text-slate-500 block">P50</span>
-                      <span className="text-emerald-400 font-bold">{feasibility.monte_carlo.p50_median_irr_pct}%</span>
+                    <div className="bg-white p-2 rounded-lg border border-slate-200 shadow-2xs">
+                      <span className="text-slate-400 block">P50</span>
+                      <span className="text-emerald-700 font-bold">{feasibility.monte_carlo.p50_median_irr_pct}%</span>
                     </div>
-                    <div className="bg-slate-900 p-1.5 rounded-lg border border-slate-800">
-                      <span className="text-slate-500 block">P90</span>
-                      <span className="text-cyan-400 font-bold">{feasibility.monte_carlo.p90_irr_pct}%</span>
+                    <div className="bg-white p-2 rounded-lg border border-slate-200 shadow-2xs">
+                      <span className="text-slate-400 block">P90</span>
+                      <span className="text-cyan-700 font-bold">{feasibility.monte_carlo.p90_irr_pct}%</span>
                     </div>
                   </div>
                   <div className="text-[9px] text-slate-500 italic text-right">
@@ -933,22 +934,22 @@ export default function DeveloperCommandCenter({
         <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* D2: Price History & Golden Zone */}
-            <div className="rounded-2xl bg-slate-900/90 border border-slate-800 p-5 shadow-xl space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+            <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-xs space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div>
-                  <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                    <TrendingUp className="w-4 h-4 text-emerald-400" />
+                  <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                    <TrendingUp className="w-4 h-4 text-emerald-600" />
                     D2: Price History &amp; Golden Zone Analysis
                   </h3>
-                  <p className="text-xs text-slate-400 mt-0.5">{priceHistory.locality_name} ({priceHistory.city})</p>
+                  <p className="text-xs text-slate-500 mt-0.5">{priceHistory.locality_name} ({priceHistory.city})</p>
                 </div>
                 <span
                   className={`px-3 py-1 rounded-full text-xs font-bold border ${
                     priceHistory.zone_classification === 'Golden Zone'
-                      ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40'
+                      ? 'bg-emerald-50 text-emerald-700 border-emerald-300'
                       : priceHistory.zone_classification === 'Watchlist'
-                      ? 'bg-amber-500/20 text-amber-400 border-amber-500/40'
-                      : 'bg-rose-500/20 text-rose-400 border-rose-500/40'
+                      ? 'bg-amber-50 text-amber-700 border-amber-300'
+                      : 'bg-rose-50 text-rose-700 border-rose-300'
                   }`}
                 >
                   {priceHistory.zone_classification}
@@ -956,59 +957,59 @@ export default function DeveloperCommandCenter({
               </div>
 
               <div className="grid grid-cols-4 gap-2 text-center text-xs font-mono">
-                <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
+                <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
                   <span className="text-slate-500 block text-[10px]">1-Yr CAGR</span>
-                  <span className="text-emerald-400 font-bold">{priceHistory.cagr_1yr}%</span>
+                  <span className="text-emerald-700 font-bold">{priceHistory.cagr_1yr}%</span>
                 </div>
-                <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
+                <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
                   <span className="text-slate-500 block text-[10px]">3-Yr CAGR</span>
-                  <span className="text-emerald-400 font-bold">{priceHistory.cagr_3yr}%</span>
+                  <span className="text-emerald-700 font-bold">{priceHistory.cagr_3yr}%</span>
                 </div>
-                <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
+                <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
                   <span className="text-slate-500 block text-[10px]">5-Yr CAGR</span>
-                  <span className="text-cyan-400 font-bold">{priceHistory.cagr_5yr}%</span>
+                  <span className="text-slate-900 font-bold">{priceHistory.cagr_5yr}%</span>
                 </div>
-                <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
+                <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
                   <span className="text-slate-500 block text-[10px]">Volatility</span>
-                  <span className="text-slate-300 font-bold">{priceHistory.volatility_pct}%</span>
+                  <span className="text-slate-700 font-bold">{priceHistory.volatility_pct}%</span>
                 </div>
               </div>
 
               <div className="space-y-1.5">
-                <div className="text-xs font-semibold text-slate-300">Historical Price Trend (₹/SqFt):</div>
+                <div className="text-xs font-semibold text-slate-700">Historical Price Trend (₹/SqFt):</div>
                 <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 text-xs font-mono">
                   {(priceHistory.history || []).map((h: any) => (
-                    <div key={h.year} className="p-2 rounded-lg bg-slate-950/60 border border-slate-800 text-center">
+                    <div key={h.year} className="p-2 rounded-lg bg-slate-50 border border-slate-200 text-center">
                       <span className="text-[10px] text-slate-500 block">{h.year}</span>
-                      <span className="text-slate-200 font-bold">₹{h.avg_rate_sqft}</span>
+                      <span className="text-slate-900 font-bold">₹{h.avg_rate_sqft}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <p className="text-xs text-slate-400 leading-relaxed bg-slate-950/40 p-3 rounded-xl border border-slate-800/80">
+              <p className="text-xs text-slate-600 leading-relaxed bg-slate-50 p-3.5 rounded-xl border border-slate-200">
                 {priceHistory.zone_reason}
               </p>
 
-              <div className="flex items-center justify-between text-[11px] text-slate-500 pt-2 border-t border-slate-800">
+              <div className="flex items-center justify-between text-[11px] text-slate-500 pt-2 border-t border-slate-100">
                 <span>Source: {priceHistory.source}</span>
-                <a href={priceHistory.portal_url} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-cyan-400 hover:underline">
+                <a href={priceHistory.portal_url} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-emerald-600 hover:underline">
                   Verify on NHB RESIDEX <ExternalLink className="w-2.5 h-2.5" />
                 </a>
               </div>
             </div>
 
             {/* D3: Future Price Forecast & Backtest Panel */}
-            <div className="rounded-2xl bg-slate-900/90 border border-slate-800 p-5 shadow-xl space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+            <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-xs space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div>
-                  <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-cyan-400" />
+                  <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-emerald-600" />
                     D3: Price Expansion Forecast (3/5/10 Year)
                   </h3>
-                  <p className="text-xs text-slate-400 mt-0.5">Anchored in historical CAGR + PM GatiShakti pipeline</p>
+                  <p className="text-xs text-slate-500 mt-0.5">Anchored in historical CAGR + PM GatiShakti pipeline</p>
                 </div>
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700">
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700">
                   {priceForecast.disclaimer_badge}
                 </span>
               </div>
@@ -1018,23 +1019,23 @@ export default function DeveloperCommandCenter({
                   const fc = priceForecast.forecasts[hKey];
                   if (!fc) return null;
                   return (
-                    <div key={hKey} className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
+                    <div key={hKey} className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
                       <div className="flex items-center justify-between text-xs">
-                        <span className="font-bold text-white uppercase">{hKey.replace('_', ' ')} Forecast ({fc.target_year})</span>
-                        <span className="text-[10px] font-mono text-emerald-400">{fc.cagr_projected_pct}% Projected CAGR</span>
+                        <span className="font-bold text-slate-900 uppercase">{hKey.replace('_', ' ')} Forecast ({fc.target_year})</span>
+                        <span className="text-[10px] font-mono font-bold text-emerald-700">{fc.cagr_projected_pct}% Projected CAGR</span>
                       </div>
                       <div className="grid grid-cols-3 gap-2 text-center text-xs font-mono">
-                        <div className="bg-slate-900/90 p-2 rounded-lg border border-slate-800">
-                          <span className="text-[10px] text-slate-500 block">Pessimistic</span>
-                          <span className="text-rose-400 font-bold">₹{fc.pessimistic_case.toLocaleString()}</span>
+                        <div className="bg-white p-2 rounded-lg border border-slate-200 shadow-2xs">
+                          <span className="text-[10px] text-slate-400 block">Pessimistic</span>
+                          <span className="text-rose-600 font-bold">₹{fc.pessimistic_case.toLocaleString()}</span>
                         </div>
-                        <div className="bg-slate-900/90 p-2 rounded-lg border border-slate-800">
-                          <span className="text-[10px] text-slate-500 block">Base Case</span>
-                          <span className="text-emerald-400 font-bold">₹{fc.base_case.toLocaleString()}</span>
+                        <div className="bg-white p-2 rounded-lg border border-slate-200 shadow-2xs">
+                          <span className="text-[10px] text-slate-400 block">Base Case</span>
+                          <span className="text-emerald-700 font-bold">₹{fc.base_case.toLocaleString()}</span>
                         </div>
-                        <div className="bg-slate-900/90 p-2 rounded-lg border border-slate-800">
-                          <span className="text-[10px] text-slate-500 block">Optimistic</span>
-                          <span className="text-cyan-400 font-bold">₹{fc.optimistic_case.toLocaleString()}</span>
+                        <div className="bg-white p-2 rounded-lg border border-slate-200 shadow-2xs">
+                          <span className="text-[10px] text-slate-400 block">Optimistic</span>
+                          <span className="text-cyan-700 font-bold">₹{fc.optimistic_case.toLocaleString()}</span>
                         </div>
                       </div>
                     </div>
@@ -1043,12 +1044,12 @@ export default function DeveloperCommandCenter({
               </div>
 
               {/* Model Backtest Panel */}
-              <div className="p-3 rounded-xl bg-emerald-950/20 border border-emerald-800/40 space-y-1 text-xs">
-                <div className="flex items-center justify-between font-bold text-emerald-400">
+              <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 space-y-1 text-xs">
+                <div className="flex items-center justify-between font-bold text-emerald-800">
                   <span>{priceForecast.backtest_panel.validation_period}</span>
-                  <span className="text-[10px]">{priceForecast.backtest_panel.accuracy_grade}</span>
+                  <span className="text-[10px] bg-white px-2 py-0.5 rounded-md border border-emerald-200">{priceForecast.backtest_panel.accuracy_grade}</span>
                 </div>
-                <p className="text-[11px] text-slate-300">
+                <p className="text-[11px] text-slate-700">
                   Predicted 2020: ₹{priceForecast.backtest_panel.model_forecasted_2020}/sqft vs Actual: ₹{priceForecast.backtest_panel.actual_reported_2020}/sqft ({priceForecast.backtest_panel.error_variance_pct}% error variance).
                 </p>
               </div>
@@ -1062,37 +1063,37 @@ export default function DeveloperCommandCenter({
         <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Mega Infrastructure Pipeline */}
-            <div className="rounded-2xl bg-slate-900/90 border border-slate-800 p-5 shadow-xl space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+            <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-xs space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div>
-                  <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                    <Landmark className="w-4 h-4 text-cyan-400" />
+                  <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                    <Landmark className="w-4 h-4 text-emerald-600" />
                     PM GatiShakti Mega Infrastructure Pipeline
                   </h3>
-                  <p className="text-xs text-slate-400 mt-0.5">Announced &amp; Under-Construction Catalysts</p>
+                  <p className="text-xs text-slate-500 mt-0.5">Announced &amp; Under-Construction Catalysts</p>
                 </div>
-                <span className="text-xs font-mono font-bold text-cyan-400">
+                <span className="text-xs font-mono font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
                   {pipelineData.nearby_pipeline_projects.length} Nearby Projects
                 </span>
               </div>
 
               <div className="space-y-3">
                 {pipelineData.nearby_pipeline_projects.map((proj: any) => (
-                  <div key={proj.id} className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
+                  <div key={proj.id} className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-white text-xs">{proj.name}</span>
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
+                      <span className="font-bold text-slate-900 text-xs">{proj.name}</span>
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-white text-emerald-700 border border-slate-200 font-bold">
                         Comp: {proj.expected_completion_year}
                       </span>
                     </div>
-                    <div className="flex items-center gap-3 text-xs text-slate-400">
-                      <span>Distance: <b className="text-slate-200">{proj.distance_km} km</b></span>
+                    <div className="flex items-center gap-3 text-xs text-slate-600">
+                      <span>Distance: <b className="text-slate-900">{proj.distance_km} km</b></span>
                       <span>•</span>
-                      <span>Projected Uplift: <b className="text-emerald-400">+{proj.projected_price_uplift_pct}%</b></span>
+                      <span>Projected Uplift: <b className="text-emerald-700">+{proj.projected_price_uplift_pct}%</b></span>
                     </div>
-                    <p className="text-[11px] text-slate-400">{proj.status}</p>
+                    <p className="text-[11px] text-slate-600">{proj.status}</p>
                     {proj.portal_link && (
-                      <a href={proj.portal_link} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-[10px] text-cyan-400 hover:underline pt-1">
+                      <a href={proj.portal_link} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-[10px] text-emerald-600 hover:underline pt-1 font-semibold">
                         Official Project Portal <ExternalLink className="w-2.5 h-2.5" />
                       </a>
                     )}
@@ -1102,30 +1103,30 @@ export default function DeveloperCommandCenter({
             </div>
 
             {/* Subsidies & Incentives Catalog */}
-            <div className="rounded-2xl bg-slate-900/90 border border-slate-800 p-5 shadow-xl space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+            <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-xs space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div>
-                  <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                    <DollarSign className="w-4 h-4 text-emerald-400" />
+                  <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                    <DollarSign className="w-4 h-4 text-emerald-600" />
                     Developer Subsidies &amp; FAR Incentives
                   </h3>
-                  <p className="text-xs text-slate-400 mt-0.5">PMAY, TOD Bonuses &amp; Green Rating FAR Relief</p>
+                  <p className="text-xs text-slate-500 mt-0.5">PMAY, TOD Bonuses &amp; Green Rating FAR Relief</p>
                 </div>
               </div>
 
               <div className="space-y-3">
                 {pipelineData.subsidies_and_incentives.map((sub: any) => (
-                  <div key={sub.id} className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
+                  <div key={sub.id} className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-white text-xs">{sub.title}</span>
-                      <span className="text-[10px] font-mono text-emerald-400 font-semibold">{sub.authority}</span>
+                      <span className="font-bold text-slate-900 text-xs">{sub.title}</span>
+                      <span className="text-[10px] font-mono text-emerald-700 font-semibold">{sub.authority}</span>
                     </div>
-                    <p className="text-xs text-slate-300">{sub.benefits}</p>
-                    <div className="p-2 rounded-lg bg-amber-950/20 border border-amber-900/30 text-[10px] text-amber-300">
+                    <p className="text-xs text-slate-700">{sub.benefits}</p>
+                    <div className="p-2 rounded-lg bg-amber-50 border border-amber-200 text-[10px] text-amber-800">
                       ⚠️ {sub.verify_flag || 'Verify with local authority prior to statutory submission'}
                     </div>
                     {sub.portal_link && (
-                      <a href={sub.portal_link} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-[10px] text-cyan-400 hover:underline pt-1">
+                      <a href={sub.portal_link} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-[10px] text-emerald-600 hover:underline pt-1 font-semibold">
                         Verify on Government Portal <ExternalLink className="w-2.5 h-2.5" />
                       </a>
                     )}
@@ -1142,46 +1143,46 @@ export default function DeveloperCommandCenter({
         <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* D5: Job-Sector Boom Index */}
-            <div className="rounded-2xl bg-slate-900/90 border border-slate-800 p-5 shadow-xl space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+            <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-xs space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div>
-                  <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                    <Flame className="w-4 h-4 text-amber-400" />
+                  <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                    <Flame className="w-4 h-4 text-amber-600" />
                     D5: Job-Sector Boom Index
                   </h3>
-                  <p className="text-xs text-slate-400 mt-0.5">Employment Driver &amp; Corporate Anchor Heat</p>
+                  <p className="text-xs text-slate-500 mt-0.5">Employment Driver &amp; Corporate Anchor Heat</p>
                 </div>
-                <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-amber-500/10 text-amber-400 border border-amber-500/30">
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-amber-50 text-amber-800 border border-amber-200">
                   {jobBoom.confidence_badge}
                 </span>
               </div>
 
-              <div className="flex items-center gap-4 p-4 rounded-xl bg-slate-950 border border-slate-800">
-                <div className="w-16 h-16 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center font-mono font-black text-2xl text-amber-400">
+              <div className="flex items-center gap-4 p-4 rounded-xl bg-slate-50 border border-slate-200">
+                <div className="w-16 h-16 rounded-xl bg-amber-100 border border-amber-200 flex items-center justify-center font-mono font-black text-2xl text-amber-800">
                   {jobBoom.job_boom_index}
                 </div>
                 <div>
-                  <div className="text-xs font-bold text-white">High Employment Absorption Affinity</div>
-                  <p className="text-[11px] text-slate-400">{jobBoom.methodology}</p>
+                  <div className="text-xs font-bold text-slate-900">High Employment Absorption Affinity</div>
+                  <p className="text-[11px] text-slate-600">{jobBoom.methodology}</p>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3 text-xs font-mono">
-                <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
+                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
                   <span className="text-[10px] text-slate-500 block">Office POIs (3km)</span>
-                  <span className="text-white font-bold text-sm">{jobBoom.job_drivers.office_poi_count_3km} Nodes</span>
+                  <span className="text-slate-900 font-bold text-sm">{jobBoom.job_drivers.office_poi_count_3km} Nodes</span>
                 </div>
-                <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
+                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
                   <span className="text-[10px] text-slate-500 block">Registered Tech Cos</span>
-                  <span className="text-cyan-400 font-bold text-sm">{jobBoom.job_drivers.registered_tech_companies_district}</span>
+                  <span className="text-emerald-700 font-bold text-sm">{jobBoom.job_drivers.registered_tech_companies_district}</span>
                 </div>
               </div>
 
               <div className="space-y-1.5">
-                <div className="text-xs font-semibold text-slate-300">Key Corporate Anchors:</div>
+                <div className="text-xs font-semibold text-slate-700">Key Corporate Anchors:</div>
                 <div className="flex flex-wrap gap-1.5">
                   {(jobBoom.job_drivers.key_employers || []).map((emp: string, idx: number) => (
-                    <span key={idx} className="px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 text-xs text-slate-300 font-medium">
+                    <span key={idx} className="px-2.5 py-1 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-700 font-medium">
                       {emp}
                     </span>
                   ))}
@@ -1190,45 +1191,45 @@ export default function DeveloperCommandCenter({
             </div>
 
             {/* D6: Demand & Elasticity Analysis */}
-            <div className="rounded-2xl bg-slate-900/90 border border-slate-800 p-5 shadow-xl space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+            <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-xs space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div>
-                  <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                    <BarChart3 className="w-4 h-4 text-emerald-400" />
+                  <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                    <BarChart3 className="w-4 h-4 text-emerald-600" />
                     D6: Demand &amp; Elasticity Analysis
                   </h3>
-                  <p className="text-xs text-slate-400 mt-0.5">Supply vs Sales Absorption Dynamics</p>
+                  <p className="text-xs text-slate-500 mt-0.5">Supply vs Sales Absorption Dynamics</p>
                 </div>
-                <span className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
+                <span className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-300">
                   {demandData.demand_verdict}
                 </span>
               </div>
 
               <div className="grid grid-cols-3 gap-3 text-xs font-mono text-center">
-                <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
+                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
                   <span className="text-[10px] text-slate-500 block">Quarterly Sales</span>
-                  <span className="text-emerald-400 font-bold text-sm">{demandData.quarterly_absorption_units} Units</span>
+                  <span className="text-emerald-700 font-bold text-sm">{demandData.quarterly_absorption_units} Units</span>
                 </div>
-                <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
+                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
                   <span className="text-[10px] text-slate-500 block">New Launches</span>
-                  <span className="text-slate-200 font-bold text-sm">{demandData.quarterly_new_launches_units} Units</span>
+                  <span className="text-slate-700 font-bold text-sm">{demandData.quarterly_new_launches_units} Units</span>
                 </div>
-                <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
+                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
                   <span className="text-[10px] text-slate-500 block">Overhang</span>
-                  <span className="text-cyan-400 font-bold text-sm">{demandData.inventory_overhang_months} Mos</span>
+                  <span className="text-slate-900 font-bold text-sm">{demandData.inventory_overhang_months} Mos</span>
                 </div>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-2 text-xs">
+              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2 text-xs">
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Price Elasticity Bracket:</span>
-                  <span className="text-white font-semibold">{demandData.elasticity_bracket}</span>
+                  <span className="text-slate-600">Price Elasticity Bracket:</span>
+                  <span className="text-slate-900 font-semibold">{demandData.elasticity_bracket}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Gross Residential Rental Yield:</span>
-                  <span className="text-emerald-400 font-bold">{demandData.rental_yield_pct}% p.a.</span>
+                  <span className="text-slate-600">Gross Residential Rental Yield:</span>
+                  <span className="text-emerald-700 font-bold">{demandData.rental_yield_pct}% p.a.</span>
                 </div>
-                <p className="text-[11px] text-slate-400 pt-2 border-t border-slate-800/80">
+                <p className="text-[11px] text-slate-600 pt-2 border-t border-slate-200">
                   {demandData.demand_explanation}
                 </p>
               </div>
@@ -1240,14 +1241,14 @@ export default function DeveloperCommandCenter({
       {/* TAB 5: COMPARE PLOTS (D11) */}
       {activeTab === 'compare_plots' && (
         <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 space-y-6">
-          <div className="rounded-2xl bg-slate-900/90 border border-slate-800 p-5 shadow-xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-xs space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div>
-                <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                  <GitCompare className="w-4 h-4 text-cyan-400" />
+                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                  <GitCompare className="w-4 h-4 text-emerald-600" />
                   D11: Side-by-Side Plot Comparison
                 </h3>
-                <p className="text-xs text-slate-400 mt-0.5">Compare key feasibility and environmental metrics across 3 benchmark sites</p>
+                <p className="text-xs text-slate-500 mt-0.5">Compare key feasibility and environmental metrics across 3 benchmark sites</p>
               </div>
             </div>
 
@@ -1290,22 +1291,22 @@ export default function DeveloperCommandCenter({
                   notes: 'High competitive supply overhang'
                 }
               ].map((plot, idx) => (
-                <div key={idx} className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3 text-xs">
+                <div key={idx} className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3 text-xs">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-white text-sm">{plot.name}</span>
-                    <span className={`px-2 py-0.5 rounded-full font-bold text-[10px] ${plot.verdict === 'BUY' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}`}>
+                    <span className="font-bold text-slate-900 text-sm">{plot.name}</span>
+                    <span className={`px-2 py-0.5 rounded-full font-bold text-[10px] ${plot.verdict === 'BUY' ? 'bg-emerald-50 text-emerald-700 border border-emerald-300' : 'bg-amber-50 text-amber-700 border border-amber-300'}`}>
                       {plot.verdict}
                     </span>
                   </div>
-                  <div className="space-y-1 font-mono text-slate-300">
+                  <div className="space-y-1 font-mono text-slate-700">
                     <div className="flex justify-between"><span>Scale / Asking:</span><b>{plot.acres} Ac / ₹{plot.cost_cr}Cr</b></div>
-                    <div className="flex justify-between"><span>Deal Score:</span><b className="text-cyan-400">{plot.score}/100</b></div>
-                    <div className="flex justify-between"><span>Projected IRR:</span><b className="text-emerald-400">{plot.irr}</b></div>
+                    <div className="flex justify-between"><span>Deal Score:</span><b className="text-emerald-700">{plot.score}/100</b></div>
+                    <div className="flex justify-between"><span>Projected IRR:</span><b className="text-emerald-700">{plot.irr}</b></div>
                     <div className="flex justify-between"><span>Gross Margin:</span><b>{plot.margin}</b></div>
                     <div className="flex justify-between"><span>Bearing Capacity:</span><b>{plot.sbc}</b></div>
                     <div className="flex justify-between"><span>Groundwater:</span><b>{plot.gw}</b></div>
                   </div>
-                  <p className="text-[11px] text-slate-400 pt-1 border-t border-slate-800/80">{plot.notes}</p>
+                  <p className="text-[11px] text-slate-600 pt-1 border-t border-slate-200">{plot.notes}</p>
                 </div>
               ))}
             </div>
@@ -1316,14 +1317,14 @@ export default function DeveloperCommandCenter({
       {/* TAB 6: REGULATORY ROADMAP (D12) */}
       {activeTab === 'regulatory_roadmap' && (
         <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 space-y-6">
-          <div className="rounded-2xl bg-slate-900/90 border border-slate-800 p-5 shadow-xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-xs space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div>
-                <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                  <CheckSquare className="w-4 h-4 text-emerald-400" />
+                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                  <CheckSquare className="w-4 h-4 text-emerald-600" />
                   D12: Regulatory Sanction &amp; Approval Roadmap
                 </h3>
-                <p className="text-xs text-slate-400 mt-0.5">Sequential statutory clearances and estimated filing timelines</p>
+                <p className="text-xs text-slate-500 mt-0.5">Sequential statutory clearances and estimated filing timelines</p>
               </div>
             </div>
 
@@ -1335,17 +1336,17 @@ export default function DeveloperCommandCenter({
                 { step: 4, title: 'Building Plan Sanction & Fire NOC', authority: 'Development Authority & Fire Dept', duration: '6 - 8 Weeks', status: 'Statutory', desc: 'Approval of architectural drawings, structural stability per IS 1893, and access road turn-around clearance.' },
                 { step: 5, title: 'State RERA Project Registration', authority: 'UP RERA / State Authority', duration: '4 - 6 Weeks', status: 'Statutory before marketing', desc: 'File sanctioned plans, escrow account details, promoter financial disclosures, and quarterly milestone commitments.' }
               ].map((rd) => (
-                <div key={rd.step} className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 flex items-start gap-3.5 text-xs">
-                  <div className="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 font-mono font-bold flex items-center justify-center shrink-0">
+                <div key={rd.step} className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3.5 text-xs">
+                  <div className="w-7 h-7 rounded-lg bg-emerald-600 text-white font-mono font-bold flex items-center justify-center shrink-0">
                     {rd.step}
                   </div>
                   <div className="flex-1 space-y-1">
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-white text-sm">{rd.title}</span>
-                      <span className="text-[10px] font-mono text-cyan-400 font-semibold">{rd.duration}</span>
+                      <span className="font-bold text-slate-900 text-sm">{rd.title}</span>
+                      <span className="text-[10px] font-mono text-emerald-700 font-semibold">{rd.duration}</span>
                     </div>
-                    <div className="text-[11px] text-slate-400">Authority: <b className="text-slate-300">{rd.authority}</b> • Status: <b className="text-amber-400">{rd.status}</b></div>
-                    <p className="text-[11px] text-slate-400">{rd.desc}</p>
+                    <div className="text-[11px] text-slate-600">Authority: <b className="text-slate-800">{rd.authority}</b> • Status: <b className="text-amber-700">{rd.status}</b></div>
+                    <p className="text-[11px] text-slate-600">{rd.desc}</p>
                   </div>
                 </div>
               ))}
@@ -1359,66 +1360,66 @@ export default function DeveloperCommandCenter({
         <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Submit Survey Form */}
-            <div className="rounded-2xl bg-slate-900/90 border border-slate-800 p-5 shadow-xl space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+            <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-xs space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div>
-                  <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                    <FileText className="w-4 h-4 text-cyan-400" />
+                  <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                    <FileText className="w-4 h-4 text-emerald-600" />
                     D9: Ground-Truth Field Survey Form
                   </h3>
-                  <p className="text-xs text-slate-400 mt-0.5">Submit verified on-site geotechnical and road measurements</p>
+                  <p className="text-xs text-slate-500 mt-0.5">Submit verified on-site geotechnical and road measurements</p>
                 </div>
               </div>
 
               {surveySubmitted && (
-                <div className="p-3 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4" />
+                <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-300 text-emerald-800 text-xs flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                   Survey logged successfully! Confidence badge upgraded to &quot;Field-Verified&quot;.
                 </div>
               )}
 
               <form onSubmit={handleSubmitSurvey} className="space-y-3.5 text-xs">
                 <div>
-                  <label className="text-slate-300 font-semibold block mb-1">Surveyor Full Name / License ID</label>
+                  <label className="text-slate-700 font-semibold block mb-1">Surveyor Full Name / License ID</label>
                   <input
                     type="text"
                     value={surveyorName}
                     onChange={(e) => setSurveyorName(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800"
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-slate-300 font-semibold block mb-1">Measured Soil SBC (kN/m²)</label>
+                    <label className="text-slate-700 font-semibold block mb-1">Measured Soil SBC (kN/m²)</label>
                     <input
                       type="number"
                       value={measuredSbc}
                       onChange={(e) => setMeasuredSbc(parseInt(e.target.value))}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 font-mono"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 font-mono"
                     />
                   </div>
                   <div>
-                    <label className="text-slate-300 font-semibold block mb-1">Actual Road Width (Meters)</label>
+                    <label className="text-slate-700 font-semibold block mb-1">Actual Road Width (Meters)</label>
                     <input
                       type="number"
                       value={measuredRoadWidth}
                       onChange={(e) => setMeasuredRoadWidth(parseInt(e.target.value))}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 font-mono"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 font-mono"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="text-slate-300 font-semibold block mb-1">Field Due Diligence Notes</label>
+                  <label className="text-slate-700 font-semibold block mb-1">Field Due Diligence Notes</label>
                   <textarea
                     rows={3}
                     value={surveyNotes}
                     onChange={(e) => setSurveyNotes(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800"
                   />
                 </div>
                 <button
                   type="submit"
-                  className="w-full py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white font-bold rounded-xl transition-all cursor-pointer shadow-sm"
+                  className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl transition-all cursor-pointer shadow-xs"
                 >
                   Submit Field Survey (Upgrade Confidence Badge)
                 </button>
@@ -1426,15 +1427,15 @@ export default function DeveloperCommandCenter({
             </div>
 
             {/* Checklist Export */}
-            <div className="rounded-2xl bg-slate-900/90 border border-slate-800 p-5 shadow-xl space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-                <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                  <CheckSquare className="w-4 h-4 text-emerald-400" />
+            <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-xs space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                  <CheckSquare className="w-4 h-4 text-emerald-600" />
                   Due Diligence Field Checklist
                 </h3>
                 <button
                   onClick={() => window.print()}
-                  className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1 cursor-pointer"
+                  className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center gap-1 cursor-pointer border border-slate-200"
                 >
                   <Download className="w-3 h-3" /> Export Checklist
                 </button>
@@ -1443,9 +1444,9 @@ export default function DeveloperCommandCenter({
               {surveyChecklist && (
                 <div className="space-y-3 text-xs">
                   {surveyChecklist.checklist_sections.map((sec: any, idx: number) => (
-                    <div key={idx} className="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
-                      <div className="font-bold text-emerald-400">{sec.section}</div>
-                      <ul className="list-disc pl-4 space-y-1 text-slate-300 text-[11px]">
+                    <div key={idx} className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                      <div className="font-bold text-emerald-800">{sec.section}</div>
+                      <ul className="list-disc pl-4 space-y-1 text-slate-700 text-[11px]">
                         {sec.items.map((item: string, iIdx: number) => (
                           <li key={iIdx}>{item}</li>
                         ))}
@@ -1462,42 +1463,42 @@ export default function DeveloperCommandCenter({
       {/* TAB 8: TOP OPPORTUNITIES & DEVELOPER FILTERS (D8) */}
       {activeTab === 'top_plots' && (
         <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 space-y-6">
-          <div className="rounded-2xl bg-slate-900/90 border border-slate-800 p-5 shadow-xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-xs space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div>
-                <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                  <Filter className="w-4 h-4 text-cyan-400" />
+                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                  <Filter className="w-4 h-4 text-emerald-600" />
                   D8: Top Land Opportunities (Ranked Opportunities)
                 </h3>
-                <p className="text-xs text-slate-400 mt-0.5">Filter by budget, scale, seismic safety, and zone classification</p>
+                <p className="text-xs text-slate-500 mt-0.5">Filter by budget, scale, seismic safety, and zone classification</p>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {topPlots.map((plot) => (
-                <div key={plot.id} className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3 text-xs">
+                <div key={plot.id} className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3 text-xs">
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="font-bold text-white text-sm">{plot.name}</div>
-                      <div className="text-[11px] text-slate-400">{plot.city} • {plot.scale_acres} Acres</div>
+                      <div className="font-bold text-slate-900 text-sm">{plot.name}</div>
+                      <div className="text-[11px] text-slate-500">{plot.city} • {plot.scale_acres} Acres</div>
                     </div>
-                    <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${plot.verdict === 'BUY' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}`}>
+                    <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${plot.verdict === 'BUY' ? 'bg-emerald-50 text-emerald-700 border border-emerald-300' : 'bg-amber-50 text-amber-700 border border-amber-300'}`}>
                       {plot.verdict} (Score: {plot.deal_score})
                     </span>
                   </div>
 
                   <div className="grid grid-cols-3 gap-2 text-center font-mono">
-                    <div className="p-2 rounded-lg bg-slate-900 border border-slate-800">
-                      <span className="text-[10px] text-slate-500 block">Asking</span>
-                      <span className="text-white font-bold">₹{plot.asking_cost_cr} Cr</span>
+                    <div className="p-2 rounded-lg bg-white border border-slate-200 shadow-2xs">
+                      <span className="text-[10px] text-slate-400 block">Asking</span>
+                      <span className="text-slate-900 font-bold">₹{plot.asking_cost_cr} Cr</span>
                     </div>
-                    <div className="p-2 rounded-lg bg-slate-900 border border-slate-800">
-                      <span className="text-[10px] text-slate-500 block">Zone</span>
-                      <span className="text-emerald-400 font-bold">{plot.zone_type}</span>
+                    <div className="p-2 rounded-lg bg-white border border-slate-200 shadow-2xs">
+                      <span className="text-[10px] text-slate-400 block">Zone</span>
+                      <span className="text-emerald-700 font-bold">{plot.zone_type}</span>
                     </div>
-                    <div className="p-2 rounded-lg bg-slate-900 border border-slate-800">
-                      <span className="text-[10px] text-slate-500 block">Metro Dist</span>
-                      <span className="text-cyan-400 font-bold">{plot.distance_to_metro_m}m</span>
+                    <div className="p-2 rounded-lg bg-white border border-slate-200 shadow-2xs">
+                      <span className="text-[10px] text-slate-400 block">Metro Dist</span>
+                      <span className="text-slate-700 font-bold">{plot.distance_to_metro_m}m</span>
                     </div>
                   </div>
 
@@ -1515,7 +1516,7 @@ export default function DeveloperCommandCenter({
                       }
                       setActiveTab('feasibility');
                     }}
-                    className="w-full py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-cyan-400 font-bold text-xs border border-slate-800 transition-colors cursor-pointer"
+                    className="w-full py-2 rounded-xl bg-white hover:bg-slate-100 text-emerald-700 font-bold text-xs border border-slate-200 shadow-2xs transition-colors cursor-pointer"
                   >
                     Simulate Plot Feasibility →
                   </button>
@@ -1528,13 +1529,13 @@ export default function DeveloperCommandCenter({
 
       {/* D14: DEVELOPER AI ADVISOR FLOATING DRAWER */}
       <div className="fixed bottom-4 right-4 z-50 print:hidden">
-        <div className="w-80 sm:w-96 rounded-2xl bg-slate-900/95 backdrop-blur-md border border-slate-800 shadow-2xl overflow-hidden flex flex-col">
-          <div className="p-3 bg-slate-950 border-b border-slate-800 flex items-center justify-between">
+        <div className="w-80 sm:w-96 rounded-2xl bg-white border border-slate-200 shadow-2xl overflow-hidden flex flex-col">
+          <div className="p-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-emerald-400" />
-              <span className="text-xs font-bold text-white uppercase tracking-wider">Developer AI Advisor</span>
+              <Sparkles className="w-4 h-4 text-emerald-600" />
+              <span className="text-xs font-bold text-slate-900 uppercase tracking-wider">Developer AI Advisor</span>
             </div>
-            <span className="text-[9px] font-mono px-1.5 py-0.5 rounded-sm bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+            <span className="text-[9px] font-mono px-1.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold">
               D14 ACTIVE
             </span>
           </div>
@@ -1546,8 +1547,8 @@ export default function DeveloperCommandCenter({
                 key={i}
                 className={`p-2.5 rounded-xl whitespace-pre-line leading-relaxed ${
                   msg.sender === 'user'
-                    ? 'bg-emerald-950/60 text-emerald-200 border border-emerald-800/40 ml-4'
-                    : 'bg-slate-950 text-slate-300 border border-slate-800 mr-4'
+                    ? 'bg-emerald-600 text-white ml-4 shadow-2xs'
+                    : 'bg-slate-50 text-slate-800 border border-slate-200 mr-4'
                 }`}
               >
                 {msg.text}
@@ -1555,25 +1556,25 @@ export default function DeveloperCommandCenter({
             ))}
             {isAiReplying && (
               <div className="text-[11px] text-slate-500 italic flex items-center gap-1.5">
-                <div className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                <div className="w-2 h-2 rounded-full bg-emerald-600 animate-ping" />
                 Querying deterministic engines...
               </div>
             )}
           </div>
 
           {/* Chat Input */}
-          <div className="p-2 bg-slate-950 border-t border-slate-800 flex items-center gap-2">
+          <div className="p-2 bg-slate-50 border-t border-slate-200 flex items-center gap-2">
             <input
               type="text"
               placeholder="Ask about IRR, soil, FAR, or water..."
               value={aiInputText}
               onChange={(e) => setAiInputText(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSendAiMessage()}
-              className="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-hidden"
+              className="flex-1 bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-hidden focus:border-emerald-500"
             />
             <button
               onClick={handleSendAiMessage}
-              className="p-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer transition-colors"
+              className="p-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer transition-colors shadow-2xs"
             >
               <Send className="w-3.5 h-3.5" />
             </button>
