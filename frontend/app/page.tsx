@@ -46,7 +46,7 @@ import {
 } from '@/lib/api';
 
 export default function Home() {
-  // Navigation State
+  // Navigation State - defaults to Page 1: Role Gateway
   const [currentRole, setCurrentRole] = useState<'gateway' | 'buyer' | 'developer'>('gateway');
   const [currentView, setCurrentView] = useState<string>('home');
 
@@ -78,10 +78,8 @@ export default function Home() {
   // Active persona for heatmap
   const [activePersona, setActivePersona] = useState<string>('family');
 
-  // Default to Page 1: Role Gateway so user can always pick their role
-  // We keep localStorage updated when they choose, but do not bypass the gateway on entry
+  // Check if URL has explicit ?role= parameter
   useEffect(() => {
-    // Check if URL has an explicit ?role= parameter, otherwise show gateway
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       const urlRole = params.get('role');
@@ -167,34 +165,34 @@ export default function Home() {
   };
 
   // ==========================================
-  // VIEW 1: PAGE 1 - ROLE GATEWAY
+  // VIEW 1: PAGE 1 - ROLE GATEWAY (Light Mode)
   // ==========================================
   if (currentRole === 'gateway') {
     return (
-      <div className="min-h-screen bg-[#090d16] text-white flex flex-col font-sans">
+      <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans">
         {/* Top Header */}
-        <header className="flex items-center justify-between px-6 py-4 border-b border-slate-800/80">
+        <header className="flex items-center justify-between px-6 py-4 bg-white border-b border-slate-200 shadow-xs">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-950/40">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-md shadow-emerald-500/20">
               <Compass className="w-5 h-5 text-white stroke-[2.5]" />
             </div>
-            <span className="text-lg font-bold tracking-tight">
+            <span className="text-lg font-bold tracking-tight text-slate-900">
               LANDNOVA
-              <span className="ml-2 text-[10px] font-semibold tracking-wider px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 uppercase">
+              <span className="ml-2 text-[10px] font-semibold tracking-wider px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 uppercase">
                 AI
               </span>
             </span>
           </div>
           <div className="flex items-center gap-3">
             <button
-              onClick={() => alert('Demo Mode: You are free to proceed without mandatory login.')}
-              className="px-4 py-2 text-xs text-slate-400 hover:text-white transition-colors"
+              onClick={() => alert('Demo Mode: You can explore the full platform freely without logging in.')}
+              className="px-4 py-2 text-xs font-medium text-slate-600 hover:text-slate-900 transition-colors"
             >
               Login
             </button>
             <button
               onClick={() => handleSelectRole('buyer')}
-              className="px-4 py-2 text-xs bg-emerald-600 hover:bg-emerald-500 rounded-lg font-medium transition-colors text-white"
+              className="px-4 py-2 text-xs bg-emerald-600 hover:bg-emerald-700 rounded-lg font-semibold transition-colors text-white shadow-xs"
             >
               Sign Up
             </button>
@@ -202,95 +200,77 @@ export default function Home() {
         </header>
 
         {/* Hero Section */}
-        <main className="flex-1 flex flex-col items-center justify-center px-4 py-12 max-w-6xl mx-auto w-full">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-xl shadow-emerald-500/30">
-                <Compass className="w-8 h-8 text-white stroke-[2]" />
+        <main className="flex-1 flex flex-col items-center justify-center px-4 py-12 max-w-5xl mx-auto w-full">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <div className="flex items-center justify-center gap-3 mb-5">
+              <div className="w-14 h-14 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center shadow-md shadow-emerald-500/10">
+                <Compass className="w-8 h-8 text-emerald-600 stroke-[2]" />
               </div>
             </div>
-            <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight mb-4">
-              LAND<span className="text-emerald-400">NOVA</span>
+            <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900 mb-3">
+              LAND<span className="text-emerald-600">NOVA</span>
             </h1>
-            <p className="text-xl sm:text-2xl text-slate-300 font-semibold mb-3">
+            <p className="text-xl sm:text-2xl text-slate-700 font-semibold mb-3">
               The Location Is the Decision.
             </p>
-            <p className="text-xs sm:text-sm text-slate-400 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-500 leading-relaxed max-w-lg mx-auto">
               AI-powered location intelligence platform for smarter real estate decisions.
-              Providing structured, source-labeled location intelligence for buyers, renters, and real estate developers.
+              Select your role below to explore structured, source-verified insights.
             </p>
           </div>
 
-          {/* Two Large Selectable Role Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl w-full mb-16">
+          {/* Two Selectable Role Cards (Clean White Cards) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl w-full mb-14">
             {/* Buyer / Renter Card */}
             <div
               onClick={() => handleSelectRole('buyer')}
-              className="group cursor-pointer relative p-8 rounded-3xl border-2 border-slate-800 hover:border-emerald-500 bg-slate-900/60 hover:bg-slate-900/90 transition-all duration-300 shadow-xl hover:shadow-2xl hover:shadow-emerald-950/30 text-left flex flex-col justify-between"
+              className="group cursor-pointer p-8 rounded-2xl border border-slate-200 bg-white hover:border-emerald-500 transition-all duration-200 shadow-sm hover:shadow-lg text-left flex flex-col justify-between"
             >
               <div>
-                <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
-                  <Users className="w-7 h-7 text-emerald-400" />
+                <div className="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
+                  <Users className="w-6 h-6 text-emerald-600" />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-emerald-300 transition-colors">
+                <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-emerald-600 transition-colors">
                   I&apos;m a Buyer / Renter
                 </h3>
-                <p className="text-xs sm:text-sm text-slate-400 leading-relaxed mb-6">
-                  Explore properties with verified livability scores, air quality index, transit access,
-                  and generate personalized spatial heatmaps based on your lifestyle persona.
+                <p className="text-xs text-slate-500 leading-relaxed mb-6">
+                  Explore properties with verified 5-factor livability scores, air quality, transit access,
+                  and generate personalized spatial heatmaps.
                 </p>
               </div>
 
-              <div className="flex items-center text-emerald-400 text-xs sm:text-sm font-semibold group-hover:gap-2 transition-all">
-                Enter Buyer Flow <ArrowRight className="w-4 h-4 ml-1" />
+              <div className="flex items-center text-emerald-600 text-xs font-semibold group-hover:gap-2 transition-all">
+                Enter Buyer Journey <ArrowRight className="w-4 h-4 ml-1" />
               </div>
             </div>
 
             {/* Developer Card */}
             <div
               onClick={() => handleSelectRole('developer')}
-              className="group cursor-pointer relative p-8 rounded-3xl border-2 border-slate-800 hover:border-amber-500 bg-slate-900/60 hover:bg-slate-900/90 transition-all duration-300 shadow-xl hover:shadow-2xl hover:shadow-amber-950/30 text-left flex flex-col justify-between"
+              className="group cursor-pointer p-8 rounded-2xl border border-slate-200 bg-white hover:border-amber-500 transition-all duration-200 shadow-sm hover:shadow-lg text-left flex flex-col justify-between"
             >
               <div>
-                <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
-                  <Building2 className="w-7 h-7 text-amber-400" />
+                <div className="w-12 h-12 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
+                  <Building2 className="w-6 h-6 text-amber-600" />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-amber-300 transition-colors">
+                <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-amber-600 transition-colors">
                   I&apos;m a Real Estate Developer
                 </h3>
-                <p className="text-xs sm:text-sm text-slate-400 leading-relaxed mb-6">
+                <p className="text-xs text-slate-500 leading-relaxed mb-6">
                   Analyze sites end-to-end: soil properties (ISRIC SoilGrids), seismic risk (USGS/BIS),
-                  climate normals (Open-Meteo), groundwater, demographic needs, and AI engineering guidance.
+                  climate normals, groundwater, and preliminary AI engineering guidance.
                 </p>
               </div>
 
-              <div className="flex items-center text-amber-400 text-xs sm:text-sm font-semibold group-hover:gap-2 transition-all">
-                Enter Developer Flow <ArrowRight className="w-4 h-4 ml-1" />
+              <div className="flex items-center text-amber-600 text-xs font-semibold group-hover:gap-2 transition-all">
+                Enter Developer Journey <ArrowRight className="w-4 h-4 ml-1" />
               </div>
             </div>
           </div>
 
-          {/* Core Problem Statement Section */}
-          <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-8 max-w-4xl w-full mb-16 shadow-xl">
-            <h3 className="text-base font-bold text-white mb-3 text-center uppercase tracking-wider">
-              The Real Estate Intelligence Problem
-            </h3>
-            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed text-center max-w-2xl mx-auto">
-              Real estate developers have no single tool that analyzes a location end-to-end
-              (soil, groundwater, seismic risk, climate, local resources, connectivity, resident profile and needs)
-              to decide <strong className="text-white">WHERE to build</strong> and <strong className="text-white">WHAT to build</strong>.
-              Buyers and renters only see listing photos and prices, with no real analysis of the neighborhood.
-            </p>
-            <div className="mt-4 pt-4 border-t border-slate-800 text-center">
-              <span className="text-xs text-emerald-400 font-semibold">
-                LandNova solves this by providing structured, source-labeled location intelligence for both groups.
-              </span>
-            </div>
-          </div>
-
-          {/* How LandNova Works: 4 Pillars */}
-          <div className="max-w-4xl w-full mb-16">
-            <h3 className="text-sm font-bold text-white mb-6 text-center uppercase tracking-wider">
+          {/* How LandNova Works: 4 Clean Steps */}
+          <div className="max-w-4xl w-full mb-12">
+            <h3 className="text-xs font-bold text-slate-400 mb-6 text-center uppercase tracking-wider">
               How LandNova Works
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -300,12 +280,12 @@ export default function Home() {
                 { step: '3', title: 'Intelligent Analysis', desc: 'Deterministic 5-factor scoring + Gemini AI insights' },
                 { step: '4', title: 'Personalized Decisions', desc: 'Persona-weighted heatmaps and site feasibility' }
               ].map(item => (
-                <div key={item.step} className="bg-slate-900/60 p-4 rounded-2xl border border-slate-800 text-center">
-                  <div className="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xs flex items-center justify-center mx-auto mb-2">
+                <div key={item.step} className="bg-white p-4 rounded-xl border border-slate-200 text-center shadow-xs">
+                  <div className="w-7 h-7 rounded-full bg-emerald-50 text-emerald-700 font-bold text-xs flex items-center justify-center mx-auto mb-2 border border-emerald-200">
                     {item.step}
                   </div>
-                  <h4 className="text-xs font-bold text-white mb-1">{item.title}</h4>
-                  <p className="text-[11px] text-slate-400">{item.desc}</p>
+                  <h4 className="text-xs font-bold text-slate-800 mb-1">{item.title}</h4>
+                  <p className="text-[11px] text-slate-500">{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -313,8 +293,8 @@ export default function Home() {
 
           {/* Verified Data Sources Badges */}
           <div className="text-center space-y-3">
-            <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-              Grounded in Verified Public Datasets
+            <h4 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+              Verified Public Data Sources
             </h4>
             <div className="flex flex-wrap justify-center gap-2 max-w-2xl mx-auto">
               {[
@@ -329,7 +309,7 @@ export default function Home() {
               ].map(src => (
                 <span
                   key={src}
-                  className="px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-[10px] text-slate-400 font-medium"
+                  className="px-2.5 py-1 rounded-full bg-white border border-slate-200 text-[10px] text-slate-600 font-medium shadow-xs"
                 >
                   {src}
                 </span>
@@ -339,18 +319,18 @@ export default function Home() {
         </main>
 
         {/* Footer */}
-        <footer className="border-t border-slate-800/80 px-6 py-6 text-center text-xs text-slate-500">
-          LandNova — The Location Is the Decision • Made for CU Hackathon 2026
+        <footer className="border-t border-slate-200 bg-white px-6 py-5 text-center text-xs text-slate-500">
+          LandNova — The Location Is the Decision • Hackathon Edition
         </footer>
       </div>
     );
   }
 
   // ==========================================
-  // OPERATIONAL VIEW: BUYER OR DEVELOPER FLOWS
+  // OPERATIONAL VIEW: BUYER OR DEVELOPER FLOWS (Light Mode)
   // ==========================================
   return (
-    <div className="min-h-screen bg-[#090d16] text-white flex flex-col font-sans selection:bg-emerald-500 selection:text-white">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-emerald-500 selection:text-white">
       {/* Role-Aware Persistent Navbar */}
       <Navbar
         currentRole={currentRole}
@@ -513,7 +493,7 @@ export default function Home() {
         )}
       </main>
 
-      {/* Floating AI Chatbot Widget (Always available across views) */}
+      {/* Floating AI Chatbot Widget */}
       <ChatWidget
         currentLocationName={currentLocation.display_name.split(',')[0]}
         currentLocationContext={{

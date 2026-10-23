@@ -82,33 +82,29 @@ export default function DeveloperHome({
 
   return (
     <div className="space-y-8 pb-16">
-      {/* Developer Hero */}
-      <div className="relative rounded-3xl bg-gradient-to-br from-slate-900 via-slate-900 to-amber-950/60 border border-slate-800 p-8 sm:p-12 overflow-hidden shadow-2xl">
-        <div className="absolute top-0 right-0 -mt-12 -mr-12 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="relative z-10 max-w-3xl space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-medium">
-            <HardHat className="w-3.5 h-3.5" />
+      {/* Developer Hero (Clean Light Mode) */}
+      <div className="relative rounded-3xl bg-gradient-to-r from-amber-50 via-orange-50 to-white border border-amber-200 p-8 sm:p-10 overflow-hidden shadow-xs">
+        <div className="relative z-10 max-w-3xl space-y-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 border border-amber-300 text-amber-900 text-xs font-semibold">
+            <HardHat className="w-3.5 h-3.5 text-amber-700" />
             End-to-End Real Estate Developer Intelligence Suite
           </div>
 
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
-            Decide <span className="text-amber-400">WHERE</span> to Build and{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-emerald-400">
-              WHAT
-            </span> to Build.
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+            Decide <span className="text-amber-700">WHERE</span> to Build and{' '}
+            <span className="text-emerald-700">WHAT</span> to Build.
           </h1>
 
-          <p className="text-sm sm:text-base text-slate-300 max-w-2xl leading-relaxed">
+          <p className="text-xs sm:text-sm text-slate-600 max-w-2xl leading-relaxed">
             Eliminate fragmented surveys. LandNova synthesizes soil characteristics (ISRIC SoilGrids),
             seismic vulnerability (USGS & BIS), climate normals (Open-Meteo), groundwater tables,
-            demographic needs (Census), and preliminary engineering feasibility in a single report.
+            and preliminary engineering feasibility in a single comprehensive report.
           </p>
 
           <div className="pt-2 flex flex-wrap items-center gap-3">
             <button
               onClick={handleStartAnalysis}
-              className="px-6 py-3 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-slate-950 font-bold rounded-xl text-xs sm:text-sm shadow-lg shadow-amber-950/40 flex items-center gap-2 transition-all hover:scale-105"
+              className="px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl text-xs sm:text-sm shadow-sm flex items-center gap-2 transition-all hover:scale-102"
             >
               <BarChart3 className="w-4 h-4" />
               Generate 12-Section Site Analysis
@@ -117,9 +113,9 @@ export default function DeveloperHome({
 
             <button
               onClick={() => onNavigateView('heatmap')}
-              className="px-5 py-3 bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-white rounded-xl text-xs sm:text-sm flex items-center gap-2 transition-colors"
+              className="px-5 py-3 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-semibold rounded-xl text-xs sm:text-sm flex items-center gap-2 transition-colors shadow-xs"
             >
-              <Flame className="w-4 h-4 text-amber-400" />
+              <Flame className="w-4 h-4 text-amber-600" />
               Development Suitability Heatmap
             </button>
           </div>
@@ -129,23 +125,23 @@ export default function DeveloperHome({
       {/* Preferences & Project Parameter Cards */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Project Setup Card */}
-        <div className="lg:col-span-2 bg-slate-900/70 border border-slate-800 rounded-2xl p-6 space-y-6">
+        <div className="lg:col-span-2 bg-white border border-slate-200 rounded-2xl p-6 space-y-6 shadow-xs">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-              <Sliders className="w-4 h-4 text-amber-400" />
-              Configure Development Parameters for {currentLocation.display_name.split(',')[0]}
+            <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-2">
+              <Sliders className="w-4 h-4 text-amber-600" />
+              Configure Parameters for {currentLocation.display_name.split(',')[0]}
             </h3>
-            <span className="text-xs text-amber-400 font-mono font-semibold">Active Site</span>
+            <span className="text-xs text-amber-700 font-mono font-bold">Active Site</span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Project Typology */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-300">Project Typology</label>
+              <label className="text-xs font-semibold text-slate-700">Project Typology</label>
               <select
                 value={projectType}
                 onChange={(e) => setProjectType(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-amber-500 focus:bg-white"
               >
                 <option value="residential_colony">Residential Colony / Gated Enclave</option>
                 <option value="commercial_office">Commercial / IT Office Complex</option>
@@ -156,11 +152,11 @@ export default function DeveloperHome({
 
             {/* Target Audience */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-300">Target Demographic</label>
+              <label className="text-xs font-semibold text-slate-700">Target Demographic</label>
               <select
                 value={targetAudience}
                 onChange={(e) => setTargetAudience(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-amber-500 focus:bg-white"
               >
                 <option value="families">Family Households (2 & 3 BHK)</option>
                 <option value="tech_professionals">Tech Professionals & Execs</option>
@@ -171,11 +167,11 @@ export default function DeveloperHome({
 
             {/* Budget Bracket */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-300">Pricing / Budget Bracket</label>
+              <label className="text-xs font-semibold text-slate-700">Pricing / Budget Bracket</label>
               <select
                 value={budgetBracket}
                 onChange={(e) => setBudgetBracket(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-amber-500 focus:bg-white"
               >
                 <option value="affordable">Affordable Housing (PMAY Tier)</option>
                 <option value="mid_market">Mid-Market Premium (₹60L - ₹1.5 Cr)</option>
@@ -186,8 +182,8 @@ export default function DeveloperHome({
             {/* Scale Acres */}
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs font-semibold">
-                <span className="text-slate-300">Land Parcel Scale</span>
-                <span className="text-amber-400 font-mono">{scaleAcres} Acres</span>
+                <span className="text-slate-700">Land Parcel Scale</span>
+                <span className="text-amber-700 font-mono font-bold">{scaleAcres} Acres</span>
               </div>
               <input
                 type="range"
@@ -196,7 +192,7 @@ export default function DeveloperHome({
                 step="0.5"
                 value={scaleAcres}
                 onChange={(e) => setScaleAcres(parseFloat(e.target.value))}
-                className="w-full accent-amber-500 h-2 bg-slate-800 rounded-lg cursor-pointer mt-2"
+                className="w-full accent-amber-600 h-2 bg-slate-100 rounded-lg cursor-pointer mt-2"
               />
             </div>
           </div>
@@ -204,7 +200,7 @@ export default function DeveloperHome({
           <div className="pt-2">
             <button
               onClick={handleStartAnalysis}
-              className="w-full py-3 bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition-colors shadow-lg"
+              className="w-full py-3 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition-colors shadow-xs"
             >
               <FileText className="w-4 h-4" />
               Run Site Feasibility Analysis for {currentLocation.display_name.split(',')[0]}
@@ -213,9 +209,9 @@ export default function DeveloperHome({
         </div>
 
         {/* 12 Data Layers Overview Box */}
-        <div className="bg-slate-900/70 border border-slate-800 rounded-2xl p-6 space-y-4">
-          <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-            <Layers className="w-4 h-4 text-emerald-400" />
+        <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-4 shadow-xs">
+          <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-2">
+            <Layers className="w-4 h-4 text-emerald-600" />
             12 Verified Site Dimensions
           </h3>
           <div className="space-y-2 text-xs">
@@ -233,9 +229,9 @@ export default function DeveloperHome({
               { num: '11', title: 'AI Recommendations', src: 'Gemini Structural' },
               { num: '12', title: 'Data Gaps Audit', src: 'Due Diligence Roadmap' },
             ].map(layer => (
-              <div key={layer.num} className="flex items-center justify-between p-1.5 rounded-lg bg-slate-950/60 border border-slate-800/80">
-                <span className="text-slate-300 font-medium flex items-center gap-2">
-                  <span className="text-[10px] text-amber-400 font-mono w-4">{layer.num}.</span>
+              <div key={layer.num} className="flex items-center justify-between p-1.5 rounded-lg bg-slate-50 border border-slate-100">
+                <span className="text-slate-700 font-medium flex items-center gap-2">
+                  <span className="text-[10px] text-amber-600 font-mono w-4 font-bold">{layer.num}.</span>
                   {layer.title}
                 </span>
                 <span className="text-[10px] text-slate-500 font-mono truncate max-w-[120px]">{layer.src}</span>
@@ -248,11 +244,11 @@ export default function DeveloperHome({
       {/* Saved Projects Section */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-base font-bold text-white flex items-center gap-2">
-            <Building2 className="w-4 h-4 text-amber-400" />
+          <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2 uppercase tracking-wider">
+            <Building2 className="w-4 h-4 text-amber-600" />
             Saved Development Sites & Benchmark Projects
           </h3>
-          <span className="text-xs text-slate-400">{savedProjects.length} Verified Benchmarks</span>
+          <span className="text-xs text-slate-500">{savedProjects.length} Verified Benchmarks</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -260,38 +256,38 @@ export default function DeveloperHome({
             <div
               key={proj.id}
               onClick={handleStartAnalysis}
-              className="cursor-pointer rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-amber-500/50 p-5 space-y-4 transition-all duration-300 group hover:shadow-xl hover:shadow-amber-950/20"
+              className="cursor-pointer rounded-2xl bg-white border border-slate-200 hover:border-amber-500 p-5 space-y-4 transition-all duration-200 group shadow-xs hover:shadow-md"
             >
               <div className="flex items-start justify-between">
                 <div>
-                  <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider block">
+                  <span className="text-[10px] font-bold text-amber-700 uppercase tracking-wider block">
                     {proj.type}
                   </span>
-                  <h4 className="text-sm font-bold text-white group-hover:text-amber-300 transition-colors mt-0.5">
+                  <h4 className="text-sm font-bold text-slate-900 group-hover:text-amber-700 transition-colors mt-0.5">
                     {proj.name}
                   </h4>
                 </div>
-                <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-xs shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 flex items-center justify-center font-bold text-xs shrink-0">
                   {proj.score}
                 </div>
               </div>
 
-              <div className="space-y-1.5 text-xs text-slate-400 border-t border-slate-800 pt-3">
+              <div className="space-y-1.5 text-xs text-slate-500 border-t border-slate-100 pt-3">
                 <div className="flex justify-between">
                   <span>Scale:</span>
-                  <span className="text-slate-200 font-medium">{proj.scale}</span>
+                  <span className="text-slate-800 font-medium">{proj.scale}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Feasibility:</span>
-                  <span className="text-emerald-400 font-medium">{proj.verdict}</span>
+                  <span className="text-emerald-700 font-semibold">{proj.verdict}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Analyzed:</span>
-                  <span className="text-slate-500">{proj.date}</span>
+                  <span className="text-slate-400">{proj.date}</span>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between pt-1 text-xs font-semibold text-amber-400 group-hover:translate-x-0.5 transition-transform">
+              <div className="flex items-center justify-between pt-1 text-xs font-semibold text-amber-700 group-hover:translate-x-0.5 transition-transform">
                 <span>View Full Feasibility Report</span>
                 <ArrowRight className="w-4 h-4" />
               </div>

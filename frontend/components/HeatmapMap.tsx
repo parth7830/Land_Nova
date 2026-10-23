@@ -29,24 +29,24 @@ export default function HeatmapMap({
   selectedCell
 }: HeatmapMapProps) {
   const getCellColor = (score: number) => {
-    if (score < 0) return '#64748b'; // Gray for insufficient data
-    if (score >= 80) return '#10b981'; // Emerald
-    if (score >= 60) return '#84cc16'; // Lime
-    if (score >= 40) return '#f59e0b'; // Amber
-    return '#ef4444'; // Red
+    if (score < 0) return '#94a3b8'; // Slate for insufficient data
+    if (score >= 80) return '#059669'; // Emerald
+    if (score >= 60) return '#65a30d'; // Lime
+    if (score >= 40) return '#d97706'; // Amber
+    return '#dc2626'; // Red
   };
 
   return (
     <MapContainer
       center={center}
       zoom={zoom}
-      style={{ width: '100%', height: '100%', backgroundColor: '#090d16' }}
+      style={{ width: '100%', height: '100%', backgroundColor: '#f1f5f9' }}
       className="rounded-2xl"
     >
       <MapController center={center} zoom={zoom} />
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
       />
 
       {cells.map((cell, idx) => {
@@ -62,10 +62,10 @@ export default function HeatmapMap({
             center={[cell.latitude, cell.longitude]}
             radius={isSelected ? 26 : 20}
             pathOptions={{
-              color: isSelected ? '#ffffff' : color,
-              weight: isSelected ? 3 : 1.5,
+              color: isSelected ? '#0f172a' : color,
+              weight: isSelected ? 3.5 : 2,
               fillColor: color,
-              fillOpacity: cell.score < 0 ? 0.35 : 0.65
+              fillOpacity: cell.score < 0 ? 0.4 : 0.75
             }}
             eventHandlers={{
               click: () => onSelectCell(cell)

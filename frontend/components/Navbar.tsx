@@ -109,7 +109,7 @@ export default function Navbar({
 
   return (
     <>
-      <header className="sticky top-0 z-40 bg-[#090d16]/95 backdrop-blur-md border-b border-slate-800">
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 gap-4">
             {/* Logo */}
@@ -118,21 +118,21 @@ export default function Navbar({
               className="flex items-center gap-3 cursor-pointer group shrink-0"
               title="Return to Page 1: Role Gateway"
             >
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-950/40 group-hover:scale-105 transition-transform">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform">
                 <Compass className="w-5 h-5 text-white stroke-[2.5]" />
               </div>
               <div className="hidden sm:block">
-                <span className="text-base font-bold tracking-tight text-white flex items-center gap-1.5">
+                <span className="text-base font-bold tracking-tight text-slate-900 flex items-center gap-1.5">
                   LANDNOVA
-                  <span className={`text-[10px] font-semibold tracking-wider px-1.5 py-0.2 rounded uppercase ${
+                  <span className={`text-[10px] font-semibold tracking-wider px-1.5 py-0.5 rounded uppercase ${
                     currentRole === 'buyer'
-                      ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
-                      : 'bg-amber-500/10 text-amber-400 border border-amber-500/30'
+                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                      : 'bg-amber-50 text-amber-700 border border-amber-200'
                   }`}>
                     {currentRole === 'buyer' ? 'BUYER' : 'DEVELOPER'}
                   </span>
                 </span>
-                <p className="text-[10px] text-slate-400 tracking-tight">The Location Is the Decision.</p>
+                <p className="text-[10px] text-slate-500 tracking-tight">The Location Is the Decision.</p>
               </div>
             </div>
 
@@ -142,13 +142,13 @@ export default function Navbar({
                 <>
                   <button
                     onClick={() => onNavigateView('preferences')}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
                       currentView === 'preferences' || currentView === 'heatmap'
-                        ? 'bg-emerald-600 text-white font-semibold'
-                        : 'text-slate-300 hover:text-white hover:bg-slate-800'
+                        ? 'bg-emerald-600 text-white'
+                        : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
                     }`}
                   >
-                    <Flame className="w-3.5 h-3.5 text-amber-400" />
+                    <Flame className="w-3.5 h-3.5 text-amber-500" />
                     Heatmap
                   </button>
 
@@ -156,15 +156,15 @@ export default function Navbar({
                   <div className="relative">
                     <button
                       onClick={() => setShowAreaPopover(!showAreaPopover)}
-                      className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-700/60 transition-colors"
+                      className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs text-slate-700 hover:text-slate-900 hover:bg-slate-100 border border-slate-200 transition-colors"
                     >
                       Area <ChevronDown className="w-3 h-3 text-slate-400" />
                     </button>
 
                     {showAreaPopover && (
-                      <div className="absolute top-full left-0 mt-2 w-64 bg-slate-900 border border-slate-700 rounded-xl p-4 shadow-xl z-50 animate-in fade-in">
-                        <h4 className="text-xs font-semibold text-white mb-2">Area Range (sq ft)</h4>
-                        <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
+                      <div className="absolute top-full left-0 mt-2 w-64 bg-white border border-slate-200 rounded-xl p-4 shadow-xl z-50 animate-in fade-in">
+                        <h4 className="text-xs font-semibold text-slate-900 mb-2">Area Range (sq ft)</h4>
+                        <div className="flex items-center justify-between text-xs text-slate-500 mb-2">
                           <span>{areaRange[0]} sqft</span>
                           <span>{areaRange[1]} sqft</span>
                         </div>
@@ -175,11 +175,11 @@ export default function Navbar({
                           step="100"
                           value={areaRange[1]}
                           onChange={(e) => setAreaRange([areaRange[0], parseInt(e.target.value)])}
-                          className="w-full accent-emerald-500 mb-4"
+                          className="w-full accent-emerald-600 mb-4"
                         />
                         <button
                           onClick={applyAreaFilter}
-                          className="w-full py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium rounded-lg"
+                          className="w-full py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg"
                         >
                           Apply Filter
                         </button>
@@ -191,33 +191,33 @@ export default function Navbar({
                   <div className="relative">
                     <button
                       onClick={() => setShowPricePopover(!showPricePopover)}
-                      className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-700/60 transition-colors"
+                      className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs text-slate-700 hover:text-slate-900 hover:bg-slate-100 border border-slate-200 transition-colors"
                     >
                       Price <ChevronDown className="w-3 h-3 text-slate-400" />
                     </button>
 
                     {showPricePopover && (
-                      <div className="absolute top-full left-0 mt-2 w-72 bg-slate-900 border border-slate-700 rounded-xl p-4 shadow-xl z-50 animate-in fade-in">
+                      <div className="absolute top-full left-0 mt-2 w-72 bg-white border border-slate-200 rounded-xl p-4 shadow-xl z-50 animate-in fade-in">
                         <div className="flex gap-2 mb-3">
                           <button
                             onClick={() => setListingTypeFilter('buy')}
-                            className={`flex-1 py-1 text-xs rounded-lg font-medium ${
-                              listingTypeFilter === 'buy' ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-400'
+                            className={`flex-1 py-1 text-xs rounded-lg font-semibold ${
+                              listingTypeFilter === 'buy' ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-600'
                             }`}
                           >
                             Buy
                           </button>
                           <button
                             onClick={() => setListingTypeFilter('rent')}
-                            className={`flex-1 py-1 text-xs rounded-lg font-medium ${
-                              listingTypeFilter === 'rent' ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-400'
+                            className={`flex-1 py-1 text-xs rounded-lg font-semibold ${
+                              listingTypeFilter === 'rent' ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-600'
                             }`}
                           >
                             Rent
                           </button>
                         </div>
-                        <h4 className="text-xs font-semibold text-white mb-2">Max Budget</h4>
-                        <p className="text-xs text-emerald-400 mb-2">
+                        <h4 className="text-xs font-semibold text-slate-900 mb-1">Max Budget</h4>
+                        <p className="text-xs text-emerald-700 font-bold mb-2">
                           {listingTypeFilter === 'buy'
                             ? `Up to ₹${(priceRange[1] / 100000).toFixed(0)} Lakhs`
                             : `Up to ₹${(priceRange[1] / 1000).toFixed(0)}k / month`}
@@ -229,11 +229,11 @@ export default function Navbar({
                           step={listingTypeFilter === 'buy' ? 500000 : 5000}
                           value={priceRange[1]}
                           onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value)])}
-                          className="w-full accent-emerald-500 mb-4"
+                          className="w-full accent-emerald-600 mb-4"
                         />
                         <button
                           onClick={applyPriceFilter}
-                          className="w-full py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium rounded-lg"
+                          className="w-full py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg"
                         >
                           Apply Filter
                         </button>
@@ -246,35 +246,35 @@ export default function Navbar({
                 <>
                   <button
                     onClick={() => onNavigateView('site-report')}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
                       currentView === 'site-report'
-                        ? 'bg-amber-600 text-white font-semibold'
-                        : 'text-slate-300 hover:text-white hover:bg-slate-800'
+                        ? 'bg-amber-600 text-white'
+                        : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
                     }`}
                   >
-                    <BarChart3 className="w-3.5 h-3.5 text-amber-400" />
+                    <BarChart3 className="w-3.5 h-3.5 text-amber-600" />
                     Site Analysis
                   </button>
                   <button
                     onClick={() => onNavigateView('heatmap')}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
                       currentView === 'heatmap'
-                        ? 'bg-amber-600 text-white font-semibold'
-                        : 'text-slate-300 hover:text-white hover:bg-slate-800'
+                        ? 'bg-amber-600 text-white'
+                        : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
                     }`}
                   >
-                    <Flame className="w-3.5 h-3.5 text-amber-400" />
+                    <Flame className="w-3.5 h-3.5 text-amber-500" />
                     Heatmap
                   </button>
                   <button
                     onClick={() => onNavigateView('compare')}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
                       currentView === 'compare'
-                        ? 'bg-amber-600 text-white font-semibold'
-                        : 'text-slate-300 hover:text-white hover:bg-slate-800'
+                        ? 'bg-amber-600 text-white'
+                        : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
                     }`}
                   >
-                    <GitCompare className="w-3.5 h-3.5 text-amber-400" />
+                    <GitCompare className="w-3.5 h-3.5 text-amber-600" />
                     Compare Sites
                   </button>
                 </>
@@ -290,25 +290,25 @@ export default function Navbar({
                   value={searchQuery}
                   onChange={(e) => handleSearchChange(e.target.value)}
                   placeholder="Search City or Locality..."
-                  className="w-full bg-slate-900 border border-slate-700/80 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+                  className="w-full bg-slate-100 border border-slate-200 rounded-xl pl-8 pr-3 py-1.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-500 focus:bg-white transition-all"
                 />
                 {isSearching && (
-                  <div className="w-3 h-3 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin absolute right-3 top-1/2 -translate-y-1/2" />
+                  <div className="w-3 h-3 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin absolute right-3 top-1/2 -translate-y-1/2" />
                 )}
               </div>
 
               {showSearchDropdown && searchResults.length > 0 && (
-                <div className="absolute top-full left-0 right-0 mt-1.5 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl overflow-hidden z-50 max-h-60 overflow-y-auto">
+                <div className="absolute top-full left-0 right-0 mt-1.5 bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden z-50 max-h-60 overflow-y-auto">
                   {searchResults.map((loc) => (
                     <button
                       key={loc.id}
                       onClick={() => handleSelectLoc(loc)}
-                      className="w-full text-left px-3.5 py-2.5 hover:bg-slate-800 flex items-start gap-2 border-b border-slate-800/60 last:border-0"
+                      className="w-full text-left px-3.5 py-2.5 hover:bg-slate-50 flex items-start gap-2 border-b border-slate-100 last:border-0"
                     >
-                      <MapPin className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                      <MapPin className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
                       <div>
-                        <p className="text-xs font-medium text-white">{loc.display_name.split(',')[0]}</p>
-                        <p className="text-[10px] text-slate-400 truncate">{loc.display_name}</p>
+                        <p className="text-xs font-semibold text-slate-900">{loc.display_name.split(',')[0]}</p>
+                        <p className="text-[10px] text-slate-500 truncate">{loc.display_name}</p>
                       </div>
                     </button>
                   ))}
@@ -321,7 +321,7 @@ export default function Navbar({
               {/* Return to Role Gateway */}
               <button
                 onClick={() => onSwitchRole('gateway')}
-                className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-xs font-medium text-slate-300 border border-slate-700 transition-colors"
+                className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-xs font-medium text-slate-700 border border-slate-200 transition-colors"
                 title="Return to Page 1: Role Gateway"
               >
                 <span>Role Gateway</span>
@@ -330,17 +330,17 @@ export default function Navbar({
               {/* Role Toggle Button */}
               <button
                 onClick={() => onSwitchRole(currentRole === 'buyer' ? 'developer' : 'buyer')}
-                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-medium text-slate-200 transition-colors"
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs font-medium text-slate-800 transition-colors"
                 title={`Switch to ${currentRole === 'buyer' ? 'Real Estate Developer' : 'Buyer / Renter'} View`}
               >
                 {currentRole === 'buyer' ? (
                   <>
-                    <Building2 className="w-3.5 h-3.5 text-amber-400" />
+                    <Building2 className="w-3.5 h-3.5 text-amber-600" />
                     <span className="hidden lg:inline">Developer Mode</span>
                   </>
                 ) : (
                   <>
-                    <Users className="w-3.5 h-3.5 text-emerald-400" />
+                    <Users className="w-3.5 h-3.5 text-emerald-600" />
                     <span className="hidden lg:inline">Buyer Mode</span>
                   </>
                 )}
@@ -352,7 +352,7 @@ export default function Navbar({
                   setAuthMode('login');
                   setShowAuthModal(true);
                 }}
-                className="px-3 py-1.5 text-xs text-slate-300 hover:text-white transition-colors"
+                className="px-3 py-1.5 text-xs text-slate-600 hover:text-slate-900 font-medium transition-colors"
               >
                 Login
               </button>
@@ -361,10 +361,10 @@ export default function Navbar({
                   setAuthMode('signup');
                   setShowAuthModal(true);
                 }}
-                className={`px-3 py-1.5 text-xs text-white font-medium rounded-lg transition-colors ${
+                className={`px-3 py-1.5 text-xs text-white font-semibold rounded-lg transition-colors shadow-xs ${
                   currentRole === 'buyer'
-                    ? 'bg-emerald-600 hover:bg-emerald-500'
-                    : 'bg-amber-600 hover:bg-amber-500'
+                    ? 'bg-emerald-600 hover:bg-emerald-700'
+                    : 'bg-amber-600 hover:bg-amber-700'
                 }`}
               >
                 Sign Up
@@ -376,23 +376,23 @@ export default function Navbar({
 
       {/* Auth Modal (Optional Demo Mode) */}
       {showAuthModal && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative animate-in fade-in zoom-in-95">
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white border border-slate-200 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative animate-in fade-in zoom-in-95">
             <button
               onClick={() => setShowAuthModal(false)}
-              className="absolute top-4 right-4 p-1 text-slate-400 hover:text-white"
+              className="absolute top-4 right-4 p-1 text-slate-400 hover:text-slate-600"
             >
               <X className="w-4 h-4" />
             </button>
 
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-4">
-              <UserCheck className="w-5 h-5 text-emerald-400" />
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center mb-4">
+              <UserCheck className="w-5 h-5 text-emerald-600" />
             </div>
 
-            <h3 className="text-base font-bold text-white mb-1">
+            <h3 className="text-base font-bold text-slate-900 mb-1">
               {authMode === 'login' ? 'Sign In to LandNova' : 'Create Free Account'}
             </h3>
-            <p className="text-xs text-slate-400 mb-5">
+            <p className="text-xs text-slate-500 mb-5">
               Save your preference profiles, shortlisted properties, and site feasibility reports.
             </p>
 
@@ -402,7 +402,7 @@ export default function Navbar({
                   setShowAuthModal(false);
                   alert('Google OAuth Demo: Logged in successfully as test user.');
                 }}
-                className="w-full py-2.5 px-4 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-medium text-white rounded-xl flex items-center justify-center gap-2 transition-colors"
+                className="w-full py-2.5 px-4 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-xs font-semibold text-slate-800 rounded-xl flex items-center justify-center gap-2 transition-colors"
               >
                 <svg className="w-4 h-4" viewBox="0 0 24 24">
                   <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.4 9 5 12 5z" />
@@ -414,14 +414,14 @@ export default function Navbar({
               </button>
 
               <div className="relative flex py-2 items-center">
-                <div className="flex-grow border-t border-slate-800"></div>
-                <span className="flex-shrink mx-2 text-[10px] text-slate-500 uppercase">Or Demo Guest Mode</span>
-                <div className="flex-grow border-t border-slate-800"></div>
+                <div className="flex-grow border-t border-slate-200"></div>
+                <span className="flex-shrink mx-2 text-[10px] text-slate-400 uppercase">Or Demo Guest Mode</span>
+                <div className="flex-grow border-t border-slate-200"></div>
               </div>
 
               <button
                 onClick={() => setShowAuthModal(false)}
-                className="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-xs font-medium text-white rounded-xl transition-colors"
+                className="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-xs font-semibold text-white rounded-xl transition-colors shadow-xs"
               >
                 Proceed as Demo Guest (No Login Required)
               </button>

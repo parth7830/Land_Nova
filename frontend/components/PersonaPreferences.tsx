@@ -113,23 +113,23 @@ export default function PersonaPreferences({
     <div className="max-w-4xl mx-auto space-y-8 pb-16">
       {/* Title */}
       <div className="text-center space-y-2">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold">
-          <Sparkles className="w-3.5 h-3.5" />
-          Page 3: Persona & Preferences
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold">
+          <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+          Persona & Preferences Setup
         </div>
-        <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+        <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
           Personalize Your Location Heatmap
         </h2>
-        <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto">
+        <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">
           Choose a lifestyle persona. LandNova preloads verified factor weights and priorities,
-          which you can fine-tune before generating the spatial heatmap.
+          which you can customize before generating the spatial heatmap.
         </p>
       </div>
 
       {/* Step 1: Choose Persona */}
       <div className="space-y-4">
-        <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-          <span className="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs">1</span>
+        <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
+          <span className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs">1</span>
           Select Your Persona
         </h3>
 
@@ -144,29 +144,29 @@ export default function PersonaPreferences({
                 onClick={() => handlePersonaSelect(p)}
                 className={`cursor-pointer rounded-2xl p-5 border-2 transition-all ${
                   isSelected
-                    ? 'bg-slate-800/90 border-emerald-500 shadow-xl shadow-emerald-950/30 scale-[1.02]'
-                    : 'bg-slate-900/60 border-slate-800 hover:border-slate-700'
+                    ? 'bg-emerald-50/70 border-emerald-500 shadow-md scale-[1.01]'
+                    : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
                 }`}
               >
                 <div className="flex items-center justify-between mb-3">
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-                    isSelected ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-slate-800 text-slate-400'
+                    isSelected ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-600'
                   }`}>
                     <Icon className="w-5 h-5" />
                   </div>
                   {isSelected && (
-                    <div className="w-5 h-5 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center">
+                    <div className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center">
                       <Check className="w-3 h-3 stroke-[3]" />
                     </div>
                   )}
                 </div>
 
-                <h4 className="text-sm font-bold text-white mb-1">{p.label}</h4>
-                <p className="text-xs text-slate-400 leading-relaxed mb-3">{p.description}</p>
+                <h4 className="text-sm font-bold text-slate-900 mb-1">{p.label}</h4>
+                <p className="text-xs text-slate-600 leading-relaxed mb-3">{p.description}</p>
 
-                <div className="pt-2 border-t border-slate-800 text-[10px] text-slate-400 flex flex-wrap gap-1">
+                <div className="pt-2 border-t border-slate-200/60 text-[10px] text-slate-500 flex flex-wrap gap-1">
                   {p.priority_amenities.map(pa => (
-                    <span key={pa} className="px-1.5 py-0.5 bg-slate-950 rounded text-slate-300 border border-slate-800">
+                    <span key={pa} className="px-1.5 py-0.5 bg-white rounded text-slate-600 border border-slate-200">
                       {pa}
                     </span>
                   ))}
@@ -178,13 +178,13 @@ export default function PersonaPreferences({
       </div>
 
       {/* Editable Weight Sliders */}
-      <div className="bg-slate-900/70 border border-slate-800 rounded-2xl p-6 space-y-4">
+      <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-4 shadow-xs">
         <div className="flex items-center justify-between">
-          <h4 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-            <Sliders className="w-4 h-4 text-emerald-400" />
+          <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+            <Sliders className="w-4 h-4 text-emerald-600" />
             Configurable Scoring Weights for {selectedPersonaId.replace('_', ' ').toUpperCase()}
           </h4>
-          <span className="text-[11px] text-slate-400">Sum of weights: {(Object.values(weights).reduce((a, b) => a + b, 0)).toFixed(2)}</span>
+          <span className="text-[11px] text-slate-500">Sum of weights: {(Object.values(weights).reduce((a, b) => a + b, 0)).toFixed(2)}</span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -196,9 +196,9 @@ export default function PersonaPreferences({
             { key: 'climate_flood', label: 'Flood & Climate Resilience' }
           ].map(factor => (
             <div key={factor.key} className="space-y-1">
-              <div className="flex justify-between text-xs text-slate-300">
+              <div className="flex justify-between text-xs text-slate-700">
                 <span>{factor.label}</span>
-                <span className="font-mono text-emerald-400 font-bold">{Math.round((weights[factor.key] || 0.2) * 100)}%</span>
+                <span className="font-mono text-emerald-700 font-bold">{Math.round((weights[factor.key] || 0.2) * 100)}%</span>
               </div>
               <input
                 type="range"
@@ -207,7 +207,7 @@ export default function PersonaPreferences({
                 step="0.05"
                 value={weights[factor.key] || 0.2}
                 onChange={(e) => handleWeightChange(factor.key, parseFloat(e.target.value))}
-                className="w-full accent-emerald-500 h-1.5 bg-slate-800 rounded-lg cursor-pointer"
+                className="w-full accent-emerald-600 h-1.5 bg-slate-100 rounded-lg cursor-pointer"
               />
             </div>
           ))}
@@ -215,16 +215,16 @@ export default function PersonaPreferences({
       </div>
 
       {/* Step 2: Preference Inputs */}
-      <div className="bg-slate-900/70 border border-slate-800 rounded-2xl p-6 space-y-6">
-        <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-          <span className="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs">2</span>
+      <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-6 shadow-xs">
+        <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
+          <span className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs">2</span>
           Budget & Amenity Filters
         </h3>
 
         {/* Buy / Rent & Price Slider */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <label className="text-xs font-semibold text-slate-200">Budget Limit</label>
+            <label className="text-xs font-semibold text-slate-800">Budget Limit</label>
             <div className="flex gap-2">
               <button
                 type="button"
@@ -232,8 +232,8 @@ export default function PersonaPreferences({
                   setListingType('buy');
                   setMaxPrice(12000000);
                 }}
-                className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
-                  listingType === 'buy' ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-400'
+                className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors ${
+                  listingType === 'buy' ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-600'
                 }`}
               >
                 Buy
@@ -244,8 +244,8 @@ export default function PersonaPreferences({
                   setListingType('rent');
                   setMaxPrice(35000);
                 }}
-                className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
-                  listingType === 'rent' ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-400'
+                className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors ${
+                  listingType === 'rent' ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-600'
                 }`}
               >
                 Rent
@@ -253,7 +253,7 @@ export default function PersonaPreferences({
             </div>
           </div>
 
-          <div className="flex justify-between items-center text-xs text-emerald-400 font-bold">
+          <div className="flex justify-between items-center text-xs text-emerald-700 font-bold">
             <span>₹0</span>
             <span>
               {listingType === 'buy'
@@ -269,14 +269,14 @@ export default function PersonaPreferences({
             step={listingType === 'buy' ? 500000 : 2500}
             value={maxPrice}
             onChange={(e) => setMaxPrice(parseInt(e.target.value))}
-            className="w-full accent-emerald-500 h-2 bg-slate-800 rounded-lg cursor-pointer"
+            className="w-full accent-emerald-600 h-2 bg-slate-100 rounded-lg cursor-pointer"
           />
         </div>
 
         {/* Connectivity Importance */}
         <div className="space-y-2">
-          <label className="text-xs font-semibold text-slate-200 flex items-center gap-1.5">
-            <Train className="w-3.5 h-3.5 text-sky-400" />
+          <label className="text-xs font-semibold text-slate-800 flex items-center gap-1.5">
+            <Train className="w-3.5 h-3.5 text-sky-600" />
             Connectivity Importance (Metro / Highway Proximity)
           </label>
           <div className="grid grid-cols-3 gap-3">
@@ -287,8 +287,8 @@ export default function PersonaPreferences({
                 onClick={() => setConnectivityImportance(level)}
                 className={`py-2 text-xs font-medium rounded-xl border transition-colors capitalize ${
                   connectivityImportance === level
-                    ? 'bg-emerald-600 text-white border-emerald-500 font-semibold'
-                    : 'bg-slate-950 text-slate-400 border-slate-800 hover:border-slate-700'
+                    ? 'bg-emerald-600 text-white border-emerald-600 font-semibold shadow-xs'
+                    : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
                 }`}
               >
                 {level}
@@ -299,8 +299,8 @@ export default function PersonaPreferences({
 
         {/* Required Amenities Checklist */}
         <div className="space-y-2">
-          <label className="text-xs font-semibold text-slate-200 flex items-center gap-1.5">
-            <CheckSquare className="w-3.5 h-3.5 text-emerald-400" />
+          <label className="text-xs font-semibold text-slate-800 flex items-center gap-1.5">
+            <CheckSquare className="w-3.5 h-3.5 text-emerald-600" />
             Required Amenities Checklist
           </label>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -312,12 +312,12 @@ export default function PersonaPreferences({
                   onClick={() => toggleAmenity(amenity.id)}
                   className={`cursor-pointer flex items-center gap-2.5 p-2.5 rounded-xl border text-xs transition-colors ${
                     isChecked
-                      ? 'bg-slate-800/80 border-emerald-500/50 text-white'
-                      : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                      ? 'bg-emerald-50/70 border-emerald-300 text-slate-900 font-medium'
+                      : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
                   }`}
                 >
                   <div className={`w-4 h-4 rounded flex items-center justify-center shrink-0 ${
-                    isChecked ? 'bg-emerald-600 text-white' : 'border border-slate-700'
+                    isChecked ? 'bg-emerald-600 text-white' : 'border border-slate-300 bg-white'
                   }`}>
                     {isChecked && <Check className="w-3 h-3 stroke-[3]" />}
                   </div>
@@ -333,14 +333,14 @@ export default function PersonaPreferences({
       <div className="text-center pt-2">
         <button
           onClick={handleProceed}
-          className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-500 hover:from-emerald-500 hover:to-teal-500 text-white text-sm font-bold rounded-2xl shadow-xl shadow-emerald-950/50 flex items-center justify-center gap-3 mx-auto transition-all hover:scale-105"
+          className="w-full sm:w-auto px-8 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold rounded-xl shadow-md flex items-center justify-center gap-3 mx-auto transition-all hover:scale-102"
         >
           <Flame className="w-5 h-5 text-amber-300" />
           Generate Spatial Suitability Heatmap
           <ArrowRight className="w-4 h-4" />
         </button>
         <p className="text-[11px] text-slate-500 mt-2">
-          Samples grid coordinates across {initialCity} and computes persona-weighted scores in real-time.
+          Samples coordinates across {initialCity} and computes persona-weighted scores in real-time.
         </p>
       </div>
     </div>
