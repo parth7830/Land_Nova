@@ -22,8 +22,8 @@ import { LocationItem } from '@/types';
 import { searchLocations } from '@/lib/api';
 
 interface NavbarProps {
-  currentRole: 'buyer' | 'developer';
-  onSwitchRole: (role: 'buyer' | 'developer') => void;
+  currentRole: 'gateway' | 'buyer' | 'developer';
+  onSwitchRole: (role: 'gateway' | 'buyer' | 'developer') => void;
   currentView: string;
   onNavigateView: (view: string) => void;
   selectedLocation: LocationItem;
@@ -114,8 +114,9 @@ export default function Navbar({
           <div className="flex items-center justify-between h-16 gap-4">
             {/* Logo */}
             <div
-              onClick={() => onNavigateView('home')}
+              onClick={() => onSwitchRole('gateway')}
               className="flex items-center gap-3 cursor-pointer group shrink-0"
+              title="Return to Page 1: Role Gateway"
             >
               <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-950/40 group-hover:scale-105 transition-transform">
                 <Compass className="w-5 h-5 text-white stroke-[2.5]" />
@@ -317,6 +318,15 @@ export default function Navbar({
 
             {/* Right Controls: Switch Role & Auth */}
             <div className="flex items-center gap-2">
+              {/* Return to Role Gateway */}
+              <button
+                onClick={() => onSwitchRole('gateway')}
+                className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-xs font-medium text-slate-300 border border-slate-700 transition-colors"
+                title="Return to Page 1: Role Gateway"
+              >
+                <span>Role Gateway</span>
+              </button>
+
               {/* Role Toggle Button */}
               <button
                 onClick={() => onSwitchRole(currentRole === 'buyer' ? 'developer' : 'buyer')}

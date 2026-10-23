@@ -78,12 +78,15 @@ export default function Home() {
   // Active persona for heatmap
   const [activePersona, setActivePersona] = useState<string>('family');
 
-  // Check localStorage for saved role
+  // Default to Page 1: Role Gateway so user can always pick their role
+  // We keep localStorage updated when they choose, but do not bypass the gateway on entry
   useEffect(() => {
+    // Check if URL has an explicit ?role= parameter, otherwise show gateway
     if (typeof window !== 'undefined') {
-      const savedRole = localStorage.getItem('landnova_role');
-      if (savedRole === 'buyer' || savedRole === 'developer') {
-        setCurrentRole(savedRole);
+      const params = new URLSearchParams(window.location.search);
+      const urlRole = params.get('role');
+      if (urlRole === 'buyer' || urlRole === 'developer') {
+        setCurrentRole(urlRole);
       }
     }
   }, []);
