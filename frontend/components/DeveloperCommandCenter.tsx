@@ -125,6 +125,7 @@ export default function DeveloperCommandCenter({
   const [surveySubmitted, setSurveySubmitted] = useState(false);
 
   // Developer AI Advisor State (D14)
+  const [isAiAdvisorMinimized, setIsAiAdvisorMinimized] = useState(false);
   const [aiChatMessages, setAiChatMessages] = useState<Array<{ sender: 'user' | 'ai'; text: string }>>([
     {
       sender: 'ai',
@@ -1529,16 +1530,38 @@ export default function DeveloperCommandCenter({
 
       {/* D14: DEVELOPER AI ADVISOR FLOATING DRAWER */}
       <div className="fixed bottom-4 right-4 z-50 print:hidden">
-        <div className="w-80 sm:w-96 rounded-2xl bg-white border border-slate-200 shadow-2xl overflow-hidden flex flex-col">
-          <div className="p-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-emerald-600" />
-              <span className="text-xs font-bold text-slate-900 uppercase tracking-wider">Developer AI Advisor</span>
-            </div>
-            <span className="text-[9px] font-mono px-1.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold">
-              D14 ACTIVE
+        {isAiAdvisorMinimized ? (
+          <button
+            onClick={() => setIsAiAdvisorMinimized(false)}
+            className="flex items-center gap-2 px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-800 font-semibold rounded-full shadow-xl border border-slate-200 transition-all cursor-pointer text-xs group"
+          >
+            <Sparkles className="w-4 h-4 text-emerald-600 group-hover:rotate-12 transition-transform" />
+            <span>Developer AI Advisor</span>
+            <span className="text-[9px] font-mono px-1.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 font-bold border border-emerald-200">
+              D14
             </span>
-          </div>
+            <ChevronUp className="w-4 h-4 text-slate-400 group-hover:text-slate-600" />
+          </button>
+        ) : (
+          <div className="w-80 sm:w-96 rounded-2xl bg-white border border-slate-200 shadow-2xl overflow-hidden flex flex-col">
+            <div className="p-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-emerald-600" />
+                <span className="text-xs font-bold text-slate-900 uppercase tracking-wider">Developer AI Advisor</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="text-[9px] font-mono px-1.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold">
+                  D14 ACTIVE
+                </span>
+                <button
+                  onClick={() => setIsAiAdvisorMinimized(true)}
+                  className="p-1 hover:bg-slate-200 rounded-md text-slate-500 hover:text-slate-700 transition cursor-pointer"
+                  title="Minimize Advisor"
+                >
+                  <ChevronDown className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
 
           {/* Messages */}
           <div className="p-3 max-h-56 overflow-y-auto space-y-2 text-xs">
@@ -1580,7 +1603,8 @@ export default function DeveloperCommandCenter({
             </button>
           </div>
         </div>
-      </div>
+      )}
+    </div>
     </div>
   );
 }

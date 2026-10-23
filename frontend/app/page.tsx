@@ -533,17 +533,19 @@ export default function Home() {
         )}
       </main>
 
-      {/* Floating AI Chatbot Widget */}
-      <ChatWidget
-        currentLocationName={currentLocation.display_name.split(',')[0]}
-        currentLocationContext={{
-          overall_score: livability?.overall_score || 81,
-          us_aqi: weather?.air_quality?.us_aqi || 92,
-          elevation_m: weather?.climate_risk?.elevation_meters || 180,
-          flood_risk_level: weather?.climate_risk?.flood_risk_level || 'Low'
-        }}
-        userPersona={currentRole === 'developer' ? 'builder_developer' : 'home_buyer'}
-      />
+      {/* Floating AI Chatbot Widget (Only for Buyer role so it never overlaps Developer AI Advisor) */}
+      {currentRole === 'buyer' && (
+        <ChatWidget
+          currentLocationName={currentLocation.display_name.split(',')[0]}
+          currentLocationContext={{
+            overall_score: livability?.overall_score || 81,
+            us_aqi: weather?.air_quality?.us_aqi || 92,
+            elevation_m: weather?.climate_risk?.elevation_meters || 180,
+            flood_risk_level: weather?.climate_risk?.flood_risk_level || 'Low'
+          }}
+          userPersona="home_buyer"
+        />
+      )}
     </div>
   );
 }
