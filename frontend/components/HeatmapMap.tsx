@@ -53,8 +53,9 @@ interface HeatmapMapProps {
 function MapController({ center, zoom }: { center: [number, number]; zoom: number }) {
   const map = useMap();
   useEffect(() => {
-    map.setView(center, zoom, { animate: true });
-  }, [center, zoom, map]);
+    map.setView(center, zoom, { animate: false });
+    map.invalidateSize();
+  }, [center[0], center[1], zoom, map]);
   return null;
 }
 
@@ -66,14 +67,14 @@ function CustomMapControls({ center }: { center: [number, number] }) {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
-          map.flyTo([pos.coords.latitude, pos.coords.longitude], 14, { duration: 1.2 });
+          map.flyTo([pos.coords.latitude, pos.coords.longitude], 14, { duration: 1.0 });
         },
         () => {
-          map.flyTo(center, 13, { duration: 1.2 });
+          map.flyTo(center, 13, { duration: 1.0 });
         }
       );
     } else {
-      map.flyTo(center, 13, { duration: 1.2 });
+      map.flyTo(center, 13, { duration: 1.0 });
     }
   };
 
@@ -105,18 +106,25 @@ function CustomMapControls({ center }: { center: [number, number] }) {
 }
 
 // Invalidate size immediately and after layout changes
-function MapResizer({ isSidebarOpen }: { isSidebarOpen?: boolean }) {
+function MapResizer({ isSidebarOpen, sectorCount }: { isSidebarOpen?: boolean; sectorCount?: number }) {
   const map = useMap();
 
   useEffect(() => {
     map.invalidateSize();
-    const t1 = setTimeout(() => map.invalidateSize(), 100);
-    const t2 = setTimeout(() => map.invalidateSize(), 300);
+    const t1 = setTimeout(() => map.invalidateSize(), 80);
+    const t2 = setTimeout(() => map.invalidateSize(), 250);
+    const t3 = setTimeout(() => map.invalidateSize(), 600);
+
+    const onResize = () => map.invalidateSize();
+    window.addEventListener('resize', onResize);
+
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
+      clearTimeout(t3);
+      window.removeEventListener('resize', onResize);
     };
-  }, [isSidebarOpen, map]);
+  }, [isSidebarOpen, sectorCount, map]);
 
   return null;
 }
@@ -131,6 +139,9 @@ export default function HeatmapMap({
   onMapMoveEnd,
   maxCommuteFilter = 120
 }: HeatmapMapProps) {
+  // Basemap style: street (clean light) or satellite (aerial)
+  const [basemap, setBasemap] = useState<'street' | 'satellite'>('street');
+
   // Layer Toggle Pills: Heat Map, Transport, Amenities, AQI, Crime, Schools, Hospitals
   const [activeLayer, setActiveLayer] = useState<
     'heatmap' | 'transport' | 'amenities' | 'aqi' | 'crime' | 'schools' | 'hospitals'
@@ -187,64 +198,101 @@ export default function HeatmapMap({
 
     return {
       fillColor: fill,
-      color: isSelected ? '#ffffff' : stroke,
-      weight: isSelected ? 3.5 : 1.5,
-      fillOpacity: isCommuteDimmed ? 0.2 : isSelected ? 0.78 : 0.62,
+      color: isSelected ? '#0f172a' : stroke,
+      weight: isSelected ? 3.5 : 2,
+      fillOpacity: isCommuteDimmed ? 0.25 : isSelected ? 0.75 : 0.58,
       dashArray: isCommuteDimmed ? '6, 6' : undefined
     };
   };
 
   return (
-    <div className="w-full h-full relative" style={{ minHeight: '100%', height: '100%' }}>
-      {/* Top Layer Toggle Pills */}
-      <div className="absolute top-3 left-1/2 transform -translate-x-1/2 z-[400] bg-white/95 backdrop-blur-md px-2 py-1.5 rounded-2xl shadow-lg border border-slate-200/90 flex items-center gap-1 overflow-x-auto max-w-[94vw] sm:max-w-none">
-        {layersList.map((layer) => {
-          const Icon = layer.icon;
-          const isActive = activeLayer === layer.id;
-          return (
-            <button
-              key={layer.id}
-              onClick={() => setActiveLayer(layer.id)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap ${
-                isActive
-                  ? 'bg-emerald-600 text-white shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-              }`}
-            >
-              <Icon className="w-3.5 h-3.5" />
-              <span>{layer.label}</span>
-            </button>
-          );
-        })}
+    <div className="w-full h-full min-h-[500px] relative" style={{ minHeight: '520px', height: '100%' }}>
+      {/* Top Layer Toggle Pills & Basemap Switcher */}
+      <div className="absolute top-3 left-1/2 transform -translate-x-1/2 z-[400] flex items-center gap-2 max-w-[96vw] overflow-x-auto pb-1">
+        {/* Layer Filters */}
+        <div className="bg-white/95 backdrop-blur-md px-2 py-1.5 rounded-2xl shadow-lg border border-slate-200/90 flex items-center gap-1 shrink-0">
+          {layersList.map((layer) => {
+            const Icon = layer.icon;
+            const isActive = activeLayer === layer.id;
+            return (
+              <button
+                key={layer.id}
+                onClick={() => setActiveLayer(layer.id)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap ${
+                  isActive
+                    ? 'bg-emerald-600 text-white shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                }`}
+              >
+                <Icon className="w-3.5 h-3.5" />
+                <span>{layer.label}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Basemap Switcher */}
+        <div className="bg-white/95 backdrop-blur-md px-1.5 py-1.5 rounded-2xl shadow-lg border border-slate-200/90 flex items-center gap-1 shrink-0">
+          <button
+            onClick={() => setBasemap('street')}
+            className={`px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+              basemap === 'street'
+                ? 'bg-slate-900 text-white shadow-xs'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+            }`}
+            title="Clean Light Street Map"
+          >
+            🗺️ Street
+          </button>
+          <button
+            onClick={() => setBasemap('satellite')}
+            className={`px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+              basemap === 'satellite'
+                ? 'bg-slate-900 text-white shadow-xs'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+            }`}
+            title="High-Resolution Satellite Imagery"
+          >
+            🛰️ Satellite
+          </button>
+        </div>
       </div>
 
       <MapContainer
         center={center}
         zoom={zoom}
-        preferCanvas={true}
         zoomControl={false}
-        style={{ width: '100%', height: '100%', minHeight: '100%', backgroundColor: '#0f172a' }}
-        className="rounded-2xl z-10"
+        scrollWheelZoom={true}
+        style={{ width: '100%', height: '100%', minHeight: '520px', backgroundColor: '#f1f5f9' }}
+        className="rounded-2xl z-10 w-full h-full"
       >
         <MapController center={center} zoom={zoom} />
-        <MapResizer isSidebarOpen={isSidebarOpen} />
+        <MapResizer isSidebarOpen={isSidebarOpen} sectorCount={sectors.length} />
         <CustomMapControls center={center} />
 
-        {/* 1. Esri World Imagery Satellite Tiles */}
-        <TileLayer
-          attribution='Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-          url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-          maxZoom={19}
-        />
+        {/* 1. Reliable Base Tile Layers */}
+        {basemap === 'street' ? (
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            maxZoom={19}
+          />
+        ) : (
+          <>
+            <TileLayer
+              attribution='Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+              url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+              maxZoom={19}
+            />
+            <TileLayer
+              url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}.png"
+              maxZoom={19}
+              opacity={0.9}
+            />
+          </>
+        )}
 
-        {/* 2. CartoDB Crisp Labels Overlay */}
-        <TileLayer
-          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png"
-          maxZoom={19}
-          opacity={0.85}
-        />
-
-        {/* 3. Sectors Polygons with Smooth Visual Field */}
+        {/* 2. Sectors Polygons with Interactive Visual Field */}
         {sectors.map((sector) => {
           const style = getSectorStyle(sector);
           const isSelected = selectedSector?.id === sector.id;
@@ -318,17 +366,26 @@ export default function HeatmapMap({
               {/* Sector Centroid Marker with Label */}
               <CircleMarker
                 center={sector.center}
-                radius={isSelected ? 6 : 4}
+                radius={isSelected ? 10 : 8}
                 pathOptions={{
                   fillColor: isSelected ? '#ffffff' : style.fillColor,
-                  color: isSelected ? '#059669' : '#ffffff',
-                  weight: 2,
+                  color: isSelected ? '#0f172a' : '#ffffff',
+                  weight: isSelected ? 3 : 2,
                   fillOpacity: 1
                 }}
                 eventHandlers={{
                   click: () => onSelectSector(sector)
                 }}
-              />
+              >
+                <Tooltip permanent direction="center" className="sector-score-pill">
+                  <span
+                    className="font-extrabold text-[10px] text-white px-1.5 py-0.5 rounded-full shadow-md border border-white/80 select-none cursor-pointer"
+                    style={{ backgroundColor: style.fillColor }}
+                  >
+                    {sector.overall_score}
+                  </span>
+                </Tooltip>
+              </CircleMarker>
             </React.Fragment>
           );
         })}

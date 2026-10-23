@@ -424,11 +424,13 @@ export default function Home() {
 
             {/* Page 4: Heatmap Explorer */}
             {currentView === 'heatmap' && (
-              <HeatmapExplorer
-                currentLocation={currentLocation}
-                initialPersona={activePersona}
-                onNavigateTab={(tab) => setCurrentView(tab)}
-              />
+              <div className="w-full flex-1" style={{ height: 'calc(100vh - 110px)', minHeight: '680px' }}>
+                <HeatmapExplorer
+                  currentLocation={currentLocation}
+                  initialPersona={activePersona}
+                  onNavigateTab={(tab) => setCurrentView(tab)}
+                />
+              </div>
             )}
 
             {/* Reusable Analysis View */}
@@ -494,11 +496,13 @@ export default function Home() {
 
             {/* Developer Heatmap Explorer */}
             {currentView === 'heatmap' && (
-              <HeatmapExplorer
-                currentLocation={currentLocation}
-                initialPersona="working_professional"
-                onNavigateTab={(tab) => setCurrentView(tab)}
-              />
+              <div className="w-full flex-1" style={{ height: 'calc(100vh - 110px)', minHeight: '680px' }}>
+                <HeatmapExplorer
+                  currentLocation={currentLocation}
+                  initialPersona="working_professional"
+                  onNavigateTab={(tab) => setCurrentView(tab)}
+                />
+              </div>
             )}
 
             {/* Compare Sites View */}

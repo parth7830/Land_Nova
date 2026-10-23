@@ -205,9 +205,9 @@ export default function HeatmapExplorer({
   };
 
   return (
-    <div className="w-full h-full flex flex-col bg-slate-100 rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden relative">
+    <div className="w-full h-full min-h-[640px] flex flex-col bg-slate-100 rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden relative">
       {/* Main Row: Left Preferences + Center Map + Right Selected Area Drawer */}
-      <div className="flex-1 flex overflow-hidden relative">
+      <div className="flex-1 flex overflow-hidden relative min-h-[500px]">
         {/* A2. Left Preferences Panel */}
         <BuyerPreferencesPanel
           preferences={preferences}
@@ -219,7 +219,7 @@ export default function HeatmapExplorer({
         />
 
         {/* A3. Center Satellite Map & Continuous Smooth Heatmap */}
-        <div className="flex-1 relative h-full">
+        <div className="flex-1 relative h-full min-h-[500px]">
           <DynamicHeatmapMap
             center={mapCenter}
             zoom={mapZoom}
@@ -227,6 +227,7 @@ export default function HeatmapExplorer({
             selectedSector={selectedSector}
             onSelectSector={handleSelectSector}
             maxCommuteFilter={preferences.max_commute_minutes}
+            isSidebarOpen={Boolean(selectedSector)}
           />
         </div>
 

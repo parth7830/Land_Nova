@@ -40,6 +40,17 @@ body {
   background-color: #ffffff !important;
 }
 
+.sector-score-pill {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.sector-score-pill::before {
+  display: none !important;
+}
+
 /* Custom Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
