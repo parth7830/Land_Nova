@@ -43,7 +43,7 @@ export default function TopRecommendedCards({
             <div
               key={sector.id}
               onClick={() => onSelectSector(sector)}
-              className={`min-w-[270px] sm:min-w-[300px] max-w-[320px] rounded-xl border p-3 cursor-pointer transition-all shrink-0 flex flex-col justify-between ${
+              className={`min-w-[240px] sm:min-w-[290px] max-w-[320px] rounded-xl border p-3 cursor-pointer transition-all shrink-0 flex flex-col justify-between ${
                 isSelected
                   ? 'bg-emerald-50/70 border-emerald-500 shadow-sm ring-1 ring-emerald-500'
                   : 'bg-white border-slate-200 hover:border-slate-300 hover:shadow-2xs'

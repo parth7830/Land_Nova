@@ -207,10 +207,9 @@ export default function HeatmapMap({
 
   return (
     <div className="w-full h-full min-h-[500px] relative" style={{ minHeight: '520px', height: '100%' }}>
-      {/* Top Layer Toggle Pills & Basemap Switcher */}
-      <div className="absolute top-3 left-1/2 transform -translate-x-1/2 z-[400] flex items-center gap-2 max-w-[96vw] overflow-x-auto pb-1">
-        {/* Layer Filters */}
-        <div className="bg-white/95 backdrop-blur-md px-2 py-1.5 rounded-2xl shadow-lg border border-slate-200/90 flex items-center gap-1 shrink-0">
+      {/* Top Left: Layer Filters (Clean horizontal scroll, responsive) */}
+      <div className="absolute top-3 left-3 z-[400] max-w-[calc(100%-150px)] sm:max-w-[calc(100%-200px)] overflow-x-auto pb-1 no-scrollbar">
+        <div className="bg-white/95 backdrop-blur-md px-2 py-1.5 rounded-2xl shadow-md border border-slate-200/90 flex items-center gap-1 w-max">
           {layersList.map((layer) => {
             const Icon = layer.icon;
             const isActive = activeLayer === layer.id;
@@ -218,7 +217,7 @@ export default function HeatmapMap({
               <button
                 key={layer.id}
                 onClick={() => setActiveLayer(layer.id)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap ${
+                className={`px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap ${
                   isActive
                     ? 'bg-emerald-600 text-white shadow-xs'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
@@ -230,12 +229,14 @@ export default function HeatmapMap({
             );
           })}
         </div>
+      </div>
 
-        {/* Basemap Switcher */}
-        <div className="bg-white/95 backdrop-blur-md px-1.5 py-1.5 rounded-2xl shadow-lg border border-slate-200/90 flex items-center gap-1 shrink-0">
+      {/* Top Right: Basemap Switcher (Tucked away cleanly on the right) */}
+      <div className="absolute top-3 right-3 z-[400]">
+        <div className="bg-white/95 backdrop-blur-md px-1.5 py-1.5 rounded-2xl shadow-md border border-slate-200/90 flex items-center gap-1">
           <button
             onClick={() => setBasemap('street')}
-            className={`px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+            className={`px-2.5 py-1 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
               basemap === 'street'
                 ? 'bg-slate-900 text-white shadow-xs'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
@@ -246,14 +247,14 @@ export default function HeatmapMap({
           </button>
           <button
             onClick={() => setBasemap('satellite')}
-            className={`px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+            className={`px-2.5 py-1 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
               basemap === 'satellite'
                 ? 'bg-slate-900 text-white shadow-xs'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
             title="High-Resolution Satellite Imagery"
           >
-            🛰️ Satellite
+            🛰️ Sat
           </button>
         </div>
       </div>
@@ -392,7 +393,7 @@ export default function HeatmapMap({
       </MapContainer>
 
       {/* Bottom-Right Legend: Location Suitability Score Gradient */}
-      <div className="absolute bottom-4 right-4 z-[400] bg-white/95 backdrop-blur-md px-3.5 py-2.5 rounded-xl shadow-lg border border-slate-200/90 text-xs max-w-[240px]">
+      <div className="absolute bottom-4 right-4 z-[400] bg-white/95 backdrop-blur-md px-3.5 py-2.5 rounded-xl shadow-lg border border-slate-200/90 text-xs max-w-[240px] hidden sm:block">
         <div className="font-bold text-slate-900 text-[11px] mb-1.5 flex items-center justify-between">
           <span>Location Suitability Score</span>
           <span className="text-[9px] text-slate-400 font-mono">0 - 100</span>

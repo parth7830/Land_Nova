@@ -117,22 +117,29 @@ export default function BuyerPreferencesPanel({
 
   if (isCollapsed) {
     return (
-      <div className="relative">
+      <div className="absolute top-15 left-3 z-30">
         <button
           onClick={() => setIsCollapsed(false)}
-          className="absolute top-4 left-3 z-30 p-2.5 bg-white border border-slate-200 rounded-xl shadow-md text-slate-700 hover:text-emerald-600 hover:border-emerald-300 transition-all flex items-center gap-1.5 font-medium text-xs"
+          className="p-2 sm:px-3 sm:py-2 bg-white/95 backdrop-blur-md border border-slate-200/90 rounded-xl shadow-md text-slate-700 hover:text-emerald-700 hover:border-emerald-300 transition-all flex items-center gap-1.5 font-bold text-xs cursor-pointer"
           title="Open Preferences"
         >
           <SlidersHorizontal className="w-4 h-4 text-emerald-600" />
-          <span>Preferences</span>
-          <ChevronRight className="w-4 h-4 ml-0.5 text-slate-400" />
+          <span className="hidden sm:inline">Preferences</span>
+          <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
         </button>
       </div>
     );
   }
 
   return (
-    <aside className="w-80 sm:w-88 shrink-0 bg-white border-r border-slate-200/90 shadow-sm flex flex-col h-full overflow-hidden transition-all duration-200 z-20">
+    <>
+      {/* Mobile/Tablet Backdrop overlay */}
+      <div
+        onClick={() => setIsCollapsed(true)}
+        className="fixed inset-0 bg-black/35 backdrop-blur-xs z-40 lg:hidden animate-in fade-in"
+      />
+
+      <aside className="fixed inset-y-0 left-0 z-50 w-80 sm:w-88 bg-white border-r border-slate-200/90 shadow-2xl lg:relative lg:inset-auto lg:z-20 lg:shadow-sm flex flex-col h-full overflow-hidden transition-all duration-300 ease-in-out animate-in slide-in-from-left-5">
       {/* Header */}
       <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/70">
         <div className="flex items-center gap-2">
@@ -407,5 +414,6 @@ export default function BuyerPreferencesPanel({
         </button>
       </div>
     </aside>
+    </>
   );
 }

@@ -100,76 +100,83 @@ export default function AreaAnalysisDrawer({
   const strokeDashoffset = circumference - (score / 100) * circumference;
 
   return (
-    <aside className="w-84 sm:w-96 shrink-0 bg-white border-l border-slate-200/90 shadow-lg flex flex-col h-full overflow-hidden transition-all duration-200 z-30">
-      {/* Drawer Header */}
-      <div className="p-4 border-b border-slate-100 flex items-start justify-between bg-slate-50/80">
-        <div className="flex items-center gap-3">
-          {/* Circular Score Ring */}
-          <div className="relative w-16 h-16 shrink-0 flex items-center justify-center">
-            <svg className="w-16 h-16 transform -rotate-90">
-              <circle
-                cx="32"
-                cy="32"
-                r={radius}
-                className="text-slate-200"
-                strokeWidth="5"
-                stroke="currentColor"
-                fill="transparent"
-              />
-              <circle
-                cx="32"
-                cy="32"
-                r={radius}
-                className={`${
+    <>
+      {/* Mobile/Tablet Backdrop overlay */}
+      <div
+        onClick={onClose}
+        className="fixed inset-0 bg-black/35 backdrop-blur-xs z-40 xl:hidden animate-in fade-in"
+      />
+
+      <aside className="fixed inset-y-0 right-0 z-50 w-full sm:w-96 bg-white border-l border-slate-200/90 shadow-2xl xl:relative xl:inset-auto xl:z-20 xl:shadow-lg flex flex-col h-full overflow-hidden transition-all duration-300 ease-in-out animate-in slide-in-from-right-5">
+        {/* Drawer Header */}
+        <div className="p-4 border-b border-slate-100 flex items-start justify-between bg-slate-50/80">
+          <div className="flex items-center gap-3">
+            {/* Circular Score Ring */}
+            <div className="relative w-16 h-16 shrink-0 flex items-center justify-center">
+              <svg className="w-16 h-16 transform -rotate-90">
+                <circle
+                  cx="32"
+                  cy="32"
+                  r={radius}
+                  className="text-slate-200"
+                  strokeWidth="5"
+                  stroke="currentColor"
+                  fill="transparent"
+                />
+                <circle
+                  cx="32"
+                  cy="32"
+                  r={radius}
+                  className={`${
+                    score >= 80
+                      ? 'text-emerald-500'
+                      : score >= 60
+                      ? 'text-lime-500'
+                      : score >= 40
+                      ? 'text-amber-500'
+                      : 'text-rose-500'
+                  } transition-all duration-1000 ease-out`}
+                  strokeWidth="5"
+                  strokeDasharray={circumference}
+                  strokeDashoffset={strokeDashoffset}
+                  strokeLinecap="round"
+                  stroke="currentColor"
+                  fill="transparent"
+                />
+              </svg>
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+                <span className="text-base font-extrabold text-slate-900 leading-none">{Math.round(score)}</span>
+                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">/ 100</span>
+              </div>
+            </div>
+
+            <div>
+              <h2 className="text-base font-bold text-slate-900 tracking-tight leading-snug">{sector.name}</h2>
+              <p className="text-xs text-slate-500 font-medium">{sector.city}</p>
+              <span
+                className={`inline-block mt-1 px-2 py-0.5 rounded-full text-[10px] font-bold tracking-wide uppercase ${
                   score >= 80
-                    ? 'text-emerald-500'
+                    ? 'bg-emerald-100 text-emerald-800'
                     : score >= 60
-                    ? 'text-lime-500'
+                    ? 'bg-lime-100 text-lime-800'
                     : score >= 40
-                    ? 'text-amber-500'
-                    : 'text-rose-500'
-                } transition-all duration-1000 ease-out`}
-                strokeWidth="5"
-                strokeDasharray={circumference}
-                strokeDashoffset={strokeDashoffset}
-                strokeLinecap="round"
-                stroke="currentColor"
-                fill="transparent"
-              />
-            </svg>
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-              <span className="text-base font-extrabold text-slate-900 leading-none">{Math.round(score)}</span>
-              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">/ 100</span>
+                    ? 'bg-amber-100 text-amber-800'
+                    : 'bg-rose-100 text-rose-800'
+                }`}
+              >
+                {sector.grade_label}
+              </span>
             </div>
           </div>
 
-          <div>
-            <h2 className="text-base font-bold text-slate-900 tracking-tight leading-snug">{sector.name}</h2>
-            <p className="text-xs text-slate-500 font-medium">{sector.city}, Uttar Pradesh</p>
-            <span
-              className={`inline-block mt-1 px-2 py-0.5 rounded-full text-[10px] font-bold tracking-wide uppercase ${
-                score >= 80
-                  ? 'bg-emerald-100 text-emerald-800'
-                  : score >= 60
-                  ? 'bg-lime-100 text-lime-800'
-                  : score >= 40
-                  ? 'bg-amber-100 text-amber-800'
-                  : 'bg-rose-100 text-rose-800'
-              }`}
-            >
-              {sector.grade_label}
-            </span>
-          </div>
+          <button
+            onClick={onClose}
+            className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 rounded-xl transition cursor-pointer"
+            title="Close analysis"
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
-
-        <button
-          onClick={onClose}
-          className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-200/60 rounded-md transition"
-          title="Close analysis"
-        >
-          <X className="w-4 h-4" />
-        </button>
-      </div>
 
       {/* Tabs */}
       <div className="flex border-b border-slate-100 px-4 bg-white text-xs font-semibold">
@@ -403,5 +410,6 @@ export default function AreaAnalysisDrawer({
         </div>
       </div>
     </aside>
+    </>
   );
 }
