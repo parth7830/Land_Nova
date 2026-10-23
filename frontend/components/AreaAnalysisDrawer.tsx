@@ -22,6 +22,7 @@ import {
   Home
 } from 'lucide-react';
 import { BuyerSector, BuyerMetricDetail } from '@/types';
+import AreaReviewsSection from './AreaReviewsSection';
 
 interface AreaAnalysisDrawerProps {
   sector: BuyerSector | null;
@@ -50,7 +51,7 @@ export default function AreaAnalysisDrawer({
   onOpenWeights,
   onOpenShare
 }: AreaAnalysisDrawerProps) {
-  const [activeTab, setActiveTab] = useState<'overview' | 'amenities' | 'environment' | 'safety'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'amenities' | 'environment' | 'safety' | 'reviews'>('overview');
   const [expandedMetric, setExpandedMetric] = useState<string | null>(null);
 
   if (!sector) return null;
@@ -179,26 +180,30 @@ export default function AreaAnalysisDrawer({
         </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-slate-100 px-4 bg-white text-xs font-semibold">
-        {(['overview', 'amenities', 'environment', 'safety'] as const).map((tab) => (
+      <div className="flex border-b border-slate-100 px-4 bg-white text-xs font-semibold overflow-x-auto">
+        {(['overview', 'amenities', 'environment', 'safety', 'reviews'] as const).map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`py-2.5 px-3 capitalize border-b-2 transition-all cursor-pointer ${
+            className={`py-2.5 px-3 capitalize border-b-2 transition-all cursor-pointer whitespace-nowrap ${
               activeTab === tab
                 ? 'border-emerald-600 text-emerald-700 font-bold'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
-            {tab}
+            {tab === 'reviews' ? '★ Reviews' : tab}
           </button>
         ))}
       </div>
 
-      {/* Metric Rows */}
+      {/* Metric Rows or Reviews Tab */}
       <div className="flex-1 overflow-y-auto p-4 space-y-2.5">
-        {/* Quick Highlights / Bullet points */}
-        {activeTab === 'overview' && (
+        {activeTab === 'reviews' ? (
+          <AreaReviewsSection areaId={sector.id} areaName={sector.name} />
+        ) : (
+          <>
+            {/* Quick Highlights / Bullet points */}
+            {activeTab === 'overview' && (
           <div className="mb-3 p-3 bg-slate-50 rounded-xl border border-slate-200/70 text-xs">
             <span className="font-bold text-slate-800 block mb-1.5 flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
@@ -327,6 +332,8 @@ export default function AreaAnalysisDrawer({
             </div>
           </div>
         </div>
+        </>
+        )}
       </div>
 
       {/* Drawer Action CTAs */}

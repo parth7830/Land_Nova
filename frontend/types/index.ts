@@ -541,5 +541,61 @@ export interface DeveloperZonesResponse {
   }>;
 }
 
+export interface ReviewItem {
+  id: string;
+  area_id: string;
+  property_id?: string | null;
+  overall_rating: number;
+  rating_safety: number;
+  rating_connectivity: number;
+  rating_cleanliness: number;
+  rating_noise: number;
+  rating_water_power: number;
+  rating_community: number;
+  review_text: string;
+  resident_type: 'Owner' | 'Tenant' | 'Visitor';
+  duration_of_stay: string;
+  helpful_count: number;
+  is_demo: boolean;
+  created_at: string;
+}
+
+export interface ReviewStats {
+  average_rating: number;
+  total_reviews: number;
+  rating_distribution: Record<number, number>;
+  category_averages: {
+    safety: number;
+    connectivity: number;
+    cleanliness: number;
+    noise: number;
+    water_power: number;
+    community: number;
+  };
+}
+
+export interface ReviewsResponse {
+  area_id?: string | null;
+  property_id?: string | null;
+  stats: ReviewStats;
+  reviews: ReviewItem[];
+}
+
+export interface ReviewCreatePayload {
+  area_id: string;
+  property_id?: string;
+  overall_rating: number;
+  rating_safety?: number;
+  rating_connectivity?: number;
+  rating_cleanliness?: number;
+  rating_noise?: number;
+  rating_water_power?: number;
+  rating_community?: number;
+  review_text: string;
+  resident_type: 'Owner' | 'Tenant' | 'Visitor';
+  duration_of_stay: string;
+}
+
+
 
 

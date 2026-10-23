@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Sparkles, ArrowRight, MapPin, CheckCircle2 } from 'lucide-react';
+import { Sparkles, ArrowRight, MapPin, CheckCircle2, Star } from 'lucide-react';
 import { BuyerSector } from '@/types';
 
 interface TopRecommendedCardsProps {
@@ -91,9 +91,15 @@ export default function TopRecommendedCards({
 
               {/* Bottom Actions */}
               <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
-                <span className="text-slate-500 font-medium">
-                  {sector.commute ? `${sector.commute.car_minutes}m drive` : `${sector.property_count} properties`}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-slate-500 font-medium">
+                    {sector.commute ? `${sector.commute.car_minutes}m drive` : `${sector.property_count} properties`}
+                  </span>
+                  <span className="flex items-center gap-0.5 text-amber-600 font-semibold">
+                    <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+                    4.4 <span className="text-slate-400 font-normal">(demo)</span>
+                  </span>
+                </div>
                 <button
                   type="button"
                   onClick={(e) => {

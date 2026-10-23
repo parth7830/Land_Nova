@@ -17,7 +17,11 @@ import {
   DeveloperCommandCenterResponse,
   FeasibilityInputs,
   DeveloperZone,
-  DeveloperZonesResponse
+  DeveloperZonesResponse,
+  ReviewItem,
+  ReviewStats,
+  ReviewsResponse,
+  ReviewCreatePayload
 } from '@/types';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
@@ -2093,6 +2097,207 @@ function computeFallbackDeveloperZones(payload: {
     top_recommended: sorted.slice(0, 3)
   };
 }
+
+export async function fetchReviews(params: {
+  area_id?: string;
+  property_id?: string;
+  resident_type?: string;
+  sort_by?: string;
+}): Promise<ReviewsResponse> {
+  const query = new URLSearchParams();
+  if (params.area_id) query.set('area_id', params.area_id);
+  if (params.property_id) query.set('property_id', params.property_id);
+  if (params.resident_type && params.resident_type !== 'All') query.set('resident_type', params.resident_type);
+  if (params.sort_by) query.set('sort_by', params.sort_by);
+
+  try {
+    const res = await fetch(`${API_BASE}/api/reviews?${query.toString()}`);
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (err) {
+    console.warn('Fetch reviews API failed, falling back to local demo reviews', err);
+  }
+
+  return getFallbackReviews(params.area_id, params.resident_type, params.sort_by);
+}
+
+export async function submitReview(payload: ReviewCreatePayload): Promise<ReviewItem> {
+  try {
+    const res = await fetch(`${API_BASE}/api/reviews`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (res.ok) {
+      return await res.json();
+    }
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.detail || 'Failed to submit review');
+  } catch (err: any) {
+    console.warn('Submit review API error', err);
+    throw err;
+  }
+}
+
+export async function voteReviewHelpful(reviewId: string): Promise<{ id: string; helpful_count: number }> {
+  try {
+    const res = await fetch(`${API_BASE}/api/reviews/${reviewId}/helpful`, {
+      method: 'POST'
+    });
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (err) {
+    console.warn('Vote helpful failed', err);
+  }
+  return { id: reviewId, helpful_count: 1 };
+}
+
+function getFallbackReviews(
+  areaId?: string,
+  residentType?: string,
+  sortBy: string = 'helpful'
+): ReviewsResponse {
+  const allReviews: ReviewItem[] = [
+    {
+      id: "rev-seed-sec62-1",
+      area_id: "sector-62-noida",
+      property_id: null,
+      overall_rating: 4.5,
+      rating_safety: 4.5,
+      rating_connectivity: 5.0,
+      rating_cleanliness: 4.0,
+      rating_noise: 3.5,
+      rating_water_power: 4.0,
+      rating_community: 4.5,
+      review_text: "Sector 62 has exceptional Blue Line metro connectivity and tech parks nearby. Very safe for evening walks, though traffic at Model Town crossing peaks during office hours.",
+      resident_type: "Owner",
+      duration_of_stay: "3+ years",
+      helpful_count: 14,
+      is_demo: true,
+      created_at: "2026-01-15T10:30:00Z"
+    },
+    {
+      id: "rev-seed-sec62-2",
+      area_id: "sector-62-noida",
+      property_id: null,
+      overall_rating: 4.0,
+      rating_safety: 4.0,
+      rating_connectivity: 4.5,
+      rating_cleanliness: 3.8,
+      rating_noise: 3.0,
+      rating_water_power: 4.2,
+      rating_community: 4.0,
+      review_text: "Great educational institutions and Fortis Hospital right across. Water supply is reliable through Ganga jal pipelines. Noise is moderate along the expressway service lane.",
+      resident_type: "Tenant",
+      duration_of_stay: "1-3 years",
+      helpful_count: 8,
+      is_demo: true,
+      created_at: "2026-01-18T14:15:00Z"
+    },
+    {
+      id: "rev-seed-sec150-1",
+      area_id: "noida-sec-150",
+      property_id: null,
+      overall_rating: 4.8,
+      rating_safety: 4.5,
+      rating_connectivity: 4.2,
+      rating_cleanliness: 5.0,
+      rating_noise: 5.0,
+      rating_water_power: 4.5,
+      rating_community: 4.8,
+      review_text: "Very peaceful, zero-noise, and low-density sector with the Shaheed Bhagat Singh sports city park. Best air quality in Noida. Upcoming retail plazas will make it even better.",
+      resident_type: "Owner",
+      duration_of_stay: "6-12 months",
+      helpful_count: 19,
+      is_demo: true,
+      created_at: "2026-01-10T09:00:00Z"
+    },
+    {
+      id: "rev-seed-sec150-2",
+      area_id: "noida-sec-150",
+      property_id: null,
+      overall_rating: 4.2,
+      rating_safety: 4.0,
+      rating_connectivity: 3.8,
+      rating_cleanliness: 4.8,
+      rating_noise: 4.8,
+      rating_water_power: 4.0,
+      rating_community: 4.2,
+      review_text: "Greenery is top notch. Need a private vehicle or cab for quick transit as metro feeder buses are still expanding. Security within gated townships is excellent.",
+      resident_type: "Tenant",
+      duration_of_stay: "< 6 months",
+      helpful_count: 6,
+      is_demo: true,
+      created_at: "2026-01-22T16:20:00Z"
+    }
+  ];
+
+  let filtered = allReviews;
+  if (areaId) {
+    const aid = areaId.toLowerCase();
+    filtered = filtered.filter(r => r.area_id.toLowerCase().includes(aid) || aid.includes(r.area_id.toLowerCase()));
+    if (filtered.length === 0) {
+      filtered = allReviews.slice(0, 2);
+    }
+  }
+
+  if (residentType && residentType !== 'All') {
+    filtered = filtered.filter(r => r.resident_type === residentType);
+  }
+
+  if (sortBy === 'newest') {
+    filtered.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  } else if (sortBy === 'highest') {
+    filtered.sort((a, b) => b.overall_rating - a.overall_rating);
+  } else if (sortBy === 'lowest') {
+    filtered.sort((a, b) => a.overall_rating - b.overall_rating);
+  } else {
+    filtered.sort((a, b) => b.helpful_count - a.helpful_count);
+  }
+
+  const count = filtered.length;
+  const ratingDist: Record<number, number> = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+  let sumOverall = 0;
+  let sumSafety = 0;
+  let sumConn = 0;
+  let sumClean = 0;
+  let sumNoise = 0;
+  let sumWater = 0;
+  let sumComm = 0;
+
+  filtered.forEach(r => {
+    const star = Math.max(1, Math.min(5, Math.round(r.overall_rating)));
+    ratingDist[star] = (ratingDist[star] || 0) + 1;
+    sumOverall += r.overall_rating;
+    sumSafety += r.rating_safety;
+    sumConn += r.rating_connectivity;
+    sumClean += r.rating_cleanliness;
+    sumNoise += r.rating_noise;
+    sumWater += r.rating_water_power;
+    sumComm += r.rating_community;
+  });
+
+  return {
+    area_id: areaId,
+    stats: {
+      average_rating: count > 0 ? Number((sumOverall / count).toFixed(1)) : 4.4,
+      total_reviews: count,
+      rating_distribution: ratingDist,
+      category_averages: {
+        safety: count > 0 ? Number((sumSafety / count).toFixed(1)) : 4.5,
+        connectivity: count > 0 ? Number((sumConn / count).toFixed(1)) : 4.6,
+        cleanliness: count > 0 ? Number((sumClean / count).toFixed(1)) : 4.2,
+        noise: count > 0 ? Number((sumNoise / count).toFixed(1)) : 3.8,
+        water_power: count > 0 ? Number((sumWater / count).toFixed(1)) : 4.2,
+        community: count > 0 ? Number((sumComm / count).toFixed(1)) : 4.4
+      }
+    },
+    reviews: filtered
+  };
+}
+
 
 
 
