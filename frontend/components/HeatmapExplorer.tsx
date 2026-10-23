@@ -17,6 +17,14 @@ import { evaluateBuyerPreferences, fetchBuyerSectors } from '@/lib/api';
 import BuyerPreferencesPanel from './BuyerPreferencesPanel';
 import AreaAnalysisDrawer from './AreaAnalysisDrawer';
 import TopRecommendedCards from './TopRecommendedCards';
+import {
+  CompareModal,
+  WalkabilityModal,
+  FloodClimateModal,
+  WaterfallModal,
+  PresetsAndWeightsModal,
+  ShareSearchModal
+} from './BuyerModals';
 
 const DynamicHeatmapMap = dynamic(() => import('./HeatmapMap'), {
   ssr: false,
@@ -81,6 +89,24 @@ export default function HeatmapExplorer({
 
   // Affordability Modal State (for B3 EMI Calculator)
   const [affordabilitySector, setAffordabilitySector] = useState<BuyerSector | null>(null);
+
+  // B2: Compare Modal State
+  const [showCompareModal, setShowCompareModal] = useState(false);
+
+  // B4: Walkability Modal State
+  const [walkabilitySector, setWalkabilitySector] = useState<BuyerSector | null>(null);
+
+  // B5: Flood & Climate Modal State
+  const [floodClimateSector, setFloodClimateSector] = useState<BuyerSector | null>(null);
+
+  // B6: Custom Weights Modal State
+  const [showWeightsModal, setShowWeightsModal] = useState(false);
+
+  // B7: Share Search Modal State
+  const [showShareModal, setShowShareModal] = useState(false);
+
+  // B10: Waterfall Modal State
+  const [waterfallSector, setWaterfallSector] = useState<BuyerSector | null>(null);
 
   // Load sectors whenever location changes or user generates heatmap
   const loadSectors = useCallback(async () => {
@@ -212,6 +238,12 @@ export default function HeatmapExplorer({
             onViewProperties={handleViewProperties}
             onOpenChecklist={handleOpenChecklist}
             onOpenAffordability={(sec) => setAffordabilitySector(sec)}
+            onOpenWalkability={(sec) => setWalkabilitySector(sec)}
+            onOpenFloodClimate={(sec) => setFloodClimateSector(sec)}
+            onOpenWaterfall={(sec) => setWaterfallSector(sec)}
+            onOpenCompare={() => setShowCompareModal(true)}
+            onOpenWeights={() => setShowWeightsModal(true)}
+            onOpenShare={() => setShowShareModal(true)}
           />
         )}
       </div>
@@ -353,6 +385,59 @@ export default function HeatmapExplorer({
             </button>
           </div>
         </div>
+      )}
+
+      {/* B2: Compare Modal */}
+      {showCompareModal && sectors.length >= 2 && (
+        <CompareModal
+          allSectors={sectors}
+          initialSectorIds={selectedSector ? [selectedSector.id] : []}
+          onClose={() => setShowCompareModal(false)}
+        />
+      )}
+
+      {/* B4: Walkability Modal */}
+      {walkabilitySector && (
+        <WalkabilityModal
+          sector={walkabilitySector}
+          onClose={() => setWalkabilitySector(null)}
+        />
+      )}
+
+      {/* B5: Flood & Climate Modal */}
+      {floodClimateSector && (
+        <FloodClimateModal
+          sector={floodClimateSector}
+          onClose={() => setFloodClimateSector(null)}
+        />
+      )}
+
+      {/* B10: Waterfall Explainability Modal */}
+      {waterfallSector && (
+        <WaterfallModal
+          sector={waterfallSector}
+          onClose={() => setWaterfallSector(null)}
+        />
+      )}
+
+      {/* B6: Custom Weight Presets & Sliders Modal */}
+      {showWeightsModal && (
+        <PresetsAndWeightsModal
+          currentWeights={weightsApplied}
+          onApplyWeights={(newWeights) => {
+            setWeightsApplied(newWeights);
+            loadSectors();
+          }}
+          onClose={() => setShowWeightsModal(false)}
+        />
+      )}
+
+      {/* B7: Share Search URL Modal */}
+      {showShareModal && (
+        <ShareSearchModal
+          currentUrl={typeof window !== 'undefined' ? window.location.href : ''}
+          onClose={() => setShowShareModal(false)}
+        />
       )}
     </div>
   );

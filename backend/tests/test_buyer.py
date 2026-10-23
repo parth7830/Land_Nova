@@ -77,3 +77,43 @@ def test_buyer_site_checklist():
         assert "category" in item
         assert "title" in item
         assert "reason" in item
+
+def test_buyer_walkability():
+    res = client.get("/api/buyer/walkability/sector-62-noida")
+    assert res.status_code == 200
+    data = res.json()
+    assert "walkability_score" in data
+    assert data["walkability_score"] > 0
+    assert "essentials" in data
+    assert len(data["essentials"]) == 7
+
+def test_buyer_flood_and_climate():
+    res = client.get("/api/buyer/flood-climate/sector-62-noida")
+    assert res.status_code == 200
+    data = res.json()
+    assert "elevation_m" in data
+    assert "elevation_source" in data
+    assert "historical_extremes" in data
+    assert len(data["historical_extremes"]) == 10
+    assert "seasonal_aqi_trend" in data
+    assert len(data["seasonal_aqi_trend"]) == 12
+
+def test_buyer_ai_natural_language_query():
+    res = client.post("/api/buyer/ai-query", json={"query": "areas under 1Cr with good metro access", "city": "Noida"})
+    assert res.status_code == 200
+    data = res.json()
+    assert "tool_call_trace" in data
+    assert "top_matches" in data
+    assert "ai_summary" in data
+
+def test_buyer_waterfall_explainability():
+    res = client.get("/api/buyer/waterfall/sector-62-noida")
+    assert res.status_code == 200
+    data = res.json()
+    assert "waterfall_bars" in data
+    assert len(data["waterfall_bars"]) == 5
+    for bar in data["waterfall_bars"]:
+        assert "pillar" in bar
+        assert "raw_score" in bar
+        assert "contribution" in bar
+

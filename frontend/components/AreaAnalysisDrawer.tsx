@@ -29,6 +29,12 @@ interface AreaAnalysisDrawerProps {
   onViewProperties: (sectorId: string) => void;
   onOpenChecklist?: (sectorId: string) => void;
   onOpenAffordability?: (sector: BuyerSector) => void;
+  onOpenWalkability?: (sector: BuyerSector) => void;
+  onOpenFloodClimate?: (sector: BuyerSector) => void;
+  onOpenWaterfall?: (sector: BuyerSector) => void;
+  onOpenCompare?: () => void;
+  onOpenWeights?: () => void;
+  onOpenShare?: () => void;
 }
 
 export default function AreaAnalysisDrawer({
@@ -36,7 +42,13 @@ export default function AreaAnalysisDrawer({
   onClose,
   onViewProperties,
   onOpenChecklist,
-  onOpenAffordability
+  onOpenAffordability,
+  onOpenWalkability,
+  onOpenFloodClimate,
+  onOpenWaterfall,
+  onOpenCompare,
+  onOpenWeights,
+  onOpenShare
 }: AreaAnalysisDrawerProps) {
   const [activeTab, setActiveTab] = useState<'overview' | 'amenities' | 'environment' | 'safety'>('overview');
   const [expandedMetric, setExpandedMetric] = useState<string | null>(null);
@@ -324,7 +336,7 @@ export default function AreaAnalysisDrawer({
           {onOpenChecklist && (
             <button
               onClick={() => onOpenChecklist(sector.id)}
-              className="py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium text-[11px] transition text-center"
+              className="py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium text-[11px] transition text-center cursor-pointer"
             >
               📋 Site Checklist
             </button>
@@ -332,9 +344,60 @@ export default function AreaAnalysisDrawer({
           {onOpenAffordability && (
             <button
               onClick={() => onOpenAffordability(sector)}
-              className="py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium text-[11px] transition text-center"
+              className="py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium text-[11px] transition text-center cursor-pointer"
             >
               💰 EMI Calculator
+            </button>
+          )}
+          {onOpenWalkability && (
+            <button
+              onClick={() => onOpenWalkability(sector)}
+              className="py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium text-[11px] transition text-center cursor-pointer"
+            >
+              🚶 Walkability
+            </button>
+          )}
+          {onOpenFloodClimate && (
+            <button
+              onClick={() => onOpenFloodClimate(sector)}
+              className="py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium text-[11px] transition text-center cursor-pointer"
+            >
+              🌊 Flood & Climate
+            </button>
+          )}
+          {onOpenWaterfall && (
+            <button
+              onClick={() => onOpenWaterfall(sector)}
+              className="py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium text-[11px] transition text-center cursor-pointer"
+            >
+              📊 Why This Score?
+            </button>
+          )}
+          {onOpenCompare && (
+            <button
+              onClick={() => onOpenCompare()}
+              className="py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium text-[11px] transition text-center cursor-pointer"
+            >
+              ⚖️ Compare Areas
+            </button>
+          )}
+        </div>
+
+        <div className="grid grid-cols-2 gap-2 text-xs">
+          {onOpenWeights && (
+            <button
+              onClick={() => onOpenWeights()}
+              className="py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-lg font-medium text-[11px] transition text-center border border-emerald-200 cursor-pointer"
+            >
+              🎚️ Custom Weights
+            </button>
+          )}
+          {onOpenShare && (
+            <button
+              onClick={() => onOpenShare()}
+              className="py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-lg font-medium text-[11px] transition text-center border border-emerald-200 cursor-pointer"
+            >
+              🔗 Share Search
             </button>
           )}
         </div>
