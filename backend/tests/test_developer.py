@@ -277,3 +277,101 @@ def test_ground_truth_survey_module_d9():
     assert "checklist_sections" in chk
     assert len(chk["checklist_sections"]) >= 3
 
+
+def test_developer_zones_weights_normalization_and_scoring():
+    """TASK 1: Verify weights normalization and deterministic 0-100 score bounds."""
+    from app.services.developer_zones_service import normalize_weights, compute_developer_zone_scores
+
+    # Unnormalized arbitrary weights
+    raw_w = {
+        "connectivity": 50.0,
+        "amenities": 50.0,
+        "aqi": 50.0,
+        "traffic": 50.0,
+        "flood_safety": 0.0,
+        "groundwater": 0.0,
+        "growth_potential": 0.0,
+        "infrastructure": 0.0,
+    }
+    norm_w = normalize_weights(raw_w)
+    assert abs(sum(norm_w.values()) - 100.0) < 0.01
+    assert norm_w["connectivity"] == 25.0
+
+    # Compute scores across zones
+    res = compute_developer_zone_scores(weights=raw_w)
+    assert res["total_zones"] >= 10
+    assert abs(sum(res["weights_applied"].values()) - 100.0) < 0.01
+
+    for z in res["zones"]:
+        score = z["suitability_score"]
+        assert 0.0 <= score <= 100.0
+        assert z["demo_badge"] == "Demo data"
+        assert z["source_label"] == "Seeded demo dataset"
+        assert z["color"].startswith("#")
+
+
+def test_developer_zones_hard_thresholds_dimming():
+    """TASK 1: Verify hard thresholds dim non-compliant zones with clear fail reasons."""
+    from app.services.developer_zones_service import compute_developer_zone_scores
+
+    # Strict filters: low AQI and tight budget
+    filters = {
+        "max_aqi": 130,            # Sector 62 has AQI 142 -> should fail
+        "max_budget_sqft": 7000,   # Sector 18 has 16500 -> should fail
+        "flood_allowed": "low_only" # Sector 115 has Elevated -> should fail
+    }
+
+    res = compute_developer_zone_scores(filters=filters)
+    assert res["qualifying_zones"] < res["total_zones"]
+
+    # Verify Sector 62 is dimmed due to AQI
+    sec62 = next((z for z in res["zones"] if z["id"] == "noida-sec-62"), None)
+    assert sec62 is not None
+    assert sec62["is_dimmed"] is True
+    assert any("AQI" in r for r in sec62["fail_reasons"])
+    assert sec62["color"] == "#94a3b8"
+
+    # Verify Sector 18 is dimmed due to price
+    sec18 = next((z for z in res["zones"] if z["id"] == "noida-sec-18"), None)
+    assert sec18 is not None
+    assert sec18["is_dimmed"] is True
+    assert any("budget" in r.lower() or "price" in r.lower() for r in sec18["fail_reasons"])
+
+    # Verify top_recommended only contains non-dimmed zones
+    for rec in res["top_recommended"]:
+        assert rec["is_dimmed"] is False
+
+
+def test_developer_zones_api_endpoints():
+    """TASK 1: Verify GET /api/developer/zones and POST /api/developer/zones/score endpoints."""
+    # Test GET
+    res_get = client.get("/api/developer/zones?city=Noida&max_aqi=150")
+    assert res_get.status_code == 200
+    data_get = res_get.json()
+    assert "zones" in data_get
+    assert "legend" in data_get
+    assert len(data_get["zones"]) >= 5
+
+    # Test POST
+    payload = {
+        "city": "Noida",
+        "filters": {
+            "max_aqi": 200,
+            "max_budget_sqft": 10000,
+            "min_growth_pct": 10.0
+        },
+        "weights": {
+            "growth_potential": 30.0,
+            "infrastructure": 30.0,
+            "connectivity": 20.0,
+            "amenities": 20.0
+        }
+    }
+    res_post = client.post("/api/developer/zones/score", json=payload)
+    assert res_post.status_code == 200
+    data_post = res_post.json()
+    assert "top_recommended" in data_post
+    assert len(data_post["top_recommended"]) > 0
+    assert abs(sum(data_post["weights_applied"].values()) - 100.0) < 0.01
+
+

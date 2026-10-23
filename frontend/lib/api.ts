@@ -15,7 +15,9 @@ import {
   AffordabilityCalculation,
   SiteChecklistItem,
   DeveloperCommandCenterResponse,
-  FeasibilityInputs
+  FeasibilityInputs,
+  DeveloperZone,
+  DeveloperZonesResponse
 } from '@/types';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
@@ -1549,5 +1551,548 @@ export async function fetchSurveyChecklist() {
     ]
   };
 }
+
+export async function fetchDeveloperZones(city: string = 'Noida', filters?: any): Promise<DeveloperZonesResponse> {
+  const queryParams = new URLSearchParams();
+  if (city) queryParams.set('city', city);
+  if (filters) {
+    if (filters.min_connectivity !== undefined) queryParams.set('min_connectivity', String(filters.min_connectivity));
+    if (filters.min_amenities !== undefined) queryParams.set('min_amenities', String(filters.min_amenities));
+    if (filters.max_aqi !== undefined) queryParams.set('max_aqi', String(filters.max_aqi));
+    if (filters.max_price_sqft !== undefined) queryParams.set('max_price_sqft', String(filters.max_price_sqft));
+    if (filters.min_growth_pct !== undefined) queryParams.set('min_growth_pct', String(filters.min_growth_pct));
+    if (filters.allowed_traffic !== undefined) queryParams.set('allowed_traffic', filters.allowed_traffic);
+    if (filters.allowed_flood !== undefined) queryParams.set('allowed_flood', filters.allowed_flood);
+    if (filters.allowed_groundwater !== undefined) queryParams.set('allowed_groundwater', filters.allowed_groundwater);
+  }
+
+  try {
+    const res = await fetch(`${API_BASE}/api/developer/zones?${queryParams.toString()}`);
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (err) {
+    console.warn('Fetch developer zones failed, falling back to local demo zones', err);
+  }
+
+  return getFallbackDeveloperZones(city);
+}
+
+export async function scoreDeveloperZones(payload: {
+  city?: string;
+  weights?: Record<string, number>;
+  filters?: Record<string, any>;
+}): Promise<DeveloperZonesResponse> {
+  try {
+    const res = await fetch(`${API_BASE}/api/developer/zones/score`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (err) {
+    console.warn('Score developer zones API failed, falling back to local computation', err);
+  }
+
+  return computeFallbackDeveloperZones(payload);
+}
+
+function getFallbackDeveloperZones(city: string = 'Noida'): DeveloperZonesResponse {
+  const fallbackZones: DeveloperZone[] = [
+    {
+      id: "noida-sec-62",
+      name: "Sector 62 (Institutional & Tech Core)",
+      city: "Noida",
+      center: [28.6280, 77.3649],
+      polygon: [
+        [28.6210, 77.3560],
+        [28.6210, 77.3730],
+        [28.6350, 77.3730],
+        [28.6350, 77.3560]
+      ],
+      connectivity_score: 88.5,
+      nearby_amenities_score: 85.0,
+      aqi: 142,
+      traffic_congestion_level: "Medium",
+      traffic_score: 70.0,
+      flood_risk: "Low",
+      flood_safety_score: 90.0,
+      groundwater_category: "Over-Exploited",
+      groundwater_score: 45.0,
+      land_price_sqft: 8200,
+      price_growth_5yr_pct: 14.8,
+      demand_level: "High",
+      demand_score: 92.0,
+      upcoming_infra_dist_km: 1.2,
+      infra_proximity_score: 85.0,
+      suitability_score: 79.2,
+      is_dimmed: false,
+      fail_reasons: [],
+      color: "#22c55e",
+      demo_badge: "Demo data",
+      source_label: "Seeded demo dataset"
+    },
+    {
+      id: "noida-sec-150",
+      name: "Sector 150 (Sports City & Green Belt)",
+      city: "Noida",
+      center: [28.4350, 77.4950],
+      polygon: [
+        [28.4270, 77.4850],
+        [28.4270, 77.5050],
+        [28.4430, 77.5050],
+        [28.4430, 77.4850]
+      ],
+      connectivity_score: 82.0,
+      nearby_amenities_score: 76.0,
+      aqi: 115,
+      traffic_congestion_level: "Low",
+      traffic_score: 88.0,
+      flood_risk: "Moderate",
+      flood_safety_score: 75.0,
+      groundwater_category: "Semi-Critical",
+      groundwater_score: 72.0,
+      land_price_sqft: 9400,
+      price_growth_5yr_pct: 22.4,
+      demand_level: "High",
+      demand_score: 95.0,
+      upcoming_infra_dist_km: 0.8,
+      infra_proximity_score: 90.0,
+      suitability_score: 82.5,
+      is_dimmed: false,
+      fail_reasons: [],
+      color: "#22c55e",
+      demo_badge: "Demo data",
+      source_label: "Seeded demo dataset"
+    },
+    {
+      id: "noida-sec-18",
+      name: "Sector 18 (Commercial CBD & Retail Hub)",
+      city: "Noida",
+      center: [28.5708, 77.3260],
+      polygon: [
+        [28.5650, 77.3200],
+        [28.5650, 77.3320],
+        [28.5760, 77.3320],
+        [28.5760, 77.3200]
+      ],
+      connectivity_score: 95.0,
+      nearby_amenities_score: 94.0,
+      aqi: 168,
+      traffic_congestion_level: "Severe",
+      traffic_score: 40.0,
+      flood_risk: "Low",
+      flood_safety_score: 92.0,
+      groundwater_category: "Over-Exploited",
+      groundwater_score: 40.0,
+      land_price_sqft: 18500,
+      price_growth_5yr_pct: 9.5,
+      demand_level: "Very High",
+      demand_score: 96.0,
+      upcoming_infra_dist_km: 2.5,
+      infra_proximity_score: 70.0,
+      suitability_score: 73.1,
+      is_dimmed: false,
+      fail_reasons: [],
+      color: "#eab308",
+      demo_badge: "Demo data",
+      source_label: "Seeded demo dataset"
+    },
+    {
+      id: "noida-sec-137",
+      name: "Sector 137 (Expressway Residential)",
+      city: "Noida",
+      center: [28.5080, 77.4050],
+      polygon: [
+        [28.5010, 77.3970],
+        [28.5010, 77.4130],
+        [28.5150, 77.4130],
+        [28.5150, 77.3970]
+      ],
+      connectivity_score: 84.0,
+      nearby_amenities_score: 82.0,
+      aqi: 135,
+      traffic_congestion_level: "Medium",
+      traffic_score: 72.0,
+      flood_risk: "Low",
+      flood_safety_score: 90.0,
+      groundwater_category: "Critical",
+      groundwater_score: 55.0,
+      land_price_sqft: 7600,
+      price_growth_5yr_pct: 16.5,
+      demand_level: "High",
+      demand_score: 86.0,
+      upcoming_infra_dist_km: 1.8,
+      infra_proximity_score: 78.0,
+      suitability_score: 78.4,
+      is_dimmed: false,
+      fail_reasons: [],
+      color: "#22c55e",
+      demo_badge: "Demo data",
+      source_label: "Seeded demo dataset"
+    },
+    {
+      id: "yeida-sec-28",
+      name: "YEIDA Sector 28 (Jewar Aerotropolis Hub)",
+      city: "Greater Noida",
+      center: [28.1950, 77.5450],
+      polygon: [
+        [28.1800, 77.5300],
+        [28.1800, 77.5600],
+        [28.2100, 77.5600],
+        [28.2100, 77.5300]
+      ],
+      connectivity_score: 79.0,
+      nearby_amenities_score: 52.0,
+      aqi: 88,
+      traffic_congestion_level: "Low",
+      traffic_score: 95.0,
+      flood_risk: "Low",
+      flood_safety_score: 95.0,
+      groundwater_category: "Safe",
+      groundwater_score: 90.0,
+      land_price_sqft: 4800,
+      price_growth_5yr_pct: 34.5,
+      demand_level: "Very High",
+      demand_score: 98.0,
+      upcoming_infra_dist_km: 0.4,
+      infra_proximity_score: 98.0,
+      suitability_score: 83.2,
+      is_dimmed: false,
+      fail_reasons: [],
+      color: "#22c55e",
+      demo_badge: "Demo data",
+      source_label: "Seeded demo dataset"
+    },
+    {
+      id: "gnoida-west-sec-1",
+      name: "Greater Noida West (Noida Extension Sector 1)",
+      city: "Greater Noida",
+      center: [28.6010, 77.4420],
+      polygon: [
+        [28.5920, 77.4300],
+        [28.5920, 77.4540],
+        [28.6100, 77.4540],
+        [28.6100, 77.4300]
+      ],
+      connectivity_score: 74.0,
+      nearby_amenities_score: 75.0,
+      aqi: 165,
+      traffic_congestion_level: "High",
+      traffic_score: 55.0,
+      flood_risk: "Moderate",
+      flood_safety_score: 70.0,
+      groundwater_category: "Critical",
+      groundwater_score: 50.0,
+      land_price_sqft: 5200,
+      price_growth_5yr_pct: 18.2,
+      demand_level: "High",
+      demand_score: 84.0,
+      upcoming_infra_dist_km: 2.2,
+      infra_proximity_score: 74.0,
+      suitability_score: 68.9,
+      is_dimmed: false,
+      fail_reasons: [],
+      color: "#eab308",
+      demo_badge: "Demo data",
+      source_label: "Seeded demo dataset"
+    },
+    {
+      id: "gnoida-pari-chowk",
+      name: "Pari Chowk & Alpha 1 (Established Civic Hub)",
+      city: "Greater Noida",
+      center: [28.4680, 77.5080],
+      polygon: [
+        [28.4580, 77.4980],
+        [28.4580, 77.5180],
+        [28.4780, 77.5180],
+        [28.4780, 77.4980]
+      ],
+      connectivity_score: 86.0,
+      nearby_amenities_score: 88.0,
+      aqi: 128,
+      traffic_congestion_level: "Medium",
+      traffic_score: 68.0,
+      flood_risk: "Low",
+      flood_safety_score: 92.0,
+      groundwater_category: "Semi-Critical",
+      groundwater_score: 70.0,
+      land_price_sqft: 6800,
+      price_growth_5yr_pct: 12.0,
+      demand_level: "Moderate",
+      demand_score: 72.0,
+      upcoming_infra_dist_km: 1.5,
+      infra_proximity_score: 82.0,
+      suitability_score: 76.5,
+      is_dimmed: false,
+      fail_reasons: [],
+      color: "#22c55e",
+      demo_badge: "Demo data",
+      source_label: "Seeded demo dataset"
+    },
+    {
+      id: "noida-sec-128",
+      name: "Sector 128 (Golf Course Luxury Corridor)",
+      city: "Noida",
+      center: [28.5280, 77.3780],
+      polygon: [
+        [28.5200, 77.3680],
+        [28.5200, 77.3880],
+        [28.5360, 77.3880],
+        [28.5360, 77.3680]
+      ],
+      connectivity_score: 90.0,
+      nearby_amenities_score: 86.0,
+      aqi: 130,
+      traffic_congestion_level: "Low",
+      traffic_score: 85.0,
+      flood_risk: "Moderate",
+      flood_safety_score: 74.0,
+      groundwater_category: "Over-Exploited",
+      groundwater_score: 42.0,
+      land_price_sqft: 14200,
+      price_growth_5yr_pct: 21.0,
+      demand_level: "Very High",
+      demand_score: 94.0,
+      upcoming_infra_dist_km: 0.9,
+      infra_proximity_score: 88.0,
+      suitability_score: 81.3,
+      is_dimmed: false,
+      fail_reasons: [],
+      color: "#22c55e",
+      demo_badge: "Demo data",
+      source_label: "Seeded demo dataset"
+    },
+    {
+      id: "noida-sec-76",
+      name: "Sector 76 (Metro Central Residential)",
+      city: "Noida",
+      center: [28.5660, 77.3850],
+      polygon: [
+        [28.5580, 77.3760],
+        [28.5580, 77.3940],
+        [28.5740, 77.3940],
+        [28.5740, 77.3760]
+      ],
+      connectivity_score: 89.0,
+      nearby_amenities_score: 87.0,
+      aqi: 146,
+      traffic_congestion_level: "Medium",
+      traffic_score: 68.0,
+      flood_risk: "Low",
+      flood_safety_score: 90.0,
+      groundwater_category: "Critical",
+      groundwater_score: 52.0,
+      land_price_sqft: 8100,
+      price_growth_5yr_pct: 13.5,
+      demand_level: "High",
+      demand_score: 82.0,
+      upcoming_infra_dist_km: 1.1,
+      infra_proximity_score: 86.0,
+      suitability_score: 77.0,
+      is_dimmed: false,
+      fail_reasons: [],
+      color: "#22c55e",
+      demo_badge: "Demo data",
+      source_label: "Seeded demo dataset"
+    },
+    {
+      id: "noida-sec-115",
+      name: "Sector 115 (FNG & Lowland Inundation Zone)",
+      city: "Noida",
+      center: [28.5750, 77.4250],
+      polygon: [
+        [28.5650, 77.4150],
+        [28.5650, 77.4350],
+        [28.5850, 77.4350],
+        [28.5850, 77.4150]
+      ],
+      connectivity_score: 62.0,
+      nearby_amenities_score: 55.0,
+      aqi: 155,
+      traffic_congestion_level: "Low",
+      traffic_score: 82.0,
+      flood_risk: "High",
+      flood_safety_score: 30.0,
+      groundwater_category: "Semi-Critical",
+      groundwater_score: 72.0,
+      land_price_sqft: 4600,
+      price_growth_5yr_pct: 8.0,
+      demand_level: "Low",
+      demand_score: 45.0,
+      upcoming_infra_dist_km: 3.8,
+      infra_proximity_score: 55.0,
+      suitability_score: 42.4,
+      is_dimmed: false,
+      fail_reasons: [],
+      color: "#ef4444",
+      demo_badge: "Demo data",
+      source_label: "Seeded demo dataset"
+    },
+    {
+      id: "gnoida-kp-3",
+      name: "Knowledge Park III (University & Tech District)",
+      city: "Greater Noida",
+      center: [28.4720, 77.4880],
+      polygon: [
+        [28.4620, 77.4780],
+        [28.4620, 77.4980],
+        [28.4820, 77.4980],
+        [28.4820, 77.4780]
+      ],
+      connectivity_score: 81.0,
+      nearby_amenities_score: 80.0,
+      aqi: 122,
+      traffic_congestion_level: "Medium",
+      traffic_score: 75.0,
+      flood_risk: "Low",
+      flood_safety_score: 94.0,
+      groundwater_category: "Semi-Critical",
+      groundwater_score: 74.0,
+      land_price_sqft: 6100,
+      price_growth_5yr_pct: 11.2,
+      demand_level: "Moderate",
+      demand_score: 68.0,
+      upcoming_infra_dist_km: 2.1,
+      infra_proximity_score: 75.0,
+      suitability_score: 74.3,
+      is_dimmed: false,
+      fail_reasons: [],
+      color: "#eab308",
+      demo_badge: "Demo data",
+      source_label: "Seeded demo dataset"
+    },
+    {
+      id: "noida-sec-94",
+      name: "Sector 94 (South Delhi Gateway Ultra-Luxury)",
+      city: "Noida",
+      center: [28.5440, 77.3240],
+      polygon: [
+        [28.5360, 77.3160],
+        [28.5360, 77.3320],
+        [28.5520, 77.3320],
+        [28.5520, 77.3160]
+      ],
+      connectivity_score: 96.0,
+      nearby_amenities_score: 91.0,
+      aqi: 152,
+      traffic_congestion_level: "High",
+      traffic_score: 60.0,
+      flood_risk: "Moderate",
+      flood_safety_score: 70.0,
+      groundwater_category: "Critical",
+      groundwater_score: 50.0,
+      land_price_sqft: 22000,
+      price_growth_5yr_pct: 19.5,
+      demand_level: "Very High",
+      demand_score: 95.0,
+      upcoming_infra_dist_km: 1.0,
+      infra_proximity_score: 88.0,
+      suitability_score: 79.8,
+      is_dimmed: false,
+      fail_reasons: [],
+      color: "#22c55e",
+      demo_badge: "Demo data",
+      source_label: "Seeded demo dataset"
+    }
+  ];
+
+  const sorted = [...fallbackZones].sort((a, b) => (b.suitability_score || 0) - (a.suitability_score || 0));
+
+  return {
+    city,
+    total_zones: fallbackZones.length,
+    qualifying_zones: fallbackZones.length,
+    weights_applied: {
+      connectivity: 0.20,
+      amenities: 0.15,
+      aqi: 0.10,
+      traffic: 0.10,
+      flood_safety: 0.10,
+      groundwater: 0.05,
+      price_growth: 0.15,
+      demand: 0.10,
+      infra_proximity: 0.05
+    },
+    filters_applied: {},
+    zones: fallbackZones,
+    top_recommended: sorted.slice(0, 3),
+    legend: [
+      { range: ">= 75", label: "Prime Developer Opportunity", color: "#22c55e" },
+      { range: "60 - 74", label: "Good Potential / Moderate", color: "#eab308" },
+      { range: "45 - 59", label: "Average Suitability", color: "#f97316" },
+      { range: "< 45", label: "High Risk / Poor Fit", color: "#ef4444" },
+      { range: "Dimmed", label: "Excluded by Hard Thresholds", color: "#94a3b8", dashed: true }
+    ]
+  };
+}
+
+function computeFallbackDeveloperZones(payload: {
+  city?: string;
+  weights?: Record<string, number>;
+  filters?: Record<string, any>;
+}): DeveloperZonesResponse {
+  const base = getFallbackDeveloperZones(payload.city || 'Noida');
+  const filters = payload.filters || {};
+  
+  const processed = base.zones.map(z => {
+    const reasons: string[] = [];
+    if (filters.min_connectivity !== undefined && z.connectivity_score < filters.min_connectivity) {
+      reasons.push(`Connectivity (${z.connectivity_score}) below min ${filters.min_connectivity}`);
+    }
+    if (filters.min_amenities !== undefined && z.nearby_amenities_score < filters.min_amenities) {
+      reasons.push(`Amenities (${z.nearby_amenities_score}) below min ${filters.min_amenities}`);
+    }
+    if (filters.max_aqi !== undefined && z.aqi > filters.max_aqi) {
+      reasons.push(`AQI (${z.aqi}) exceeds max ${filters.max_aqi}`);
+    }
+    if (filters.max_price_sqft !== undefined && z.land_price_sqft > filters.max_price_sqft) {
+      reasons.push(`Land price ₹${z.land_price_sqft}/sqft exceeds max ₹${filters.max_price_sqft}`);
+    }
+    if (filters.min_growth_pct !== undefined && z.price_growth_5yr_pct < filters.min_growth_pct) {
+      reasons.push(`5-Yr growth (${z.price_growth_5yr_pct}%) below min ${filters.min_growth_pct}%`);
+    }
+    if (filters.allowed_traffic && Array.isArray(filters.allowed_traffic) && !filters.allowed_traffic.includes(z.traffic_congestion_level)) {
+      reasons.push(`Traffic level '${z.traffic_congestion_level}' excluded`);
+    }
+    if (filters.allowed_flood && Array.isArray(filters.allowed_flood) && !filters.allowed_flood.includes(z.flood_risk)) {
+      reasons.push(`Flood risk '${z.flood_risk}' excluded`);
+    }
+    if (filters.allowed_groundwater && Array.isArray(filters.allowed_groundwater) && !filters.allowed_groundwater.includes(z.groundwater_category)) {
+      reasons.push(`Groundwater status '${z.groundwater_category}' excluded`);
+    }
+
+    const is_dimmed = reasons.length > 0;
+    const score = z.suitability_score || 70;
+    let color = "#22c55e";
+    if (is_dimmed) color = "#94a3b8";
+    else if (score >= 75) color = "#22c55e";
+    else if (score >= 60) color = "#eab308";
+    else if (score >= 45) color = "#f97316";
+    else color = "#ef4444";
+
+    return {
+      ...z,
+      is_dimmed,
+      fail_reasons: reasons,
+      color
+    };
+  });
+
+  const qualifying = processed.filter(z => !z.is_dimmed);
+  const sorted = [...qualifying].sort((a, b) => (b.suitability_score || 0) - (a.suitability_score || 0));
+
+  return {
+    ...base,
+    total_zones: processed.length,
+    qualifying_zones: qualifying.length,
+    filters_applied: filters,
+    zones: processed,
+    top_recommended: sorted.slice(0, 3)
+  };
+}
+
 
 

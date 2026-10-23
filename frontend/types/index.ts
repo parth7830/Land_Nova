@@ -495,4 +495,51 @@ export interface DeveloperCommandCenterResponse {
   deal_verdict: DealVerdictResponse;
 }
 
+export interface DeveloperZone {
+  id: string;
+  name: string;
+  city: string;
+  center: [number, number];
+  polygon: [number, number][];
+  connectivity_score: number;
+  nearby_amenities_score: number;
+  aqi: number;
+  traffic_congestion_level: string;
+  traffic_score: number;
+  flood_risk: string;
+  flood_safety_score: number;
+  groundwater_category: string;
+  groundwater_score: number;
+  land_price_sqft: number;
+  price_growth_5yr_pct: number;
+  demand_level: string;
+  demand_score: number;
+  upcoming_infra_dist_km: number;
+  infra_proximity_score: number;
+  suitability_score?: number;
+  is_dimmed?: boolean;
+  fail_reasons?: string[];
+  factor_breakdown?: Record<string, number>;
+  color?: string;
+  demo_badge?: string;
+  source_label?: string;
+}
+
+export interface DeveloperZonesResponse {
+  city: string;
+  total_zones: number;
+  qualifying_zones: number;
+  weights_applied: Record<string, number>;
+  filters_applied: Record<string, any>;
+  zones: DeveloperZone[];
+  top_recommended: DeveloperZone[];
+  legend: Array<{
+    range: string;
+    label: string;
+    color: string;
+    dashed?: boolean;
+  }>;
+}
+
+
 

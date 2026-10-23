@@ -57,6 +57,10 @@ const DeveloperCommandCenter = dynamic(() => import('@/components/DeveloperComma
   ssr: false,
   loading: () => <LoadingView />
 });
+const DeveloperHeatmapExplorer = dynamic(() => import('@/components/DeveloperHeatmapExplorer'), {
+  ssr: false,
+  loading: () => <LoadingView />
+});
 
 import {
   LocationItem,
@@ -501,9 +505,8 @@ export default function Home() {
             {/* Developer Heatmap Explorer */}
             {currentView === 'heatmap' && (
               <div className="w-full flex-1" style={{ height: 'calc(100vh - 110px)', minHeight: '680px' }}>
-                <HeatmapExplorer
+                <DeveloperHeatmapExplorer
                   currentLocation={currentLocation}
-                  initialPersona="working_professional"
                   onNavigateTab={(tab) => setCurrentView(tab)}
                 />
               </div>

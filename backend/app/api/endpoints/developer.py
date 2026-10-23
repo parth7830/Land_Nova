@@ -25,6 +25,11 @@ from app.services.developer_engine import (
     get_site_surveys,
     get_survey_checklist_template
 )
+from app.services.developer_zones_service import (
+    compute_developer_zone_scores,
+    load_developer_demo_zones,
+    normalize_weights
+)
 
 router = APIRouter(prefix="/developer", tags=["Developer Command Center Engine"])
 
@@ -228,3 +233,65 @@ async def get_survey_checklist():
     D9: Exportable field due diligence survey checklist.
     """
     return get_survey_checklist_template()
+
+
+# =========================================================================
+# DEVELOPER DEMO HEATMAP ZONES ENDPOINTS (TASK 1)
+# =========================================================================
+
+@router.get("/zones")
+async def get_developer_zones(
+    city: str = "Noida",
+    max_aqi: Optional[float] = None,
+    max_budget_sqft: Optional[float] = None,
+    min_growth_pct: Optional[float] = None,
+    min_connectivity: Optional[float] = None,
+    min_amenities: Optional[float] = None,
+    flood_allowed: Optional[str] = "all",
+    groundwater_allowed: Optional[str] = "all",
+    traffic_allowed: Optional[str] = "all"
+):
+    """
+    TASK 1: Retrieve seeded demo zones for Developer Heatmap.
+    Computes deterministic suitability scores (0-100) and marks dimmed zones
+    that breach hard developer thresholds.
+    """
+    filters = {}
+    if max_aqi is not None:
+        filters["max_aqi"] = max_aqi
+    if max_budget_sqft is not None:
+        filters["max_budget_sqft"] = max_budget_sqft
+    if min_growth_pct is not None:
+        filters["min_growth_pct"] = min_growth_pct
+    if min_connectivity is not None:
+        filters["min_connectivity"] = min_connectivity
+    if min_amenities is not None:
+        filters["min_amenities"] = min_amenities
+    if flood_allowed:
+        filters["flood_allowed"] = flood_allowed
+    if groundwater_allowed:
+        filters["groundwater_allowed"] = groundwater_allowed
+    if traffic_allowed:
+        filters["traffic_allowed"] = traffic_allowed
+
+    return compute_developer_zone_scores(city=city, filters=filters)
+
+
+class DeveloperZonesScoreRequest(BaseModel):
+    city: Optional[str] = "Noida"
+    filters: Optional[Dict[str, Any]] = None
+    weights: Optional[Dict[str, float]] = None
+
+
+@router.post("/zones/score")
+async def score_developer_zones(request: DeveloperZonesScoreRequest):
+    """
+    TASK 1: Score developer zones with customized user filters & normalized weights.
+    Returns ranked zones, factor breakdowns, hard-threshold exclusion reasons,
+    and a visual legend.
+    """
+    return compute_developer_zone_scores(
+        city=request.city or "Noida",
+        filters=request.filters,
+        weights=request.weights
+    )
