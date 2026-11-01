@@ -1,4 +1,4 @@
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 
 # Curated demonstration locations with realistic geospatial benchmarks
 DEMO_LOCATIONS: Dict[str, Dict[str, Any]] = {
