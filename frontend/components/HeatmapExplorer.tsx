@@ -36,7 +36,8 @@ import {
   FloodClimateModal,
   WaterfallModal,
   PresetsAndWeightsModal,
-  ShareSearchModal
+  ShareSearchModal,
+  AffordabilityModal
 } from './BuyerModals';
 
 const DynamicHeatmapMap = dynamic(() => import('./HeatmapMap'), {
@@ -298,6 +299,7 @@ export default function HeatmapExplorer({
             display_name: `${s.name}, ${s.city}`,
             locality: s.name,
             city: s.city,
+            country: 'India',
             latitude: s.center[0],
             longitude: s.center[1],
             is_demo: false,
@@ -680,8 +682,8 @@ export default function HeatmapExplorer({
       {/* Compare Candidate Areas Modal (B2) */}
       {showCompareModal && (
         <CompareModal
-          sectors={sectors}
-          currentSector={selectedSector}
+          allSectors={sectors}
+          initialSectorIds={selectedSector ? [selectedSector.id] : []}
           onClose={() => setShowCompareModal(false)}
         />
       )}
@@ -699,9 +701,11 @@ export default function HeatmapExplorer({
       {/* Custom Weights & Presets Modal (B6) */}
       {showWeightsModal && (
         <PresetsAndWeightsModal
-          preferences={preferences}
-          onUpdatePreferences={handleUpdatePreferences}
-          onApply={loadSectors}
+          currentWeights={preferences.custom_weights || { connectivity: 25, amenities: 25, environment: 20, safety: 15, climate_flood: 15 }}
+          onApplyWeights={(newWeights) => {
+            handleUpdatePreferences({ custom_weights: newWeights });
+            loadSectors();
+          }}
           onClose={() => setShowWeightsModal(false)}
         />
       )}
@@ -709,8 +713,7 @@ export default function HeatmapExplorer({
       {/* Share Search Link Modal (B7) */}
       {showShareModal && (
         <ShareSearchModal
-          preferences={preferences}
-          selectedSectorId={selectedSector?.id}
+          currentUrl={typeof window !== 'undefined' ? window.location.href : 'https://landnova.io'}
           onClose={() => setShowShareModal(false)}
         />
       )}

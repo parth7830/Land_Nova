@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   X,
   Sparkles,
@@ -18,8 +18,10 @@ import {
   Building2,
   Wind
 } from 'lucide-react';
-import { BuyerSector } from '@/types';
-import { compareBuyerSectors } from '@/lib/api';
+import { BuyerSector, AffordabilityCalculation } from '@/types';
+import { compareBuyerSectors, calculateBuyerAffordability } from '@/lib/api';
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 // ==================== B2: COMPARE MODAL ====================
 export function CompareModal({
@@ -204,6 +206,174 @@ export function CompareModal({
   );
 }
 
+// ==================== B3: AFFORDABILITY & EMI MODAL ====================
+export function AffordabilityModal({
+  sector,
+  onClose
+}: {
+  sector: BuyerSector;
+  onClose: () => void;
+}) {
+  const [unitSize, setUnitSize] = useState<number>(1200);
+  const [downPaymentPct, setDownPaymentPct] = useState<number>(20);
+  const [interestPct, setInterestPct] = useState<number>(8.5);
+  const [tenureYears, setTenureYears] = useState<number>(20);
+  const [monthlyIncome, setMonthlyIncome] = useState<number>(150000);
+  const [calc, setCalc] = useState<AffordabilityCalculation | null>(null);
+
+  const price = useMemo(() => sector.avg_price_sqft * unitSize, [sector.avg_price_sqft, unitSize]);
+
+  useEffect(() => {
+    async function runCalc() {
+      const res = await calculateBuyerAffordability(price, downPaymentPct, interestPct, tenureYears, monthlyIncome);
+      if (res) {
+        setCalc(res);
+      } else {
+        const dp = Math.round(price * (downPaymentPct / 100));
+        const principal = price - dp;
+        const monthlyRate = interestPct / 12 / 100;
+        const numMonths = tenureYears * 12;
+        const emi = Math.round(
+          (principal * monthlyRate * Math.pow(1 + monthlyRate, numMonths)) /
+            (Math.pow(1 + monthlyRate, numMonths) - 1)
+        );
+        const totalPayable = emi * numMonths;
+        const totalInterest = totalPayable - principal;
+        const dti = monthlyIncome > 0 ? Math.round((emi / monthlyIncome) * 100) : 0;
+        const healthBadge = dti <= 35 ? 'Comfortable (<35% DTI)' : dti <= 50 ? 'Moderate (35-50% DTI)' : 'Stretched (>50% DTI)';
+        const healthColor: 'emerald' | 'amber' | 'red' = dti <= 35 ? 'emerald' : dti <= 50 ? 'amber' : 'red';
+        setCalc({
+          property_price: price,
+          down_payment: dp,
+          loan_principal: principal,
+          monthly_emi: emi,
+          total_interest: totalInterest,
+          total_payable: totalPayable,
+          debt_to_income_pct: dti,
+          health_badge: healthBadge,
+          health_color: healthColor,
+          formula: 'Standard RBI Annuity: P * r * (1+r)^n / ((1+r)^n - 1)'
+        });
+      }
+    }
+    runCalc();
+  }, [price, downPaymentPct, interestPct, tenureYears, monthlyIncome]);
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 relative animate-in fade-in zoom-in-95 max-h-[90vh] overflow-y-auto">
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 cursor-pointer"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
+        <div className="flex items-center gap-2 mb-3">
+          <span className="text-2xl">💰</span>
+          <div>
+            <h3 className="text-base font-bold text-slate-900">Affordability &amp; EMI Simulator</h3>
+            <p className="text-xs text-slate-500">{sector.name} — ₹{sector.avg_price_sqft.toLocaleString()}/sq.ft benchmark</p>
+          </div>
+        </div>
+
+        <div className="space-y-4 text-xs">
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-[11px] font-bold text-slate-700 mb-1">Unit Area (sq.ft)</label>
+              <input
+                type="number"
+                min={400}
+                max={6000}
+                step={50}
+                value={unitSize}
+                onChange={(e) => setUnitSize(Math.max(200, Number(e.target.value)))}
+                className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg font-mono font-bold"
+              />
+            </div>
+            <div>
+              <label className="block text-[11px] font-bold text-slate-700 mb-1">Total Unit Price</label>
+              <div className="px-3 py-1.5 bg-slate-100 border border-slate-200 rounded-lg font-mono font-bold text-slate-900 truncate">
+                ₹{(price / 100000).toFixed(1)} Lakhs
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-3 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <div>
+              <div className="flex justify-between font-bold mb-1">
+                <span>Down Payment:</span>
+                <span className="font-mono text-emerald-700">{downPaymentPct}% (₹{((price * downPaymentPct) / 10000000).toFixed(2)} Cr)</span>
+              </div>
+              <input
+                type="range"
+                min={10}
+                max={50}
+                step={5}
+                value={downPaymentPct}
+                onChange={(e) => setDownPaymentPct(Number(e.target.value))}
+                className="w-full accent-emerald-600 cursor-pointer"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="block text-[10px] font-bold text-slate-600 mb-0.5">Interest Rate (%)</label>
+                <input
+                  type="number"
+                  min={6}
+                  max={15}
+                  step={0.1}
+                  value={interestPct}
+                  onChange={(e) => setInterestPct(Number(e.target.value))}
+                  className="w-full px-2 py-1 bg-white border border-slate-200 rounded font-mono text-xs"
+                />
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold text-slate-600 mb-0.5">Tenure (Years)</label>
+                <input
+                  type="number"
+                  min={5}
+                  max={30}
+                  value={tenureYears}
+                  onChange={(e) => setTenureYears(Number(e.target.value))}
+                  className="w-full px-2 py-1 bg-white border border-slate-200 rounded font-mono text-xs"
+                />
+              </div>
+            </div>
+          </div>
+
+          {calc && (
+            <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-200 space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="text-xs font-bold text-slate-700">Estimated Monthly EMI:</span>
+                <span className="text-xl font-black text-emerald-700 font-mono">₹{calc.monthly_emi.toLocaleString()}/mo</span>
+              </div>
+              <div className="flex justify-between items-center text-[11px] pt-1 border-t border-emerald-200/60">
+                <span className="text-slate-600">Debt-to-Income (DTI):</span>
+                <span className="font-bold text-emerald-900">{calc.debt_to_income_pct}% — {calc.health_badge}</span>
+              </div>
+              <div className="flex justify-between text-[10px] text-slate-500 font-mono pt-1">
+                <span>Principal: ₹{calc.loan_principal.toLocaleString()}</span>
+                <span>Total Interest: ₹{calc.total_interest.toLocaleString()}</span>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="mt-4 pt-3 border-t border-slate-100 flex justify-end">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs transition cursor-pointer"
+          >
+            Done
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ==================== B4: 15-MINUTE-CITY WALKABILITY MODAL ====================
 export function WalkabilityModal({
   sector,
@@ -219,7 +389,7 @@ export function WalkabilityModal({
     async function fetchWalk() {
       setLoading(true);
       try {
-        const res = await fetch(`http://localhost:8000/api/buyer/walkability/${sector.id}`);
+        const res = await fetch(`${API_BASE}/api/buyer/walkability/${sector.id}`);
         if (res.ok) {
           setData(await res.json());
         }
@@ -317,7 +487,7 @@ export function FloodClimateModal({
     async function fetchClimate() {
       setLoading(true);
       try {
-        const res = await fetch(`http://localhost:8000/api/buyer/flood-climate/${sector.id}`);
+        const res = await fetch(`${API_BASE}/api/buyer/flood-climate/${sector.id}`);
         if (res.ok) {
           setData(await res.json());
         }
@@ -445,7 +615,7 @@ export function WaterfallModal({
     async function fetchWaterfall() {
       setLoading(true);
       try {
-        const res = await fetch(`http://localhost:8000/api/buyer/waterfall/${sector.id}`);
+        const res = await fetch(`${API_BASE}/api/buyer/waterfall/${sector.id}`);
         if (res.ok) {
           setData(await res.json());
         }

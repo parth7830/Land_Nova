@@ -20,6 +20,7 @@ import {
   DeveloperZonesResponse,
   ReviewItem,
   ReviewStats,
+  ReviewsResponse,
   ReviewCreatePayload,
   AreaHeatmapResponse,
   HeatmapLayerType
