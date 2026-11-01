@@ -36,6 +36,7 @@ interface AreaAnalysisDrawerProps {
   onOpenCompare?: () => void;
   onOpenWeights?: () => void;
   onOpenShare?: () => void;
+  activeLayer?: string;
 }
 
 export default function AreaAnalysisDrawer({
@@ -49,7 +50,8 @@ export default function AreaAnalysisDrawer({
   onOpenWaterfall,
   onOpenCompare,
   onOpenWeights,
-  onOpenShare
+  onOpenShare,
+  activeLayer
 }: AreaAnalysisDrawerProps) {
   const [activeTab, setActiveTab] = useState<'overview' | 'amenities' | 'environment' | 'safety' | 'reviews'>('overview');
   const [expandedMetric, setExpandedMetric] = useState<string | null>(null);
@@ -225,11 +227,24 @@ export default function AreaAnalysisDrawer({
           const metric = sector.metrics[key];
           if (!metric) return null;
           const isExpanded = expandedMetric === key;
+          const isLayerMatched = Boolean(
+            activeLayer &&
+            activeLayer !== 'all' &&
+            (key.toLowerCase().includes(activeLayer.toLowerCase()) ||
+             (activeLayer === 'transport' && key === 'connectivity') ||
+             (activeLayer === 'crime' && key === 'crime_rate') ||
+             (activeLayer === 'noise' && key === 'noise_level') ||
+             (activeLayer === 'amenities' && key === 'markets'))
+          );
 
           return (
             <div
               key={key}
-              className="border border-slate-200/80 rounded-xl overflow-hidden bg-white hover:border-slate-300 transition-all shadow-2xs"
+              className={`border rounded-xl overflow-hidden bg-white transition-all shadow-2xs ${
+                isLayerMatched
+                  ? 'border-emerald-500 ring-2 ring-emerald-500/30 bg-emerald-50/15'
+                  : 'border-slate-200/80 hover:border-slate-300'
+              }`}
             >
               {/* Row header */}
               <button
@@ -238,11 +253,18 @@ export default function AreaAnalysisDrawer({
                 className="w-full p-3 flex items-center justify-between text-left hover:bg-slate-50/60 transition cursor-pointer"
               >
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center shrink-0">
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${isLayerMatched ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100'}`}>
                     {getMetricIcon(key)}
                   </div>
                   <div className="min-w-0">
-                    <span className="text-xs font-bold text-slate-900 block truncate">{metric.title}</span>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs font-bold text-slate-900 block truncate">{metric.title}</span>
+                      {isLayerMatched && (
+                        <span className="text-[9px] bg-emerald-600 text-white font-bold px-1.5 py-0.2 rounded shrink-0">
+                          Active Layer
+                        </span>
+                      )}
+                    </div>
                     <span className="text-[11px] text-slate-500 block truncate">{metric.value}</span>
                   </div>
                 </div>

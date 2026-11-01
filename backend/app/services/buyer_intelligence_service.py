@@ -13,6 +13,16 @@ import math
 from typing import Dict, Any, List, Optional
 from datetime import datetime
 from pydantic import BaseModel, Field
+from app.services.layer_scoring_service import (
+    score_schools,
+    score_hospitals,
+    score_transport,
+    score_parks,
+    score_amenities,
+    score_aqi,
+    score_crime,
+    score_noise
+)
 
 # Verified Benchmark Sectors for Noida and neighboring NCR hubs
 BENCHMARK_SECTORS: List[Dict[str, Any]] = [
@@ -206,6 +216,198 @@ BENCHMARK_SECTORS: List[Dict[str, Any]] = [
             "major_road_distance_m": 350,
             "commercial_density": 0.18,
             "groundwater_tds": 360
+        }
+    },
+    {
+        "id": "sector-128-noida",
+        "name": "Sector 128 (Jaypee Greens & Wish Town)",
+        "city": "Noida",
+        "center": [28.5280, 77.3780],
+        "polygon": [
+            [28.5360, 77.3680],
+            [28.5360, 77.3880],
+            [28.5200, 77.3880],
+            [28.5200, 77.3680]
+        ],
+        "image": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80",
+        "avg_price_sqft": 10500,
+        "avg_rent_2bhk": 32000,
+        "property_count": 38,
+        "base_metrics": {
+            "aqi": 112,
+            "pm25": 35.0,
+            "elevation_m": 200.0,
+            "flood_risk_score": 86.0,
+            "transit_nodes": 6,
+            "schools_count": 8,
+            "hospitals_count": 4,
+            "parks_count": 10,
+            "markets_count": 7,
+            "sports_count": 6,
+            "police_distance_km": 1.2,
+            "major_road_distance_m": 260,
+            "commercial_density": 0.25,
+            "groundwater_tds": 370
+        }
+    },
+    {
+        "id": "sector-44-noida",
+        "name": "Sector 44 (Golf Course Corridor)",
+        "city": "Noida",
+        "center": [28.5550, 77.3380],
+        "polygon": [
+            [28.5620, 77.3300],
+            [28.5620, 77.3460],
+            [28.5480, 77.3460],
+            [28.5480, 77.3300]
+        ],
+        "image": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&auto=format&fit=crop&q=80",
+        "avg_price_sqft": 14200,
+        "avg_rent_2bhk": 42000,
+        "property_count": 22,
+        "base_metrics": {
+            "aqi": 128,
+            "pm25": 43.0,
+            "elevation_m": 201.0,
+            "flood_risk_score": 84.0,
+            "transit_nodes": 8,
+            "schools_count": 9,
+            "hospitals_count": 5,
+            "parks_count": 6,
+            "markets_count": 12,
+            "sports_count": 4,
+            "police_distance_km": 0.9,
+            "major_road_distance_m": 150,
+            "commercial_density": 0.35,
+            "groundwater_tds": 420
+        }
+    },
+    {
+        "id": "sector-135-noida",
+        "name": "Sector 135 (SEZ Corridor & Green Park)",
+        "city": "Noida",
+        "center": [28.5020, 77.4080],
+        "polygon": [
+            [28.5110, 77.3990],
+            [28.5110, 77.4170],
+            [28.4930, 77.4170],
+            [28.4930, 77.3990]
+        ],
+        "image": "https://images.unsplash.com/photo-1574362848149-11496d93a7c7?w=600&auto=format&fit=crop&q=80",
+        "avg_price_sqft": 7100,
+        "avg_rent_2bhk": 21500,
+        "property_count": 41,
+        "base_metrics": {
+            "aqi": 115,
+            "pm25": 37.0,
+            "elevation_m": 197.0,
+            "flood_risk_score": 80.0,
+            "transit_nodes": 5,
+            "schools_count": 6,
+            "hospitals_count": 3,
+            "parks_count": 8,
+            "markets_count": 8,
+            "sports_count": 3,
+            "police_distance_km": 1.5,
+            "major_road_distance_m": 200,
+            "commercial_density": 0.38,
+            "groundwater_tds": 400
+        }
+    },
+    {
+        "id": "gr-noida-alpha1",
+        "name": "Alpha 1 (Commercial & High-Density)",
+        "city": "Greater Noida",
+        "center": [28.4720, 77.5120],
+        "polygon": [
+            [28.4800, 77.5020],
+            [28.4800, 77.5220],
+            [28.4640, 77.5220],
+            [28.4640, 77.5020]
+        ],
+        "image": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&auto=format&fit=crop&q=80",
+        "avg_price_sqft": 6200,
+        "avg_rent_2bhk": 18500,
+        "property_count": 36,
+        "base_metrics": {
+            "aqi": 105,
+            "pm25": 34.0,
+            "elevation_m": 199.0,
+            "flood_risk_score": 87.0,
+            "transit_nodes": 7,
+            "schools_count": 7,
+            "hospitals_count": 4,
+            "parks_count": 6,
+            "markets_count": 14,
+            "sports_count": 4,
+            "police_distance_km": 1.0,
+            "major_road_distance_m": 220,
+            "commercial_density": 0.42,
+            "groundwater_tds": 380
+        }
+    },
+    {
+        "id": "gr-noida-pari-chowk",
+        "name": "Pari Chowk & Knowledge Park",
+        "city": "Greater Noida",
+        "center": [28.4680, 77.5050],
+        "polygon": [
+            [28.4760, 77.4950],
+            [28.4760, 77.5150],
+            [28.4600, 77.5150],
+            [28.4600, 77.4950]
+        ],
+        "image": "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&auto=format&fit=crop&q=80",
+        "avg_price_sqft": 5800,
+        "avg_rent_2bhk": 17000,
+        "property_count": 49,
+        "base_metrics": {
+            "aqi": 108,
+            "pm25": 35.0,
+            "elevation_m": 198.0,
+            "flood_risk_score": 85.0,
+            "transit_nodes": 9,
+            "schools_count": 12,
+            "hospitals_count": 5,
+            "parks_count": 7,
+            "markets_count": 10,
+            "sports_count": 5,
+            "police_distance_km": 0.8,
+            "major_road_distance_m": 100,
+            "commercial_density": 0.48,
+            "groundwater_tds": 390
+        }
+    },
+    {
+        "id": "gr-noida-ecotech12",
+        "name": "Ecotech 12 (Tech Corridor & Expressway)",
+        "city": "Greater Noida",
+        "center": [28.5980, 77.4420],
+        "polygon": [
+            [28.6080, 77.4300],
+            [28.6080, 77.4540],
+            [28.5880, 77.4540],
+            [28.5880, 77.4300]
+        ],
+        "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&auto=format&fit=crop&q=80",
+        "avg_price_sqft": 4900,
+        "avg_rent_2bhk": 15000,
+        "property_count": 31,
+        "base_metrics": {
+            "aqi": 122,
+            "pm25": 40.0,
+            "elevation_m": 197.0,
+            "flood_risk_score": 82.0,
+            "transit_nodes": 4,
+            "schools_count": 4,
+            "hospitals_count": 2,
+            "parks_count": 5,
+            "markets_count": 6,
+            "sports_count": 2,
+            "police_distance_km": 2.5,
+            "major_road_distance_m": 180,
+            "commercial_density": 0.22,
+            "groundwater_tds": 410
         }
     }
 ]
@@ -457,6 +659,18 @@ class BuyerIntelligenceService:
             f"Stable civic infrastructure and emergency services coverage"
         ]
 
+        layer_scores = {
+            "all": overall_score,
+            "schools": score_schools(schools),
+            "hospitals": score_hospitals(hospitals),
+            "transport": score_transport(conn_nodes),
+            "parks": score_parks(parks),
+            "amenities": score_amenities(markets),
+            "aqi": score_aqi(aqi),
+            "crime": score_crime(police_dist),
+            "noise": score_noise(metrics.get("major_road_distance_m", 250))
+        }
+
         return {
             "id": sector_raw["id"],
             "name": sector_raw["name"],
@@ -468,6 +682,7 @@ class BuyerIntelligenceService:
             "avg_rent_2bhk": sector_raw["avg_rent_2bhk"],
             "property_count": sector_raw["property_count"],
             "overall_score": overall_score,
+            "layer_scores": layer_scores,
             "grade_label": grade_label,
             "grade_color": grade_color,
             "reasons": selected_reasons,
@@ -658,23 +873,31 @@ class BuyerIntelligenceService:
         """Returns all sectors scored against current weights."""
         results = []
 
-        # 1. First try matching benchmark sectors with flexible bidirectional check
+        # 1. First try matching benchmark sectors — only match when city genuinely matches
         if city:
             q = city.strip().lower()
             for s in self.sectors:
                 s_c = s["city"].lower()
-                if q in s_c or s_c in q or ("noida" in q and "noida" in s_c) or ("delhi" in q and "noida" in s_c):
+                # Strict match: city names must genuinely overlap
+                # "Noida" matches "Noida" and "Greater Noida"
+                # "Greater Noida" matches "Greater Noida" and "Noida"
+                # But "Delhi", "Mumbai", "Bengaluru" etc. do NOT match "Noida"
+                if q == s_c or q in s_c or s_c in q:
                     scored = self.calculate_sector_scores(s, weights=weights, commute_origin=commute_origin)
                     results.append(scored)
 
-        # 2. If query is for another specific city with coordinates, generate dynamic sectors
+        # 2. If no benchmark sectors matched, generate dynamic sectors for the queried city
+        #    Use the actual provided coordinates so the sectors are placed at the right location
         if not results and city:
-            effective_lat = lat or (commute_origin[0] if commute_origin else 28.6280)
-            effective_lon = lon or (commute_origin[1] if commute_origin else 77.3649)
-            dynamic_raw = self._generate_sectors_for_location(city, effective_lat, effective_lon)
-            for s in dynamic_raw:
-                scored = self.calculate_sector_scores(s, weights=weights, commute_origin=commute_origin)
-                results.append(scored)
+            effective_lat = lat if lat is not None else (commute_origin[0] if commute_origin and len(commute_origin) >= 2 else None)
+            effective_lon = lon if lon is not None else (commute_origin[1] if commute_origin and len(commute_origin) >= 2 else None)
+            
+            # Only generate if we have real coordinates for the target city
+            if effective_lat is not None and effective_lon is not None:
+                dynamic_raw = self._generate_sectors_for_location(city, effective_lat, effective_lon)
+                for s in dynamic_raw:
+                    scored = self.calculate_sector_scores(s, weights=weights, commute_origin=commute_origin)
+                    results.append(scored)
 
         # 3. Fail-safe: Always return benchmark sectors if still empty
         if not results:

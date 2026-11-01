@@ -4,9 +4,9 @@ from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from app.core.config import settings
-from app.models.database import init_db
-from app.api.endpoints import locations, analysis, ai, history, v2, buyer, developer, reviews
+from app.api.endpoints import locations, analysis, ai, history, v2, buyer, developer, reviews, heatmap, auth
 from app.core.http_client import get_shared_client, close_shared_client
+from app.models.database import init_db
 
 from contextlib import asynccontextmanager
 
@@ -100,6 +100,8 @@ app.include_router(v2.router, prefix="/api")
 app.include_router(buyer.router, prefix="/api")
 app.include_router(developer.router, prefix="/api")
 app.include_router(reviews.router, prefix="/api/reviews")
+app.include_router(heatmap.router, prefix="/api/heatmap")
+app.include_router(auth.router, prefix="/api")
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):

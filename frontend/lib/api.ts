@@ -20,8 +20,9 @@ import {
   DeveloperZonesResponse,
   ReviewItem,
   ReviewStats,
-  ReviewsResponse,
-  ReviewCreatePayload
+  ReviewCreatePayload,
+  AreaHeatmapResponse,
+  HeatmapLayerType
 } from '@/types';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
@@ -2298,6 +2299,235 @@ function getFallbackReviews(
   };
 }
 
+/**
+ * Fetches fine 25x25 smoothly interpolated grid clipped to an area polygon
+ * for the active layer (All, Schools, Hospitals, Crime, AQI, Transport, Amenities, Parks, Noise).
+ */
+export async function fetchAreaHeatmapGrid(
+  areaId: string,
+  layer: HeatmapLayerType = 'all',
+  weights?: Record<string, number>,
+  resolution: number = 25,
+  center?: [number, number],
+  polygon?: [number, number][]
+): Promise<AreaHeatmapResponse> {
+  try {
+    const params = new URLSearchParams({
+      area_id: areaId,
+      layer,
+      resolution: String(resolution)
+    });
+    if (weights) {
+      params.append('weights', JSON.stringify(weights));
+    }
+    // Pass center and polygon for dynamically generated sectors
+    if (center) {
+      params.append('center_lat', String(center[0]));
+      params.append('center_lon', String(center[1]));
+    }
+    if (polygon && polygon.length > 0) {
+      params.append('polygon_json', JSON.stringify(polygon));
+    }
+    const res = await fetch(`${API_BASE}/api/heatmap/area?${params.toString()}`);
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (err) {
+    console.warn(`Failed to fetch area heatmap grid for ${areaId}`, err);
+  }
 
+  // Graceful offline fallback
+  return getFallbackAreaHeatmap(areaId, layer);
+}
 
+function getFallbackAreaHeatmap(areaId: string, layer: HeatmapLayerType): AreaHeatmapResponse {
+  const centerLat = 28.628;
+  const centerLng = 77.3649;
+  const cells = [];
+  for (let i = 0; i < 20; i++) {
+    for (let j = 0; j < 20; j++) {
+      const lat = centerLat - 0.006 + (i * 0.0006);
+      const lng = centerLng - 0.006 + (j * 0.0006);
+      const score = Math.min(96, Math.max(40, 78 + Math.sin(i * 0.5) * 12 + Math.cos(j * 0.5) * 8));
+      const color = score >= 80 ? '#22c55e' : score >= 65 ? '#84cc16' : score >= 50 ? '#eab308' : '#f97316';
+      cells.push({ lat: Number(lat.toFixed(5)), lng: Number(lng.toFixed(5)), score: Number(score.toFixed(1)), color });
+    }
+  }
 
+  return {
+    area_id: areaId,
+    area_name: areaId.replace(/-/g, ' ').toUpperCase(),
+    layer,
+    layer_label: layer.toUpperCase(),
+    overall_layer_score: 79.5,
+    grid_resolution: '20x20',
+    total_cells: cells.length,
+    cells,
+    pois: [
+      { id: 'poi-fb-1', name: 'Local Public School', category: 'schools', lat: centerLat + 0.002, lng: centerLng - 0.002, distance_m: 350 },
+      { id: 'poi-fb-2', name: 'Community Care Center', category: 'hospitals', lat: centerLat - 0.003, lng: centerLng + 0.002, distance_m: 520 },
+      { id: 'poi-fb-3', name: 'Metro Corridor Station', category: 'transport', lat: centerLat + 0.001, lng: centerLng + 0.004, distance_m: 480 }
+    ],
+    summary: {
+      score: 79.5,
+      best_block: { lat: centerLat + 0.002, lng: centerLng + 0.001, score: 94.0 },
+      worst_block: { lat: centerLat - 0.005, lng: centerLng - 0.004, score: 58.0 },
+      nearest_school: 'Local Public School (350m)',
+      nearest_hospital: 'Community Care Center (520m)',
+      nearest_metro: 'Metro Corridor Station (480m)',
+      average_block_score: 78.4
+    },
+    legend: {
+      unit: 'Score (0-100)',
+      min_label: 'Low',
+      max_label: 'High',
+      confidence: 'Estimated',
+      data_source: 'Seeded Fallback Grid',
+      is_inverted: false
+    },
+    confidence: 'Estimated',
+    data_source: 'Seeded Fallback Grid',
+    generated_at: new Date().toISOString(),
+    is_cached: false
+  };
+}
+
+/* =========================================================================
+   AUTHENTICATION & USER PROFILE SERVICE (DATABASE BACKED)
+   ========================================================================= */
+
+export interface UserProfile {
+  id: string;
+  email: string;
+  full_name: string;
+  role: 'buyer' | 'developer' | string;
+  organization?: string | null;
+  phone?: string | null;
+  is_active: boolean;
+  created_at?: string;
+}
+
+export interface AuthResponse {
+  access_token: string;
+  token_type: string;
+  user: UserProfile;
+  message?: string;
+}
+
+const AUTH_TOKEN_KEY = 'landnova_auth_token';
+const AUTH_USER_KEY = 'landnova_auth_user';
+
+export function getStoredAuthToken(): string | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    return localStorage.getItem(AUTH_TOKEN_KEY);
+  } catch {
+    return null;
+  }
+}
+
+export function getStoredUser(): UserProfile | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = localStorage.getItem(AUTH_USER_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+export function setStoredAuth(token: string, user: UserProfile): void {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(AUTH_TOKEN_KEY, token);
+    localStorage.setItem(AUTH_USER_KEY, JSON.stringify(user));
+  } catch (e) {
+    console.error('Failed to save auth to localStorage:', e);
+  }
+}
+
+export function clearStoredAuth(): void {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.removeItem(AUTH_TOKEN_KEY);
+    localStorage.removeItem(AUTH_USER_KEY);
+  } catch (e) {
+    console.error('Failed to clear auth from localStorage:', e);
+  }
+}
+
+export async function loginUser(email: string, password: string): Promise<AuthResponse> {
+  const res = await fetch(`${API_BASE}/api/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password })
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.detail || 'Login failed. Please verify your credentials.');
+  }
+
+  const data: AuthResponse = await res.json();
+  setStoredAuth(data.access_token, data.user);
+  return data;
+}
+
+export async function signupUser(payload: {
+  email: string;
+  password: string;
+  full_name: string;
+  role?: string;
+  phone?: string;
+  organization?: string;
+}): Promise<AuthResponse> {
+  const res = await fetch(`${API_BASE}/api/auth/signup`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.detail || 'Signup failed. Please try again.');
+  }
+
+  const data: AuthResponse = await res.json();
+  setStoredAuth(data.access_token, data.user);
+  return data;
+}
+
+export async function fetchCurrentUser(): Promise<UserProfile | null> {
+  const token = getStoredAuthToken();
+  if (!token) return null;
+
+  try {
+    const res = await fetch(`${API_BASE}/api/auth/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    if (res.ok) {
+      const user: UserProfile = await res.json();
+      setStoredAuth(token, user);
+      return user;
+    } else {
+      clearStoredAuth();
+      return null;
+    }
+  } catch (e) {
+    console.warn('Failed to verify token with backend:', e);
+    return getStoredUser();
+  }
+}
+
+export async function logoutUser(): Promise<void> {
+  try {
+    await fetch(`${API_BASE}/api/auth/logout`, { method: 'POST' });
+  } catch {
+    // Ignore network error on logout
+  } finally {
+    clearStoredAuth();
+  }
+}

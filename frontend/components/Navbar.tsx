@@ -18,10 +18,12 @@ import {
   UserCheck,
   Bell,
   User,
-  X
+  X,
+  LogOut
 } from 'lucide-react';
 import { LocationItem } from '@/types';
-import { searchLocations } from '@/lib/api';
+import { searchLocations, fetchCurrentUser, logoutUser, UserProfile, getStoredUser } from '@/lib/api';
+import AuthModal from './AuthModal';
 
 interface NavbarProps {
   currentRole: 'gateway' | 'buyer' | 'developer';
@@ -52,6 +54,16 @@ export default function Navbar({
   const [showAreaPopover, setShowAreaPopover] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
+  const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
+  const [showUserDropdown, setShowUserDropdown] = useState(false);
+
+  useEffect(() => {
+    const cached = getStoredUser();
+    if (cached) setCurrentUser(cached);
+    fetchCurrentUser().then((user) => {
+      if (user) setCurrentUser(user);
+    });
+  }, []);
 
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 50000000]);
   const [areaRange, setAreaRange] = useState<[number, number]>([500, 3500]);
@@ -305,16 +317,81 @@ export default function Navbar({
                 <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white" />
               </button>
 
-              {/* User Avatar */}
-              <div
-                onClick={() => {
-                  setAuthMode('login');
-                  setShowAuthModal(true);
-                }}
-                className="w-8 h-8 rounded-full bg-emerald-100 border border-emerald-300 text-emerald-800 font-bold text-xs flex items-center justify-center cursor-pointer shadow-2xs hover:scale-105 transition-transform"
-                title="Account Profile / Login"
-              >
-                <User className="w-4 h-4 text-emerald-700" />
+              {/* User Avatar & Dropdown */}
+              <div className="relative">
+                <button
+                  onClick={() => {
+                    if (currentUser) {
+                      setShowUserDropdown(!showUserDropdown);
+                    } else {
+                      setAuthMode('login');
+                      setShowAuthModal(true);
+                    }
+                  }}
+                  className={`h-8 px-2.5 rounded-full border text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-2xs hover:scale-105 transition-all ${
+                    currentUser
+                      ? 'bg-emerald-600 border-emerald-700 text-white'
+                      : 'bg-emerald-100 border-emerald-300 text-emerald-800'
+                  }`}
+                  title={currentUser ? `${currentUser.full_name} (${currentUser.role})` : 'Account Profile / Login'}
+                >
+                  <User className={`w-3.5 h-3.5 ${currentUser ? 'text-white' : 'text-emerald-700'}`} />
+                  <span className="hidden sm:inline max-w-[90px] truncate text-[11px]">
+                    {currentUser ? currentUser.full_name.split(' ')[0] : 'Sign In'}
+                  </span>
+                </button>
+
+                {/* User Profile Dropdown */}
+                {currentUser && showUserDropdown && (
+                  <div className="absolute right-0 mt-2 w-60 rounded-2xl bg-white border border-slate-200 shadow-xl py-2 z-50 animate-in fade-in zoom-in-95">
+                    <div className="px-4 py-2.5 border-b border-slate-100">
+                      <p className="text-xs font-bold text-slate-900 truncate">{currentUser.full_name}</p>
+                      <p className="text-[11px] text-slate-500 truncate">{currentUser.email}</p>
+                      <div className="mt-1.5 flex items-center gap-1.5">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 capitalize">
+                          {currentUser.role}
+                        </span>
+                        {currentUser.organization && (
+                          <span className="text-[10px] text-slate-400 truncate max-w-[120px]">
+                            {currentUser.organization}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="p-1 space-y-0.5">
+                      <button
+                        onClick={() => {
+                          setShowUserDropdown(false);
+                          onSwitchRole(currentUser.role === 'developer' ? 'developer' : 'buyer');
+                        }}
+                        className="w-full text-left px-3 py-1.5 text-xs text-slate-700 hover:bg-slate-50 rounded-lg flex items-center gap-2 cursor-pointer transition-colors"
+                      >
+                        {currentUser.role === 'developer' ? (
+                          <>
+                            <Building2 className="w-3.5 h-3.5 text-amber-600" />
+                            <span>Developer Feasibility Dossier</span>
+                          </>
+                        ) : (
+                          <>
+                            <Users className="w-3.5 h-3.5 text-emerald-600" />
+                            <span>Buyer Suitability Explorer</span>
+                          </>
+                        )}
+                      </button>
+                      <button
+                        onClick={async () => {
+                          setShowUserDropdown(false);
+                          await logoutUser();
+                          setCurrentUser(null);
+                        }}
+                        className="w-full text-left px-3 py-1.5 text-xs text-rose-600 hover:bg-rose-50 rounded-lg flex items-center gap-2 cursor-pointer transition-colors"
+                      >
+                        <LogOut className="w-3.5 h-3.5 text-rose-500" />
+                        <span>Sign Out</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Role Switcher Pill */}
@@ -340,61 +417,18 @@ export default function Navbar({
         </div>
       </header>
 
-      {/* Auth Modal (Optional Demo Mode) */}
-      {showAuthModal && (
-        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white border border-slate-200 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative animate-in fade-in zoom-in-95">
-            <button
-              onClick={() => setShowAuthModal(false)}
-              className="absolute top-4 right-4 p-1 text-slate-400 hover:text-slate-600"
-            >
-              <X className="w-4 h-4" />
-            </button>
-
-            <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center mb-4">
-              <UserCheck className="w-5 h-5 text-emerald-600" />
-            </div>
-
-            <h3 className="text-base font-bold text-slate-900 mb-1">
-              {authMode === 'login' ? 'Sign In to LandNova' : 'Create Free Account'}
-            </h3>
-            <p className="text-xs text-slate-500 mb-5">
-              Save your preference profiles, shortlisted properties, and site feasibility reports.
-            </p>
-
-            <div className="space-y-3">
-              <button
-                onClick={() => {
-                  setShowAuthModal(false);
-                  alert('Google OAuth Demo: Logged in successfully as test user.');
-                }}
-                className="w-full py-2.5 px-4 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-xs font-semibold text-slate-800 rounded-xl flex items-center justify-center gap-2 transition-colors"
-              >
-                <svg className="w-4 h-4" viewBox="0 0 24 24">
-                  <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.4 9 5 12 5z" />
-                  <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.7-.2-2.3H12v4.6h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.9z" />
-                  <path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.5.4-2.3L1.9 7.3C.7 9.7 0 12.3 0 15.2c0 2.8.7 5.4 1.9 7.8l3.7-2.9z" />
-                  <path fill="#34A853" d="M12 23.5c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2-6.4-4.8L1.9 16.9C3.7 20.6 7.5 23.5 12 23.5z" />
-                </svg>
-                Continue with Google
-              </button>
-
-              <div className="relative flex py-2 items-center">
-                <div className="flex-grow border-t border-slate-200"></div>
-                <span className="flex-shrink mx-2 text-[10px] text-slate-400 uppercase">Or Demo Guest Mode</span>
-                <div className="flex-grow border-t border-slate-200"></div>
-              </div>
-
-              <button
-                onClick={() => setShowAuthModal(false)}
-                className="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-xs font-semibold text-white rounded-xl transition-colors shadow-xs"
-              >
-                Proceed as Demo Guest (No Login Required)
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Database-Backed Auth Modal */}
+      <AuthModal
+        isOpen={showAuthModal}
+        initialMode={authMode}
+        onClose={() => setShowAuthModal(false)}
+        onAuthSuccess={(user) => {
+          setCurrentUser(user);
+          if (user.role === 'developer' && currentRole !== 'developer') {
+            onSwitchRole('developer');
+          }
+        }}
+      />
     </>
   );
 }

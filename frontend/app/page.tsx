@@ -25,6 +25,7 @@ import PersonaPreferences from '@/components/PersonaPreferences';
 import PropertyDetail from '@/components/PropertyDetail';
 import DeveloperHome from '@/components/DeveloperHome';
 import ChatWidget from '@/components/ChatWidget';
+import AuthModal from '@/components/AuthModal';
 
 const LoadingView = () => (
   <div className="w-full h-96 flex flex-col items-center justify-center bg-white rounded-2xl border border-slate-200 shadow-xs">
@@ -82,6 +83,8 @@ export default function Home() {
   // Navigation State - defaults to Page 1: Role Gateway
   const [currentRole, setCurrentRole] = useState<'gateway' | 'buyer' | 'developer'>('gateway');
   const [currentView, setCurrentView] = useState<string>('home');
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
 
   // Selected Location (Default: Sector 62, Noida)
   const [currentLocation, setCurrentLocation] = useState<LocationItem>({
@@ -222,13 +225,19 @@ export default function Home() {
           </div>
           <div className="flex items-center gap-3">
             <button
-              onClick={() => alert('Demo Mode: You can explore the full platform freely without logging in.')}
+              onClick={() => {
+                setAuthMode('login');
+                setShowAuthModal(true);
+              }}
               className="px-4 py-2 text-xs font-medium text-slate-600 hover:text-slate-900 transition-colors"
             >
               Login
             </button>
             <button
-              onClick={() => handleSelectRole('buyer')}
+              onClick={() => {
+                setAuthMode('signup');
+                setShowAuthModal(true);
+              }}
               className="px-4 py-2 text-xs bg-emerald-600 hover:bg-emerald-700 rounded-lg font-semibold transition-colors text-white shadow-xs"
             >
               Sign Up
@@ -359,6 +368,20 @@ export default function Home() {
         <footer className="border-t border-slate-200 bg-white px-6 py-5 text-center text-xs text-slate-500">
           LandNova — The Location Is the Decision • Hackathon Edition
         </footer>
+
+        {/* Gateway Auth Modal */}
+        <AuthModal
+          isOpen={showAuthModal}
+          initialMode={authMode}
+          onClose={() => setShowAuthModal(false)}
+          onAuthSuccess={(user) => {
+            if (user.role === 'developer') {
+              setCurrentRole('developer');
+            } else {
+              setCurrentRole('buyer');
+            }
+          }}
+        />
       </div>
     );
   }

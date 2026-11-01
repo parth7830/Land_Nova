@@ -77,6 +77,20 @@ class SearchHistoryModel(Base):
     longitude = Column(Float, nullable=False)
     searched_at = Column(DateTime, default=datetime.datetime.utcnow)
 
+class UserModel(Base):
+    __tablename__ = "users"
+
+    id = Column(String, primary_key=True, index=True)
+    email = Column(String, unique=True, index=True, nullable=False)
+    full_name = Column(String, nullable=False)
+    password_hash = Column(String, nullable=False)
+    role = Column(String, default="buyer", nullable=False)
+    organization = Column(String, nullable=True)
+    phone = Column(String, nullable=True)
+    is_active = Column(Boolean, default=True, nullable=False)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
+
 def init_db():
     Base.metadata.create_all(bind=engine)
 

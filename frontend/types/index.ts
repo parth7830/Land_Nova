@@ -318,9 +318,74 @@ export interface BuyerSector {
   };
   metrics: Record<string, BuyerMetricDetail>;
   weights_used: Record<string, number>;
+  layer_scores?: Record<string, number>;
   is_within_commute?: boolean;
   is_within_budget?: boolean;
   estimated_unit_price?: number;
+}
+
+export type HeatmapLayerType =
+  | 'all'
+  | 'schools'
+  | 'hospitals'
+  | 'crime'
+  | 'aqi'
+  | 'transport'
+  | 'amenities'
+  | 'parks'
+  | 'noise';
+
+export interface AreaHeatmapCell {
+  lat: number;
+  lng: number;
+  score: number;
+  color: string;
+}
+
+export interface AreaPOI {
+  id: string;
+  name: string;
+  category: string;
+  lat: number;
+  lng: number;
+  distance_m: number;
+}
+
+export interface AreaHeatmapSummary {
+  score: number;
+  best_block: { lat: number; lng: number; score: number };
+  worst_block: { lat: number; lng: number; score: number };
+  nearest_school: string;
+  nearest_hospital: string;
+  nearest_metro: string;
+  average_block_score: number;
+}
+
+export interface AreaHeatmapLegend {
+  unit: string;
+  min_label: string;
+  max_label: string;
+  confidence: string;
+  data_source: string;
+  is_inverted: boolean;
+}
+
+export interface AreaHeatmapResponse {
+  area_id: string;
+  area_name: string;
+  layer: HeatmapLayerType;
+  layer_label: string;
+  overall_layer_score: number;
+  grid_resolution: string;
+  total_cells: number;
+  cells: AreaHeatmapCell[];
+  pois: AreaPOI[];
+  summary: AreaHeatmapSummary;
+  legend: AreaHeatmapLegend;
+  confidence: string;
+  data_source: string;
+  generated_at: string;
+  is_cached: boolean;
 }
 
 export interface BuyerPreferences {
